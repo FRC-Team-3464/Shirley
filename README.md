@@ -1,4 +1,2 @@
 # Shirley
-
-2023 FIRST Robotics Competition Charged Up by First Robotics Team 3464 Simcity
-
+Created by FIRST Robotics Team 3464 Simcity for 2023 FIRST Robotics Competition Charged Up. 
