@@ -77,9 +77,9 @@ public static JoystickButton
   //constructor which runs once, and defines all joysticks and buttons
   public OI() {
 
-    leftStick = new Joystick(1);
-    rightStick = new Joystick(2);
-    auxStick = new Joystick(3);
+    leftStick = new Joystick(0);
+    rightStick = new Joystick(1);
+    auxStick = new Joystick(2);
     //XboxController controller = new XboxController(3);
 
     //controller is an Xbox controller created using the Joystick class

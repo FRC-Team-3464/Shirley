@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.commands.ElevatorPIDCMD;
 import frc.robot.subsystems.ColorSensorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,11 +19,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // The robot's subsystems are defined here
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
+  private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+
+  // Commands defined here
+  private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,9 +46,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+      OI.button10Aux.toggleOnTrue(PIDElevator);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
   }
 
   /**
