@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class RunElevator extends CommandBase {
+public class ElevatorPIDCMD extends CommandBase {
   /** Creates a new RunElevator. */
   
   private final ElevatorSubsystem elevatorSub;
@@ -19,7 +19,7 @@ public class RunElevator extends CommandBase {
   private double speed;
 
 
-  public RunElevator(ElevatorSubsystem elevatorSubsystem, double target) {
+  public ElevatorPIDCMD(ElevatorSubsystem elevatorSubsystem, double target) {
     setpoint = target;
     elevatorSub = elevatorSubsystem;
     addRequirements(elevatorSub);
@@ -38,7 +38,10 @@ public class RunElevator extends CommandBase {
 
     SmartDashboard.putNumber("Elevator Setpoint", setpoint);
     SmartDashboard.putNumber("Elevator Speed", speed);
-    
+    SmartDashboard.putNumber("Error", extendPID.getPositionError());
+    // SmartDashboard.putNumber(""), setpoint)
+    SmartDashboard.putBoolean("PID Command Finished", extendPID.atSetpoint());
+
   }
 
   // Called once the command ends or is interrupted.
