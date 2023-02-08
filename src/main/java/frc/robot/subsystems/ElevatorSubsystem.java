@@ -12,10 +12,11 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
-  private final CANSparkMax elevatorMotor = new CANSparkMax(1, CANSparkMax.MotorType.kBrushless); // How is this working
+  private final CANSparkMax elevatorMotor = new CANSparkMax(2, CANSparkMax.MotorType.kBrushless); // How is this working
   private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
   // private final 
 
@@ -25,10 +26,22 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorMotor.set(speed);
     }
 
+    public double getElevatorPosition(){
+      return elevatorEncoder.getPosition(); // Return the current elevator encoder position
+    }
+
+    public double getElevatorInchPosition(){
+      return getElevatorPosition() * Constants.ElevatorConstants.kEncoderTickToInch;
+    }
+    public void resetElevatorEncoder(){
+      elevatorEncoder.setPosition(0); // Reset encoder value to 0
+    }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getPosition());
+    SmartDashboard.putNumber("Elevator Encoder", getElevatorPosition());
+    SmartDashboard.putNumber("Elevator Encoder (IN)", getElevatorInchPosition());
+    
   }
 }
