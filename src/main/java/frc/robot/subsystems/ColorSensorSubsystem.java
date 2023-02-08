@@ -18,7 +18,7 @@ public class ColorSensorSubsystem extends SubsystemBase {
   private final I2C.Port i2cPort = I2C.Port.kOnboard; // I2C port on roborio
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
-  private final ColorMatch m_colorMatch = new ColorMatch();
+  // private final ColorMatch m_colorMatch = new ColorMatch();
   
   // private final Color kBlueTarget = new Color(0.143,0.427,0.429);
   // private final Color kRedTarget = new Color(kBlueTarget),0.427,0.429);
@@ -40,7 +40,6 @@ public class ColorSensorSubsystem extends SubsystemBase {
     SmartDashboard.putString("Color Value", rgbColor.toString());
 
     // SmartDashboard.putNumberArray("Blue Value", [m_colorSensor.getRed()] m_colorSensor.getBlue());
-
     // SmartDashboard.putString("Color", String(m_colorSensor.getColor())); 
   }
 }

@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -16,6 +20,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  DigitalOutput ping = new DigitalOutput(1);
+  DigitalInput echo = new DigitalInput(2);
+  private final Ultrasonic vexUltrasonic = new Ultrasonic(ping, echo);
+  
+
+  
 
   private RobotContainer m_robotContainer;
 
@@ -28,6 +38,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    Ultrasonic.setAutomaticMode(true);
   }
 
   /**
@@ -43,6 +54,11 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    //vexUltrasonic.ping();
+    double distanceInches = vexUltrasonic.getRangeInches();
+    System.out.println(distanceInches);
+    SmartDashboard.putNumber("Pingg Distance", distanceInches);
+
     CommandScheduler.getInstance().run();
   }
 
