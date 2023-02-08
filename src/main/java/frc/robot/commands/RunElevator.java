@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
 
@@ -15,16 +16,14 @@ public class RunElevator extends CommandBase {
   
   private final PIDController extendPID = new PIDController(0.02272727272, 0, 0);
   private double setpoint;
+  private double speed;
+
 
   public RunElevator(ElevatorSubsystem elevatorSubsystem, double target) {
     setpoint = target;
     elevatorSub = elevatorSubsystem;
     addRequirements(elevatorSub);
-    
-    extendPID.setSetpoint(target);
-    // extendPID.setTolerance(target);
-    // extendPID.setTolerance(0);
-    // Use addRequirements() here to declare subsystem dependencies.
+    extendPID.setSetpoint(setpoint); // Set the setpoint to be whatever is passed
   }
 
   // Called when the command is initially scheduled.
@@ -34,12 +33,18 @@ public class RunElevator extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // elevatorSub.elevatorUp(extendPID.calculate());
+    speed =  extendPID.calculate(elevatorSub.getElevatorPosition()); // Calculate the speed outputed based on a PID calculation given the current error. 
+    elevatorSub.elevatorUp(speed);
+
+    SmartDashboard.putNumber("Elevator Setpoint", setpoint);
+    SmartDashboard.putNumber("Elevator Speed", speed);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
