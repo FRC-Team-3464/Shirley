@@ -5,10 +5,12 @@
 package frc.robot;
 
 import frc.robot.commands.ElevatorPIDCMD;
+import frc.robot.commands.ElevatorSetPositionCMD;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -27,7 +29,7 @@ public class RobotContainer {
 
   // Commands defined here
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
-
+  private final ElevatorSetPositionCMD setElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,8 +48,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+      OI.triggerAux.onTrue(new InstantCommand(elevatorSub::resetElevatorEncoder, elevatorSub));
       OI.button10Aux.toggleOnTrue(PIDElevator);
-
+      OI.button11Aux.onTrue(setElevator);
   }
 
   /**
