@@ -6,8 +6,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -61,12 +63,63 @@ public class DriveTrainSubsystem extends SubsystemBase {
     leftBack.set(leftFront.get());
     rightBack.set(rightFront.get());
   }
+  
+  public void stopDrive() {
+    // Stops the arcadeDrive
+    arcadeDrive(0, 0);
+  }
 
+  public double getLeftSpeed() {
+    // Returns the left encoder value
+    return leftFront.get();
+  }
+
+  public double getRightSpeed() {
+    // Returns the right encoder value
+    return rightFront.get();
+  }
+
+  public double getForwardSpeed() {
+    // Returns the average value of both encoders
+    return ((getLeftSpeed() + getRightSpeed()) /2 );
+  }
+
+  public void resetEncoders() {
+    // Sets the position the motors are at to 0
+    leftFrontEncoder.setPosition(0);
+    rightFrontEncoder.setPosition(0);
+  }
+
+  public double getForwardDistance() {
+    // Gets the average position of the two encoders
+    return ((leftFrontEncoder.getPosition() + rightFrontEncoder.getPosition() /2 ));
+  }
+
+  public void enableMotors(boolean on) {
+    // Sets the motors to either kBrake (no movement) or kCoast (can push to move)
+    // if Mode is on, then kBrake will be on, elsem kCoast will be on
+    IdleMode mode;
+    if(on) {
+      mode = IdleMode.kBrake;
+    } else {
+      mode = IdleMode.kCoast;
+    }
+    // Sets the motors to the mode activated
+    leftFront.setIdleMode(mode);
+    leftBack.setIdleMode(mode);
+    rightFront.setIdleMode(mode);
+    rightBack.setIdleMode(mode);
+  }
 
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Puts each values for the numbers on Smart Dashboard
+    SmartDashboard.putNumber("Encoder Forward Distance", getForwardDistance());
+    SmartDashboard.putNumber("Encoder Left Speed", getLeftSpeed());
+    SmartDashboard.putNumber("Encoder Right Speed", getRightSpeed());
+    SmartDashboard.putNumber("Forward Distance (feet)", getForwardDistance());
   }
 }
