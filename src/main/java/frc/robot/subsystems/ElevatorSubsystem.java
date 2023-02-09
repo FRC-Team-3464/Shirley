@@ -37,6 +37,15 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorEncoder.setPosition(0); // Reset encoder value to 0
     }
 
+    public void regularSetPoint(){
+      if(elevatorEncoder.getPosition() < 25){
+        elevatorMotor.set(.5);
+      }
+      else{
+        elevatorMotor.set(0);
+      }
+    }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

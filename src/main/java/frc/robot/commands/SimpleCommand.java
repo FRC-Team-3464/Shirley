@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorPIDCMD extends CommandBase {
+public class SimpleCommand extends CommandBase {
   /** Creates a new RunElevator. */
   
   private final ElevatorSubsystem elevatorSub;
@@ -19,7 +19,7 @@ public class ElevatorPIDCMD extends CommandBase {
   private double speed;
 
 
-  public ElevatorPIDCMD(ElevatorSubsystem elevatorSubsystem, double target) {
+  public SimpleCommand(ElevatorSubsystem elevatorSubsystem, double target) {
     setpoint = target;
     elevatorSub = elevatorSubsystem;
     addRequirements(elevatorSub);
@@ -29,14 +29,17 @@ public class ElevatorPIDCMD extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    elevatorSub.elevatorUp(0);
+    elevatorSub.resetElevatorEncoder();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    speed =  extendPID.calculate(elevatorSub.getElevatorPosition()); // Calculate the speed outputed based on a PID calculation given the current error. 
-    elevatorSub.elevatorUp(speed);
-
+    /*speed =  extendPID.calculate(elevatorSub.getElevatorPosition()); // Calculate the speed outputed based on a PID calculation given the current error. 
+    elevatorSub.elevatorUp(speed);*/
+    elevatorSub.regularSetPoint();
     SmartDashboard.putNumber("Elevator Setpoint", setpoint);
     SmartDashboard.putNumber("Elevator Speed", speed);
     SmartDashboard.putNumber("Error", extendPID.getPositionError());
@@ -54,10 +57,12 @@ public class ElevatorPIDCMD extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(extendPID.atSetpoint()){
-      return true;
-    }else{
-      return false;
-    }
+    return false;
+    //if(extendPID.atSetpoint()){
+      //return true;
+    //}else{
+      //return false;
+    //}
   }
 }
+
