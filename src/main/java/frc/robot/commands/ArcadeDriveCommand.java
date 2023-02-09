@@ -12,11 +12,11 @@ public class ArcadeDriveCommand extends CommandBase {
   /** Creates a new ArcadeDriveCommand. */
   
   private final XboxController controller = new XboxController(3);
-  private final DriveTrainSubsystem driveSub;
+  private final DriveTrainSubsystem arcadeDriveSub;
   
   
   public ArcadeDriveCommand(DriveTrainSubsystem driveTrainSub) {
-    driveSub = driveTrainSub;
+    arcadeDriveSub = driveTrainSub;
     addRequirements(driveTrainSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -31,7 +31,7 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
     // Uses the left joystick X and Y values 
-    driveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getLeftX());
+    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getLeftX());
   }
 
   // Called once the command ends or is interrupted.
