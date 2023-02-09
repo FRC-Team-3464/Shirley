@@ -8,6 +8,7 @@ import frc.robot.commands.ElevatorPIDCMD;
 import frc.robot.commands.ElevatorSetPositionCMD;
 import frc.robot.commands.SimpleCommand;
 import frc.robot.subsystems.ColorSensorSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +27,7 @@ public class RobotContainer {
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
+  private final DriveTrainSubsystem arcadeDriveSub = new DriveTrainSubsystem();
 
 
   // Commands defined here
