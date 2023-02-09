@@ -31,7 +31,7 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
     // Uses the left joystick X and Y values, and uses 80% of the value
-    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getLeftX() * 0.8);
+    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getRightX() * 0.8);
   }
 
   // Called once the command ends or is interrupted.

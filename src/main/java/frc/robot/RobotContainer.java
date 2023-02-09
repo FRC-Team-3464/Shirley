@@ -4,14 +4,17 @@
 
 package frc.robot;
 
+import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.ElevatorPIDCMD;
 import frc.robot.commands.ElevatorSetPositionCMD;
 import frc.robot.commands.SimpleCommand;
+import frc.robot.commands.TankDriveCommand;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,13 +30,15 @@ public class RobotContainer {
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
-  private final DriveTrainSubsystem arcadeDriveSub = new DriveTrainSubsystem();
+  private final DriveTrainSubsystem driveSub = new DriveTrainSubsystem();
 
 
   // Commands defined here
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
   private final ElevatorSetPositionCMD setElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
   private final SimpleCommand simp = new SimpleCommand(elevatorSub, 0);
+  private final ArcadeDriveCommand arcadeDrive = new ArcadeDriveCommand(driveSub);
+  // private final TankDriveCommand tankDrive = new TankDriveCommand(driveSub);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -52,6 +57,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+      CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDrive);
+      // CommandScheduler.getInstance().setDefaultCommand(driveSub, tankDrive);
       OI.triggerAux.onTrue(new InstantCommand(elevatorSub::resetElevatorEncoder, elevatorSub));
       OI.button10Aux.onTrue(PIDElevator);
       OI.button11Aux.onTrue(setElevator);
