@@ -30,8 +30,8 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Uses the left joystick X and Y values 
-    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getLeftX());
+    // Uses the left joystick X and Y values, and uses 80% of the value
+    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getLeftX() * 0.8);
   }
 
   // Called once the command ends or is interrupted.
