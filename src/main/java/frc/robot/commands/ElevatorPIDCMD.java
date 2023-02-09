@@ -24,6 +24,7 @@ public class ElevatorPIDCMD extends CommandBase {
     elevatorSub = elevatorSubsystem;
     addRequirements(elevatorSub);
     extendPID.setSetpoint(setpoint); // Set the setpoint to be whatever is passed
+    extendPID.setTolerance(0.75); // Set the position torence to be between + or - 0.75 in
   }
 
   // Called when the command is initially scheduled.
@@ -52,6 +53,10 @@ public class ElevatorPIDCMD extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(extendPID.atSetpoint()){
+      return true;
+    }else{
+      return false;
+    }
   }
 }
