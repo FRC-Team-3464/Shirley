@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,10 +20,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
   
   // Motor Ports will be changed later
   private final CANSparkMax
-    leftFront = new CANSparkMax(3, null),
-    leftBack = new CANSparkMax(4, null),
-    rightFront = new CANSparkMax(5, null),
-    rightBack = new CANSparkMax(6, null);
+    leftFront = new CANSparkMax(4, MotorType.kBrushless),
+    leftBack = new CANSparkMax(5, MotorType.kBrushless),
+    rightFront = new CANSparkMax(6, MotorType.kBrushless),
+    rightBack = new CANSparkMax(7, MotorType.kBrushless);
   
   // Gets encoder values from the two front motors
   private final RelativeEncoder leftFrontEncoder = leftFront.getEncoder();
