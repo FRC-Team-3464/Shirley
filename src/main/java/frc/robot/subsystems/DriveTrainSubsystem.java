@@ -36,8 +36,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   
   public DriveTrainSubsystem() {
-    // Inverts the left motor, allowing it to go straight
-    leftFront.setInverted(true);
+    // Inverts the right side, allowing it to go straight when motors spin clockwise
+    rightFront.setInverted(true);
+    
+    // Makes the back motors follow the front motors at the same exact speed
+    leftBack.follow(leftFront);
+    rightBack.follow(rightFront);
   }
 
   public void driveTank(double left, double right) {
@@ -52,17 +56,13 @@ public class DriveTrainSubsystem extends SubsystemBase {
     // Uses the existing tankDrive() from the DifferentialDrive along with modified values
     drive.tankDrive(left, right);
 
-    // Makes the back motors move the same speed as the front
-    leftBack.set(leftFront.get());
-    rightBack.set(rightFront.get());
+    
   }
 
   public void arcadeDrive(double speed, double rotation) {
     // Uses the built in arcadeDrive() from DifferentialDrive
     drive.arcadeDrive(speed, rotation);
-    // Have back motors follow the front motors
-    leftBack.set(leftFront.get());
-    rightBack.set(rightFront.get());
+    
   }
   
   public void stopDrive() {
