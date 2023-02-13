@@ -27,7 +27,6 @@ public class RobotContainer {
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
 
-
   // Commands defined here
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
   private final ElevatorSetPositionCMD setElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
