@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.commands.ArmPIDCommand;
 import frc.robot.commands.ElevatorPIDCMD;
 import frc.robot.commands.ElevatorSetPositionCMD;
 import frc.robot.commands.SimpleCommand;
+import frc.robot.subsystems.ArmPivoterSubsystem;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
@@ -26,8 +28,10 @@ public class RobotContainer {
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
+  private final ArmPivoterSubsystem pivoterSub = new ArmPivoterSubsystem();
 
   // Commands defined here
+  private final ArmPIDCommand PIDArm = new ArmPIDCommand(pivoterSub, 90);
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
   private final ElevatorSetPositionCMD setElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
   private final SimpleCommand simp = new SimpleCommand(elevatorSub, 0);
@@ -53,7 +57,9 @@ public class RobotContainer {
       OI.button10Aux.onTrue(PIDElevator);
       OI.button11Aux.onTrue(setElevator);
       OI.button3Aux.onTrue(simp); // Thanks camden
-  }
+
+      OI.button4Aux.onTrue(PIDArm);
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

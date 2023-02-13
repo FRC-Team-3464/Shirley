@@ -14,13 +14,14 @@ public class ArmPIDCommand extends CommandBase {
 
   private final ArmPivoterSubsystem pivoterSub;
   private final PIDController armPIDController = new PIDController(0.00555555555, 0, 0);
-
+  private double speed;
 
   public ArmPIDCommand(ArmPivoterSubsystem pivoterSubsystem, double target) {
     // Use addRequirements() here to declare subsystem dependencies.
     pivoterSub = pivoterSubsystem;
     addRequirements(pivoterSubsystem);
     armPIDController.setSetpoint(target);
+    armPIDController.setTolerance(1);
   }
 
   // Called when the command is initially scheduled.
@@ -30,8 +31,9 @@ public class ArmPIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivotArm(armPIDController.calculate(pivoterSub.getEncoderDegrees()));
-    SmartDashboard.getBoolean("Arm Complete:" , armPIDController.atSetpoint());
+    speed = armPIDController.calculate(pivoterSub.getEncoderDegrees());
+    SmartDashboard.putBoolean("Arm Complete:" , armPIDController.atSetpoint());
+    SmartDashboard.putNumber("Arm Speed", speed);
   }
 
   // Called once the command ends or is interrupted.
