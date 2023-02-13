@@ -49,7 +49,7 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
 
-  public double getGrabberDistance() {
+  public double getGrabberDegrees() {
     // Gets the distance of the motor
     return (grabberEncoder.getPosition() * GrabberConstants.kTickToDegrees);
   }
@@ -63,6 +63,8 @@ public class GrabberSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // Puts encoder value on the SmartDashboard
-    SmartDashboard.putNumber("Encoder Value Grabber", getGrabberSpeed());
+    SmartDashboard.putNumber("Encoder Value Grabber Speed", getGrabberSpeed());
+    SmartDashboard.putNumber("Encoder Degrees", getGrabberDegrees());
+
   }
 }
