@@ -17,7 +17,7 @@ public class ArmPivoterSubsystem extends SubsystemBase {
   
   private final CANSparkMax
     leftPivoter = new CANSparkMax(1, MotorType.kBrushless), //Left Motor for Arm Pivoter
-    rightPivoter = new CANSparkMax(3, MotorType.kBrushless); //Right Motor for Arm Pivoter
+    rightPivoter = new CANSparkMax(0, MotorType.kBrushless); //Right Motor for Arm Pivoter
   
   private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
 
@@ -29,9 +29,9 @@ public class ArmPivoterSubsystem extends SubsystemBase {
 
   public void pivotArm(double speed) { //Pivots arm at Given Speed
     // Makes values that are too small equal to 0
-    if (Math.abs(speed) < 0.15) {
-      speed = 0;
-    }
+    // if (Math.abs(speed) < 0.15) {
+    //   speed = 0;
+    // }
     // Makes left pivoter rotate the same as the right
     rightPivoter.set(speed);
     leftPivoter.follow(rightPivoter);

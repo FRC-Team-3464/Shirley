@@ -32,6 +32,7 @@ public class RobotContainer {
 
   // Commands defined here
   private final ArmPIDCommand PIDArm = new ArmPIDCommand(pivoterSub, 90);
+  private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0);
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
   private final ElevatorSetPositionCMD setElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
   private final SimpleCommand simp = new SimpleCommand(elevatorSub, 0);
@@ -58,7 +59,8 @@ public class RobotContainer {
       OI.button11Aux.onTrue(setElevator);
       OI.button3Aux.onTrue(simp); // Thanks camden
 
-      OI.button4Aux.onTrue(PIDArm);
+      OI.button5Aux.onTrue(PIDArm);
+      OI.button6Aux.onTrue(PIDArmBack);
     }
 
   /**

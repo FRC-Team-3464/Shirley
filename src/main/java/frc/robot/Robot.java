@@ -58,7 +58,6 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     //vexUltrasonic.ping();
     double distanceInches = vexUltrasonic.getRangeInches();
-    System.out.println(distanceInches);
     SmartDashboard.putNumber("Pingg Distance", distanceInches);
 
     CommandScheduler.getInstance().run();

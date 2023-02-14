@@ -32,8 +32,12 @@ public class ArmPIDCommand extends CommandBase {
   @Override
   public void execute() {
     speed = armPIDController.calculate(pivoterSub.getEncoderDegrees());
+    SmartDashboard.putNumber("Arm Error", armPIDController.getPositionError());
     SmartDashboard.putBoolean("Arm Complete:" , armPIDController.atSetpoint());
     SmartDashboard.putNumber("Arm Speed", speed);
+    
+    pivoterSub.pivotArm(speed);
+  
   }
 
   // Called once the command ends or is interrupted.
