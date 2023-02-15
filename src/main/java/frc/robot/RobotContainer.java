@@ -59,6 +59,7 @@ public class RobotContainer {
       OI.button11Aux.onTrue(setElevator);
       OI.button3Aux.onTrue(simp); // Thanks camden
 
+      // OI.button12Aux.onTrue(new InstantCommand(elevatorSub))
       OI.button5Aux.onTrue(PIDArm);
       OI.button6Aux.onTrue(PIDArmBack);
     }
