@@ -13,7 +13,8 @@ public class ArmPIDCommand extends CommandBase {
   /** Creates a new SetGrabberCommand. */
 
   private final ArmPivoterSubsystem pivoterSub;
-  private final PIDController armPIDController = new PIDController(0.00555555555, 0, 0);
+  // private final PIDController armPIDController = new PIDController(0.00555555555, 0, 0);
+  private final PIDController armPIDController = new PIDController(0.00275555, 0, 0);
   private double speed;
 
   public ArmPIDCommand(ArmPivoterSubsystem pivoterSubsystem, double target) {

@@ -16,6 +16,8 @@ import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
+
+  // Camden wrote it... gotta find the branch. 
   private final CANSparkMax elevatorMotor = new CANSparkMax(2, CANSparkMax.MotorType.kBrushless); // How is this working
   private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
   // private final 

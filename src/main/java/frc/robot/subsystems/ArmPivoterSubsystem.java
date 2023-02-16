@@ -17,7 +17,7 @@ public class ArmPivoterSubsystem extends SubsystemBase {
   
   private final CANSparkMax
     leftPivoter = new CANSparkMax(1, MotorType.kBrushless), //Left Motor for Arm Pivoter
-    rightPivoter = new CANSparkMax(0, MotorType.kBrushless); //Right Motor for Arm Pivoter
+    rightPivoter = new CANSparkMax(3, MotorType.kBrushless); //Right Motor for Arm Pivoter
   
   private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
 
@@ -37,6 +37,10 @@ public class ArmPivoterSubsystem extends SubsystemBase {
     leftPivoter.follow(rightPivoter);
   }
 
+  public double getArmSpeed() {
+    return rightPivoter.get();
+  }
+
   public double getEncoderTicks(){
     return leftPivotEncoder.getPosition();
   }
@@ -50,5 +54,8 @@ public class ArmPivoterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Degrees", getEncoderDegrees());
+    System.out.println(rightPivoter.get());
+    SmartDashboard.putNumber("Arm Speed", getArmSpeed());
+
   }
 }

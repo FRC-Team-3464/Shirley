@@ -39,7 +39,7 @@ public class ElevatorSetPositionCMD extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(elevatorSub.getElevatorInchPosition() != setpoint){
+    if(elevatorSub.getElevatorInchPosition() >= setpoint){
       return false;
     }else{
       return true;
