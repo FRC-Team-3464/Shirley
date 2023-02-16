@@ -55,6 +55,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
       OI.triggerAux.onTrue(new InstantCommand(elevatorSub::resetElevatorEncoder, elevatorSub));
+      // OI.button2Aux.onTrue(new InstantCommand(pivoterSub::pivotArm(0.5), pivoterSub));
       OI.button10Aux.onTrue(PIDElevator);
       OI.button11Aux.onTrue(setElevator);
       OI.button3Aux.onTrue(simp); // Thanks camden
