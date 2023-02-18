@@ -10,7 +10,6 @@ import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
 import frc.robot.commands.GrabberSetCommand;
 import frc.robot.subsystems.PivoterSubsystem;
-import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
@@ -29,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems are defined here
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
-  private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ExtenderSubsystem extenderSub = new ExtenderSubsystem();
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
@@ -43,8 +41,8 @@ public class RobotContainer {
   private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
  
   // Alternate forms - use in test
-  // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
-  // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
+  private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
+  private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
   
 
   private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
