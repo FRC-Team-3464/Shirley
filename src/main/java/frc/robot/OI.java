@@ -1,8 +1,11 @@
 package frc.robot;
+import java.lang.ModuleLayer.Controller;
+
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.buttons.JoystickButton;
 //import edu.wpi.first.wpilibj.command.Command;
-
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import frc.robot.Commands.ElevatorCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -15,8 +18,9 @@ public class OI {
   public static Joystick
   leftStick, // 
   rightStick,
-  controller, // 
   auxStick; // 
+
+  public static XboxController xBoxController;
 
 //declaring buttons for each joystick
 public static JoystickButton 
@@ -84,7 +88,7 @@ public static JoystickButton
 
     //controller is an Xbox controller created using the Joystick class
     //can alternatively use the XboxController class (probably works better)
-    controller = new Joystick(3);
+    xBoxController = new XboxController(3);
 
     triggerLeft = new JoystickButton(leftStick, 1);
     triggerRight = new JoystickButton(rightStick, 1);
@@ -131,14 +135,14 @@ public static JoystickButton
     button12Left = new JoystickButton(leftStick, 12);
 
     //buttons for Xbox controller
-    buttonA = new JoystickButton(controller, 1);  
-    buttonB = new JoystickButton(controller, 2);
-    buttonX = new JoystickButton(controller, 3); 
-    buttonY = new JoystickButton(controller, 4); 
-    buttonLB = new JoystickButton(controller, 5); 
-    buttonRB = new JoystickButton(controller, 6); 
-    buttonBox = new JoystickButton(controller, 7); 
-    buttonPancake = new JoystickButton(controller, 8); 
+    buttonA = new JoystickButton(xBoxController, 1);  
+    buttonB = new JoystickButton(xBoxController, 2);
+    buttonX = new JoystickButton(xBoxController, 3); 
+    buttonY = new JoystickButton(xBoxController, 4); 
+    buttonLB = new JoystickButton(xBoxController, 5); 
+    buttonRB = new JoystickButton(xBoxController, 6); 
+    buttonBox = new JoystickButton(xBoxController, 7); 
+    buttonPancake = new JoystickButton(xBoxController, 8); 
     
   }
 }
