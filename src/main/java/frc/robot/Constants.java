@@ -13,11 +13,13 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+  public static class PivoterConstants{
+    public static final int kLeftMotorPort = 1;
+    public static final int kRightMotorPort = 3;
+    
   }
 
-  public static class ElevatorConstants{
+  public static class ExtenderConstants{
     public static final double kEncoderTickToInch = ((1/42) * (Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
   }
 
