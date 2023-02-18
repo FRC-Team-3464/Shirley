@@ -4,14 +4,16 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.OI;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
   /** Creates a new ArcadeDriveCommand. */
   
-  private final XboxController controller = new XboxController(3);
+  private final XboxController controller = OI.xBoxController;
   private final DrivetrainSubsystem arcadeDriveSub;
   
   
