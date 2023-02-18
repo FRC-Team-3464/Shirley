@@ -6,19 +6,18 @@ package frc.robot;
 
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.ArmPIDCommand;
-import frc.robot.commands.ElevatorPIDCMD;
-import frc.robot.commands.ElevatorSetPositionCMD;
-import frc.robot.commands.ElevatorSimpleSetPositionCommand;
+import frc.robot.commands.ExtenderPIDCommand;
+import frc.robot.commands.ExtenderSetPositionCommand;
+import frc.robot.commands.ExtenderSimpleSetPositionCommand;
 import frc.robot.commands.GrabberSetCommand;
 import frc.robot.subsystems.ArmPivoterSubsystem;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ExtenderSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -32,17 +31,23 @@ public class RobotContainer {
   // The robot's subsystems are defined here
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
-  private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
+  private final ExtenderSubsystem extenderSub = new ExtenderSubsystem();
   private final ArmPivoterSubsystem pivoterSub = new ArmPivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
-  private final ArmPIDCommand PIDArm = new ArmPIDCommand(pivoterSub, 90);
-  private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0);  
-  private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
-  private final ElevatorSetPositionCMD noPIDCmdElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
-  private final ElevatorSimpleSetPositionCommand simpleSetElevator = new ElevatorSimpleSetPositionCommand(elevatorSub, 0); // You better change this. 
+  private final ArmPIDCommand PIDArmForward = new ArmPIDCommand(pivoterSub, 90);
+  private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
+
+  private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
+  private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
+  private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
+  private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
+  private final ExtenderSimpleSetPositionCommand simpleSetExtenderExtend = new ExtenderSimpleSetPositionCommand(extenderSub, 22); // You better change this. 
+  private final ExtenderSimpleSetPositionCommand simpleSetExtenderRetract = new ExtenderSimpleSetPositionCommand(extenderSub, 0); // You better change this. 
+  
+
   private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
   private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 
@@ -62,20 +67,27 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true` hmmmm...
       
+      // Run default command as the arcade drive command.
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
-
+      
+      // Trigger command execution. 
       OI.triggerAux.toggleOnTrue(openGrabber);
       OI.triggerAux.toggleOnFalse(closeGrabber);
-      // OI.triggerAux.onTrue(new InstantCommand(elevatorSub::resetElevatorEncoder, elevatorSub));
-      OI.button10Aux.onTrue(PIDElevator);
-      OI.button11Aux.onTrue(noPIDCmdElevator); // Don't think we need this
-      OI.button3Aux.onTrue(simpleSetElevator); // Thanks camden
 
-      // OI.button12Aux.onTrue(new InstantCommand(elevatorSub))
-      OI.button5Aux.onTrue(PIDArm);
-      OI.button6Aux.onTrue(PIDArmBack);
+      OI.button5Aux.toggleOnTrue(PIDArmForward);
+      OI.button5Aux.toggleOnFalse(PIDArmBack);
+ 
+      OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
+      OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
+      
+      // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
+      // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
+
+      // OI.button11Aux.toggleOnTrue(simpleSetExtenderExtend); // Uncomment to test
+      // OI.button11Aux.toggleOnFalse(simpleSetExtenderRetract); // 
+      
     }
 
   /**

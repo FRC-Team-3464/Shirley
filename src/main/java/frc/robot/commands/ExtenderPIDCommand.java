@@ -7,22 +7,22 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ExtenderSubsystem;
 
-public class ElevatorPIDCMD extends CommandBase {
+public class ExtenderPIDCommand extends CommandBase {
   /** Creates a new RunElevator. */
   
-  private final ElevatorSubsystem elevatorSub;
+  private final ExtenderSubsystem extenderSub;
   
   private final PIDController extendPID = new PIDController(0.02272727272, 0, 0);
   private double setpoint;
   private double speed;
 
 
-  public ElevatorPIDCMD(ElevatorSubsystem elevatorSubsystem, double target) {
+  public ExtenderPIDCommand(ExtenderSubsystem elevatorSubsystem, double target) {
     setpoint = target;
-    elevatorSub = elevatorSubsystem;
-    addRequirements(elevatorSub);
+    extenderSub = elevatorSubsystem;
+    addRequirements(extenderSub);
     extendPID.setSetpoint(setpoint); // Set the setpoint to be whatever is passed
     extendPID.setTolerance(0.75); // Set the position torence to be between + or - 0.75 in
   }
@@ -34,8 +34,8 @@ public class ElevatorPIDCMD extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    speed =  extendPID.calculate(elevatorSub.getElevatorPosition()); // Calculate the speed outputed based on a PID calculation given the current error. 
-    elevatorSub.elevatorUp(speed);
+    speed =  extendPID.calculate(extenderSub.getElevatorPosition()); // Calculate the speed outputed based on a PID calculation given the current error. 
+    extenderSub.elevatorUp(speed);
 
     SmartDashboard.putNumber("Elevator Setpoint", setpoint);
     SmartDashboard.putNumber("Elevator Speed", speed);
@@ -48,7 +48,7 @@ public class ElevatorPIDCMD extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevatorSub.elevatorUp(0);
+    extenderSub.elevatorUp(0);
   }
 
   // Returns true when the command should end.

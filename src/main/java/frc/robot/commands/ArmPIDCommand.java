@@ -36,8 +36,7 @@ public class ArmPIDCommand extends CommandBase {
     SmartDashboard.putNumber("Arm Error", armPIDController.getPositionError());
     SmartDashboard.putBoolean("Arm Complete:" , armPIDController.atSetpoint());
     SmartDashboard.putNumber("Arm Speed", speed);
-    
-    pivoterSub.pivotArm(speed);
+    pivoterSub.pivotArm(speed); // This doesn't seem to be working
   
   }
 

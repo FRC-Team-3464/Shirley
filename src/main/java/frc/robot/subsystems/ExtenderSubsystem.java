@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class ExtenderSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
 
   // Camden wrote it... gotta find the branch. 
@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
   // private final 
 
-    public ElevatorSubsystem() {}
+    public ExtenderSubsystem() {}
 
     public void elevatorUp(double speed){
       elevatorMotor.set(speed);
