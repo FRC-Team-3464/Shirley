@@ -9,10 +9,12 @@ import frc.robot.commands.ArmPIDCommand;
 import frc.robot.commands.ElevatorPIDCMD;
 import frc.robot.commands.ElevatorSetPositionCMD;
 import frc.robot.commands.ElevatorSimpleSetPositionCommand;
+import frc.robot.commands.GrabberSetCommand;
 import frc.robot.subsystems.ArmPivoterSubsystem;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,14 +35,17 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
   private final ArmPivoterSubsystem pivoterSub = new ArmPivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
-
+  private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // Commands defined here
+  private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
   private final ArmPIDCommand PIDArm = new ArmPIDCommand(pivoterSub, 90);
-  private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0);
+  private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0);  
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
   private final ElevatorSetPositionCMD noPIDCmdElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
   private final ElevatorSimpleSetPositionCommand simpleSetElevator = new ElevatorSimpleSetPositionCommand(elevatorSub, 0); // You better change this. 
-  private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
+  private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
+  private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -60,8 +65,10 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
       
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
-      OI.triggerAux.onTrue(new InstantCommand(elevatorSub::resetElevatorEncoder, elevatorSub));
-      // OI.button2Aux.onTrue(new InstantCommand(pivoterSub::pivotArm(0.5), pivoterSub));
+
+      OI.triggerAux.toggleOnTrue(openGrabber);
+      OI.triggerAux.toggleOnFalse(closeGrabber);
+      // OI.triggerAux.onTrue(new InstantCommand(elevatorSub::resetElevatorEncoder, elevatorSub));
       OI.button10Aux.onTrue(PIDElevator);
       OI.button11Aux.onTrue(noPIDCmdElevator); // Don't think we need this
       OI.button3Aux.onTrue(simpleSetElevator); // Thanks camden
