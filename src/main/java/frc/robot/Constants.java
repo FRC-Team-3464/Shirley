@@ -14,12 +14,12 @@ package frc.robot;
  */
 public final class Constants {
   public static class PivoterConstants{
-    public static final int kLeftMotorPort = 1;
-    public static final int kRightMotorPort = 3;
-    
+    public static final int kPivotLeftMotorPort = 1;
+    public static final int kPivotRightMotorPort = 3;
   }
 
   public static class ExtenderConstants{
+    public static final int kExtenderMotorPort = 2;
     public static final double kEncoderTickToInch = ((1/42) * (Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
   }
 

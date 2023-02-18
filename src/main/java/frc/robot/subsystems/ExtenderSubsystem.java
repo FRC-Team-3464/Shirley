@@ -13,12 +13,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ExtenderConstants;
 
 public class ExtenderSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
 
   // Camden wrote it... gotta find the branch. 
-  private final CANSparkMax elevatorMotor = new CANSparkMax(2, CANSparkMax.MotorType.kBrushless); // How is this working
+  private final CANSparkMax elevatorMotor = new CANSparkMax(ExtenderConstants.kExtenderMotorPort, CANSparkMax.MotorType.kBrushless); // How is this working
   private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
   // private final 
 
