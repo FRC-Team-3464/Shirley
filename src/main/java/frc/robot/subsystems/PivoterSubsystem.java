@@ -19,24 +19,16 @@ public class PivoterSubsystem extends SubsystemBase {
   private final CANSparkMax
     leftPivoter = new CANSparkMax(PivoterConstants.kPivoterLeftMotorPort, MotorType.kBrushless), //Left Motor for Arm Pivoter
     rightPivoter = new CANSparkMax(PivoterConstants.kPivoterRightMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
-  
-  private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
 
+  private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
   public PivoterSubsystem() {
+    // Which way should the pivoter rotate? 
     leftPivoter.setInverted(true);
   }
 
 
   public void pivot(double speed) { 
-    //Pivots arm at Given Speed
-    
-    // if (Math.abs(speed) < 0.15) {
-    // Makes values that are too small equal to 0
-      //   speed = 0;
-    // }
-
-    // Makes left pivoter rotate the same as the right
     rightPivoter.set(speed);
     leftPivoter.follow(rightPivoter);
   }
@@ -50,15 +42,15 @@ public class PivoterSubsystem extends SubsystemBase {
   }
 
   public double getPivoterDegrees(){
-    return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterTickToDegree; // This is the same thing...?
+    // Multiply the position  - in ticks - by the conversion factor that changes it from ticks to degrees. 
+    return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterTickToDegree; 
   }
 
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // Print out pivoter degrees and speed
     SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
-    System.out.println(rightPivoter.get());
     SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());
 
   }
