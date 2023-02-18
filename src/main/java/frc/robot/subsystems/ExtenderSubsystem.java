@@ -24,7 +24,7 @@ public class ExtenderSubsystem extends SubsystemBase {
 
     public ExtenderSubsystem() {}
 
-    public void elevatorUp(double speed){
+    public void translateExtender(double speed){
       elevatorMotor.set(speed);
     }
 
@@ -33,20 +33,12 @@ public class ExtenderSubsystem extends SubsystemBase {
     }
 
     public double getElevatorInchPosition(){
-      return getElevatorPosition() * Constants.ElevatorConstants.kEncoderTickToInch;
+      return getElevatorPosition() * Constants.ExtenderConstants.kEncoderTickToInch;
     }
     public void resetElevatorEncoder(){
       elevatorEncoder.setPosition(0); // Reset encoder value to 0
     }
 
-    public void regularSetPoint(){
-      if(elevatorEncoder.getPosition() < 25){
-        elevatorMotor.set(.5);
-      }
-      else{
-        elevatorMotor.set(0);
-      }
-    }
 
   @Override
   public void periodic() {
