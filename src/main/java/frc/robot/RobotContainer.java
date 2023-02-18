@@ -7,9 +7,10 @@ package frc.robot;
 import frc.robot.commands.ArmPIDCommand;
 import frc.robot.commands.ElevatorPIDCMD;
 import frc.robot.commands.ElevatorSetPositionCMD;
-import frc.robot.commands.SimpleCommand;
+import frc.robot.commands.ElevatorSimpleSetPositionCommand;
 import frc.robot.subsystems.ArmPivoterSubsystem;
 import frc.robot.subsystems.ColorSensorSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,13 +30,14 @@ public class RobotContainer {
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
   private final ArmPivoterSubsystem pivoterSub = new ArmPivoterSubsystem();
+  private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
 
   // Commands defined here
   private final ArmPIDCommand PIDArm = new ArmPIDCommand(pivoterSub, 90);
   private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0);
   private final ElevatorPIDCMD PIDElevator = new ElevatorPIDCMD(elevatorSub, 22); // We want to get it to 22 inches. 
   private final ElevatorSetPositionCMD setElevator = new ElevatorSetPositionCMD(elevatorSub, 22);
-  private final SimpleCommand simp = new SimpleCommand(elevatorSub, 0);
+  private final ElevatorSimpleSetPositionCommand simp = new ElevatorSimpleSetPositionCommand(elevatorSub, 0); // You better change this. 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
