@@ -8,9 +8,8 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.ArmPIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
-import frc.robot.commands.ExtenderSimpleSetPositionCommand;
 import frc.robot.commands.GrabberSetCommand;
-import frc.robot.subsystems.ArmPivoterSubsystem;
+import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
@@ -32,7 +31,7 @@ public class RobotContainer {
   private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ColorSensorSubsystem colorSub = new ColorSensorSubsystem();
   private final ExtenderSubsystem extenderSub = new ExtenderSubsystem();
-  private final ArmPivoterSubsystem pivoterSub = new ArmPivoterSubsystem();
+  private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // Commands defined here
@@ -42,10 +41,10 @@ public class RobotContainer {
 
   private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
   private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
-  private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
-  private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
-  private final ExtenderSimpleSetPositionCommand simpleSetExtenderExtend = new ExtenderSimpleSetPositionCommand(extenderSub, 22); // You better change this. 
-  private final ExtenderSimpleSetPositionCommand simpleSetExtenderRetract = new ExtenderSimpleSetPositionCommand(extenderSub, 0); // You better change this. 
+ 
+  // Alternate forms - use in test
+  // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
+  // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
   
 
   private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
@@ -86,7 +85,7 @@ public class RobotContainer {
       // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
 
       // OI.button11Aux.toggleOnTrue(simpleSetExtenderExtend); // Uncomment to test
-      // OI.button11Aux.toggleOnFalse(simpleSetExtenderRetract); // 
+      // There is no code for simpleSetExtenderRetract
       
     }
 

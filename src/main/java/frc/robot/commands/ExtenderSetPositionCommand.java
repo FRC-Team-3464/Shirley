@@ -12,6 +12,8 @@ public class ExtenderSetPositionCommand extends CommandBase {
 
   private final ExtenderSubsystem extenderSub;
   private double setpoint;
+  private double speed;
+
 
   public ExtenderSetPositionCommand(ExtenderSubsystem extenderSubsystem, double target) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -22,18 +24,27 @@ public class ExtenderSetPositionCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    if(extenderSub.getElevatorInchPosition() < setpoint){ // If current position is less, we want it to be positve - so flip is 1
+      speed = 0.5;
+    }else if(extenderSub.getElevatorInchPosition() == setpoint){
+      speed = 0;
+    }else{ // If current position is greater than, speed is negative. 
+      speed = -0.5;
+    }
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    extenderSub.elevatorUp(0.75);
+    extenderSub.translateExtender(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    extenderSub.elevatorUp(0);
+    extenderSub.translateExtender(0);
   }
 
   // Returns true when the command should end.

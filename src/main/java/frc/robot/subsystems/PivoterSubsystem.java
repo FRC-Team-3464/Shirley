@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants.PivoterConstants;
 
-public class ArmPivoterSubsystem extends SubsystemBase {
+public class PivoterSubsystem extends SubsystemBase {
   /** Creates a new ArmPivoterSubsystem. */
   
   private final CANSparkMax
@@ -22,7 +22,7 @@ public class ArmPivoterSubsystem extends SubsystemBase {
   private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
 
   
-  public ArmPivoterSubsystem() {
+  public PivoterSubsystem() {
     leftPivoter.setInverted(true);
   }
 

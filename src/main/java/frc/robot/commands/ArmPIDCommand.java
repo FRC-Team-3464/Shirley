@@ -7,17 +7,17 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmPivoterSubsystem;
+import frc.robot.subsystems.PivoterSubsystem;
 
 public class ArmPIDCommand extends CommandBase {
   /** Creates a new SetGrabberCommand. */
+  private final PivoterSubsystem pivoterSub;
 
-  private final ArmPivoterSubsystem pivoterSub;
   // private final PIDController armPIDController = new PIDController(0.00555555555, 0, 0);
   private final PIDController armPIDController = new PIDController(0.00275555, 0, 0);
   private double speed;
 
-  public ArmPIDCommand(ArmPivoterSubsystem pivoterSubsystem, double target) {
+  public ArmPIDCommand(PivoterSubsystem pivoterSubsystem, double target) {
     // Use addRequirements() here to declare subsystem dependencies.
     pivoterSub = pivoterSubsystem;
     addRequirements(pivoterSubsystem);

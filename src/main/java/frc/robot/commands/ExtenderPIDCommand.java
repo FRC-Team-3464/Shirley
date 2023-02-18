@@ -35,7 +35,7 @@ public class ExtenderPIDCommand extends CommandBase {
   @Override
   public void execute() {
     speed =  extendPID.calculate(extenderSub.getElevatorPosition()); // Calculate the speed outputed based on a PID calculation given the current error. 
-    extenderSub.elevatorUp(speed);
+    extenderSub.translateExtender(speed);
 
     SmartDashboard.putNumber("Elevator Setpoint", setpoint);
     SmartDashboard.putNumber("Elevator Speed", speed);
@@ -48,7 +48,7 @@ public class ExtenderPIDCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    extenderSub.elevatorUp(0);
+    extenderSub.translateExtender(0);
   }
 
   // Returns true when the command should end.
