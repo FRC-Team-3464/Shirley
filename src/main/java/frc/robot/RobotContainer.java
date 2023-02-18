@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.ArmPIDCommand;
+import frc.robot.commands.PivoterPIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
 import frc.robot.commands.GrabberSetCommand;
@@ -34,8 +34,8 @@ public class RobotContainer {
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
-  private final ArmPIDCommand PIDArmForward = new ArmPIDCommand(pivoterSub, 90);
-  private final ArmPIDCommand PIDArmBack = new ArmPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
+  private final PivoterPIDCommand PIDArmForward = new PivoterPIDCommand(pivoterSub, 90);
+  private final PivoterPIDCommand PIDArmBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
 
   private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
   private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
