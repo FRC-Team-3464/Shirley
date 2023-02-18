@@ -4,21 +4,35 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
   /** Creates a new ArcadeDriveCommand. */
-  public ArcadeDriveCommand() {
+  
+  private final XboxController controller = new XboxController(3);
+  private final DrivetrainSubsystem arcadeDriveSub;
+  
+  
+  public ArcadeDriveCommand(DrivetrainSubsystem driveTrainSub) {
+    arcadeDriveSub = driveTrainSub;
+    addRequirements(driveTrainSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    // Uses the left joystick X and Y values, and uses 80% of the value
+    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getRightX() * 0.8);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
