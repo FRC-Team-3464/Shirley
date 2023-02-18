@@ -34,7 +34,7 @@ public class RobotContainer {
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
-  private final PivoterPIDCommand PIDArmForward = new PivoterPIDCommand(pivoterSub, 90);
+  private final PivoterPIDCommand PIDArmForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
   private final PivoterPIDCommand PIDArmBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
 
   private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
@@ -44,7 +44,6 @@ public class RobotContainer {
   private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
   private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
   
-
   private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
   private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 

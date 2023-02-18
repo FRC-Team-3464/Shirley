@@ -11,13 +11,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants.PivoterConstants;
+import frc.robot.Constants.PivoterConstants;
 
 public class PivoterSubsystem extends SubsystemBase {
   /** Creates a new ArmPivoterSubsystem. */
   
   private final CANSparkMax
-    leftPivoter = new CANSparkMax(1, MotorType.kBrushless), //Left Motor for Arm Pivoter
-    rightPivoter = new CANSparkMax(3, MotorType.kBrushless); //Right Motor for Arm Pivoter
+    leftPivoter = new CANSparkMax(PivoterConstants.kPivoterLeftMotorPort, MotorType.kBrushless), //Left Motor for Arm Pivoter
+    rightPivoter = new CANSparkMax(PivoterConstants.kPivoterRightMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
   
   private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
 
@@ -27,35 +28,38 @@ public class PivoterSubsystem extends SubsystemBase {
   }
 
 
-  public void pivotArm(double speed) { //Pivots arm at Given Speed
-    // Makes values that are too small equal to 0
+  public void pivot(double speed) { 
+    //Pivots arm at Given Speed
+    
     // if (Math.abs(speed) < 0.15) {
-    //   speed = 0;
+    // Makes values that are too small equal to 0
+      //   speed = 0;
     // }
+
     // Makes left pivoter rotate the same as the right
     rightPivoter.set(speed);
     leftPivoter.follow(rightPivoter);
   }
 
-  public double getArmSpeed() {
+  public double getPivoterSpeed() {
     return rightPivoter.get();
   }
 
-  public double getEncoderTicks(){
+  public double getPivoterTicks(){
     return leftPivotEncoder.getPosition();
   }
 
-  public double getEncoderDegrees(){
-    return leftPivotEncoder.getPosition();
+  public double getPivoterDegrees(){
+    return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterTickToDegree; // This is the same thing...?
   }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Arm Degrees", getEncoderDegrees());
+    SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
     System.out.println(rightPivoter.get());
-    SmartDashboard.putNumber("Arm Speed", getArmSpeed());
+    SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());
 
   }
 }

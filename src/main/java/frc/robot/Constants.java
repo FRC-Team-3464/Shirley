@@ -14,8 +14,10 @@ package frc.robot;
  */
 public final class Constants {
   public static class PivoterConstants{
-    public static final int kPivotLeftMotorPort = 1;
-    public static final int kPivotRightMotorPort = 3;
+    public static final double kPivoterTickToDegree = ((1/42) * (1/64) *  (12/24)  *360);
+    public static final int kPivoterLeftMotorPort = 1;
+    public static final int kPivoterRightMotorPort = 3;
+
   }
 
   public static class ExtenderConstants{

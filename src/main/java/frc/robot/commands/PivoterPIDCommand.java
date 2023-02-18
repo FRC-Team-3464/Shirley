@@ -14,7 +14,7 @@ public class PivoterPIDCommand extends CommandBase {
   private final PivoterSubsystem pivoterSub;
 
   // private final PIDController armPIDController = new PIDController(0.00555555555, 0, 0);
-  private final PIDController armPIDController = new PIDController(0.00275555, 0, 0);
+  private final PIDController armPIDController = new PIDController(0.00455555555, 0, 0);
   private double speed;
 
   public PivoterPIDCommand(PivoterSubsystem pivoterSubsystem, double target) {
@@ -32,12 +32,15 @@ public class PivoterPIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    speed = armPIDController.calculate(pivoterSub.getEncoderDegrees());
-    SmartDashboard.putNumber("Arm Error", armPIDController.getPositionError());
-    SmartDashboard.putBoolean("Arm Complete:" , armPIDController.atSetpoint());
-    SmartDashboard.putNumber("Arm Speed", speed);
-    pivoterSub.pivotArm(speed); // This doesn't seem to be working
-  
+    speed = armPIDController.calculate(pivoterSub.getPivoterDegrees()); // This should help. 
+    if(speed > 0.35){
+      speed = 0.35;
+    }
+    pivoterSub.pivot(speed); // This doesn't seem to be working
+    SmartDashboard.putNumber("Pivoter Error", armPIDController.getPositionError());
+    SmartDashboard.putBoolean("Pivot Command Complete:" , armPIDController.atSetpoint());
+    SmartDashboard.putNumber("Pivot Speed", speed);
+    
   }
 
   // Called once the command ends or is interrupted.
