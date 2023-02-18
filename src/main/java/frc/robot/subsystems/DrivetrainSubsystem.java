@@ -32,8 +32,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Differential drive, allows arcade drive and tank drive
   public DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
 
-
-
   
   public DrivetrainSubsystem() {
     // Inverts the left motor, allowing it to go straight
