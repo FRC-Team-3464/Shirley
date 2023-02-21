@@ -4,14 +4,22 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DrivetrainConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /** Creates a new DriveTrainSubsystem. */
@@ -30,14 +38,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final RelativeEncoder rightFrontEncoder = rightFront.getEncoder();
 
   // Differential drive, allows arcade drive and tank drive
-  public DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
+  private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
 
-  
+  private final AHRS gyro = new AHRS(Port.kMXP);
+
+  // Create drive kinemeatics
+  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.ktrackWidthInches)); // Might be 27
+  // Create drive odometry
+  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading(), leftFrontEncoder.getPosition(), rightFrontEncoder.getPosition());
+
+  // Store our robot position with Pose - contains x, y and heading.
+  private Pose2d pose; 
+
   public DrivetrainSubsystem() {
     // Inverts the left motor, allowing it to go straight
     leftFront.setInverted(true);
+    leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // Set it our rotation to meters conversion factor so it applies to .getPosition()
+    rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
+    
   }
 
+  public Rotation2d getHeading(){
+    return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
+  }
+  
   public void driveTank(double left, double right) {
     // Gets rid of the joystick drift
     if (Math.abs(left) < 0.07) {
@@ -67,6 +91,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Stops the arcadeDrive
     arcadeDrive(0, 0);
   }
+
 
   public double getLeftSpeed() {
     // Returns the left encoder value
@@ -114,11 +139,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // Puts each values for the numbers on Smart Dashboard
-    SmartDashboard.putNumber("Encoder Forward Distance", getForwardDistance());
-    SmartDashboard.putNumber("Encoder Left Speed", getLeftSpeed());
-    SmartDashboard.putNumber("Encoder Right Speed", getRightSpeed());
-    SmartDashboard.putNumber("Forward Distance (feet)", getForwardDistance());
+    // Update our odometry to get the new heading every 20 ms. 
+    pose = odometry.update(getHeading(), leftFrontEncoder.getPosition(), rightFrontEncoder.getPosition());
+
+    // Get left and right encoder meter values - distance traveled. 
+    SmartDashboard.putNumber("Left Encoder Meter Value:", leftFrontEncoder.getPosition());
+    SmartDashboard.putNumber("Right Encoder Meter Value:", rightFrontEncoder.getPosition());
+
   }
 }
