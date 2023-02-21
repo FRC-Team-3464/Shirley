@@ -28,10 +28,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   
   // Motor Ports will be changed later
   private final CANSparkMax
-    leftFront = new CANSparkMax(4, MotorType.kBrushless),
-    leftBack = new CANSparkMax(5, MotorType.kBrushless),
-    rightFront = new CANSparkMax(6, MotorType.kBrushless),
-    rightBack = new CANSparkMax(7, MotorType.kBrushless);
+    leftFront = new CANSparkMax(DrivetrainConstants.leftFrontPort, MotorType.kBrushless),
+    leftBack = new CANSparkMax(DrivetrainConstants.leftBackPort, MotorType.kBrushless),
+    rightFront = new CANSparkMax(DrivetrainConstants.rightFrontPort, MotorType.kBrushless),
+    rightBack = new CANSparkMax(DrivetrainConstants.rightBackPort, MotorType.kBrushless);
   
   // Gets encoder values from the two front motors
   private final RelativeEncoder leftFrontEncoder = leftFront.getEncoder();
@@ -134,7 +134,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightFront.setIdleMode(mode);
     rightBack.setIdleMode(mode);
   }
-
 
 
   @Override
