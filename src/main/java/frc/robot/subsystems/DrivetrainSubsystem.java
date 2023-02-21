@@ -28,10 +28,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   
   // Motor Ports will be changed later
   private final CANSparkMax
-    leftFront = new CANSparkMax(4, MotorType.kBrushless),
-    leftBack = new CANSparkMax(5, MotorType.kBrushless),
-    rightFront = new CANSparkMax(6, MotorType.kBrushless),
-    rightBack = new CANSparkMax(7, MotorType.kBrushless);
+    leftFront = new CANSparkMax(DrivetrainConstants.kLeftFrontPort, MotorType.kBrushless),
+    leftBack = new CANSparkMax(DrivetrainConstants.kLeftBackPort, MotorType.kBrushless),
+    rightFront = new CANSparkMax(DrivetrainConstants.kRightFrontPort, MotorType.kBrushless),
+    rightBack = new CANSparkMax(DrivetrainConstants.kRightBackPort, MotorType.kBrushless);
   
   // Gets encoder values from the two front motors
   private final RelativeEncoder leftFrontEncoder = leftFront.getEncoder();
@@ -39,7 +39,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Differential drive, allows arcade drive and tank drive
   private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
-
   private final AHRS gyro = new AHRS(Port.kMXP);
 
   // Create drive kinemeatics
