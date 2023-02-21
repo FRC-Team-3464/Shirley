@@ -10,6 +10,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -46,8 +48,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.ktrackWidthInches)); // Might be 27
   // Create drive odometry
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading(), leftFrontEncoder.getPosition(), rightFrontEncoder.getPosition());
-
+  // Get a feedforward 
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.268, 1.89, 0.243); // We need to run frc-characterization in order to do this. 
+  private final PIDController leftPIDController = new PIDController(9.95, 0, 0); // Also need to get values from frc-characterization. 
+  private final PIDController rightPIDController = new PIDController(9.95, 0, 0); // Also need to get values from frc-characterization. 
+ 
   // Store our robot position with Pose - contains x, y and heading.
+ 
   private Pose2d pose; 
 
   public DrivetrainSubsystem() {
@@ -60,6 +67,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Rotation2d getHeading(){
     return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
+  }
+
+  // Return the feedforward as well as the left and right PID Controllers. 
+  public SimpleMotorFeedforward getFeedforward(){
+    return feedforward;
+  }
+
+  public PIDController getLeftPIDController(){
+    return leftPIDController;
+  }
+  
+  public PIDController getRightPIDController(){
+    return rightPIDController;
   }
   
   public void driveTank(double left, double right) {
