@@ -46,6 +46,10 @@ public class PivoterSubsystem extends SubsystemBase {
     return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterTickToDegree; 
   }
 
+  public void resetEncoders(){
+    leftPivotEncoder.setPosition(0);
+  }
+
 
   @Override
   public void periodic() {

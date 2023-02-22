@@ -25,7 +25,9 @@ public class PivoterSetCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    pivoterSub.resetEncoders();
   }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

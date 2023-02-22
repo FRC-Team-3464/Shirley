@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.PivoterPIDCommand;
+import frc.robot.commands.PivoterSetCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
 import frc.robot.commands.GrabberSetCommand;
@@ -54,7 +55,12 @@ public class RobotContainer {
   private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
   private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 
+
   // Alternate forms - use in test
+  private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
+  private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
+  
+
   private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
   private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
   
