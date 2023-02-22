@@ -58,8 +58,6 @@ public class RobotContainer {
   private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
   private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
   
-
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -96,7 +94,6 @@ public class RobotContainer {
 
       // OI.button11Aux.toggleOnTrue(simpleSetExtenderExtend); // Uncomment to test
       // There is no code for simpleSetExtenderRetract
-      
     }
 
   /**
@@ -106,12 +103,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2));
-    config.setKinematics(driveSub.getKinematics()); // Set the kinematics to be the one from drivesub .
-    
+    config.setKinematics(driveSub.getKinematics()); // Set the kinematics to be the one from drivesub.
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(Arrays.asList(new Pose2d(), new Pose2d(1.0, 0, new Rotation2d())), config); // Move forward to 1.0, which is one meter forward. 
     RamseteCommand command = new RamseteCommand(trajectory, driveSub::getPose, new RamseteController(2.0, 0.7), driveSub.getFeedforward(), driveSub.getKinematics(), driveSub::getSpeeds, driveSub.getLeftPIDController(), driveSub.getRightPIDController(), driveSub::setVolts, driveSub);
-
     return command; 
-    
   }
 }

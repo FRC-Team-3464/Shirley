@@ -42,8 +42,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Differential drive, allows arcade drive and tank drive
   private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
+  
+  // NavX Gyro
   private final AHRS gyro = new AHRS(Port.kMXP);
 
+  // Follow along Green Hope Falcon's Trajectory Tracking Tutorial: 
   // Create drive kinemeatics
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.ktrackWidthInches)); // Might be 27
   // Create drive odometry
@@ -54,7 +57,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PIDController rightPIDController = new PIDController(9.95, 0, 0); // Also need to get values from frc-characterization. 
  
   // Store our robot position with Pose - contains x, y and heading.
- 
   private Pose2d pose; 
 
   public DrivetrainSubsystem() {
@@ -64,50 +66,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Make sure that the back motors follow the front motors. 
     leftBack.follow(leftFront);
     rightBack.follow(rightFront);
-    
 
     leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // Set it our rotation to meters conversion factor so it applies to .getPosition()
     rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
-    
-
-  }
-
-  public Rotation2d getHeading(){
-    return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
-  }
-
-  // Return the pose, which is suppoed odometry that's fed in our newloy updated heading and left/right positions. 
-  public Pose2d getPose(){
-    return pose; // We should be able to get it from periodic()...
-  }
-
-  // Return the drivewheel speeds - which are useful for creating the ramsete controller in robotContainer. 
-  public DifferentialDriveWheelSpeeds getSpeeds(){
-    return new DifferentialDriveWheelSpeeds(
-      leftFrontEncoder.getVelocity() * DrivetrainConstants.kRotationToMeters,
-      rightFrontEncoder.getVelocity()* DrivetrainConstants.kRotationToMeters);
-  }
-
-  public DifferentialDriveKinematics getKinematics(){
-    return kinematics;
-  }
-
-  // Return the feedforward as well as the left and right PID Controllers. 
-  public SimpleMotorFeedforward getFeedforward(){
-    return feedforward;
-  }
-
-  public PIDController getLeftPIDController(){
-    return leftPIDController;
-  }
-  
-  public PIDController getRightPIDController(){
-    return rightPIDController;
-  }
-  
-  public void setVolts(double leftVolts, double rightVolts){
-    leftFront.set(leftVolts/12); // Covert from volts to speeds we input to the sparkMax. 
-    rightFront.set(rightVolts/12);
   }
 
   public void driveTank(double left, double right) {
@@ -166,7 +127,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getForwardDistance() {
     // Gets the average position of the two encoders
-    return ((leftFrontEncoder.getPosition() + rightFrontEncoder.getPosition() /2 ));
+    return ((leftFrontEncoder.getPosition() + rightFrontEncoder.getPosition() /2));
   }
 
   public void enableMotors(boolean on) {
@@ -185,6 +146,43 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightBack.setIdleMode(mode);
   }
 
+  public Rotation2d getHeading(){
+    return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
+  }
+
+  // Return the pose, which is suppoed odometry that's fed in our newloy updated heading and left/right positions. 
+  public Pose2d getPose(){
+    return pose; // We should be able to get it from periodic()...
+  }
+
+  // Return the drivewheel speeds - which are useful for creating the ramsete controller in robotContainer. 
+  public DifferentialDriveWheelSpeeds getSpeeds(){
+    return new DifferentialDriveWheelSpeeds(
+      leftFrontEncoder.getVelocity() * DrivetrainConstants.kRotationToMeters,
+      rightFrontEncoder.getVelocity()* DrivetrainConstants.kRotationToMeters);
+  }
+
+  public DifferentialDriveKinematics getKinematics(){
+    return kinematics;
+  }
+
+  // Return the feedforward as well as the left and right PID Controllers. 
+  public SimpleMotorFeedforward getFeedforward(){
+    return feedforward;
+  }
+
+  public PIDController getLeftPIDController(){
+    return leftPIDController;
+  }
+  
+  public PIDController getRightPIDController(){
+    return rightPIDController;
+  }
+  
+  public void setVolts(double leftVolts, double rightVolts){
+    leftFront.set(leftVolts/12); // Covert from volts to speeds we input to the sparkMax. 
+    rightFront.set(rightVolts/12);
+  }
 
   @Override
   public void periodic() {
