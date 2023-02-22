@@ -100,6 +100,7 @@ public class RobotContainer {
 
       // OI.button11Aux.toggleOnTrue(simpleSetExtenderExtend); // Uncomment to test
       // There is no code for simpleSetExtenderRetract
+
     }
 
   /**
