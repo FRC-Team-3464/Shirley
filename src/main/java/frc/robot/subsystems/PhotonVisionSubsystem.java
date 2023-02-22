@@ -13,18 +13,49 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   
   // Get the camera focused on cones/cubes. 
   //  We need to update the name.
-  private final PhotonCamera objectCamera = new PhotonCamera("objectCamera");
-  
+  // private final PhotonCamera objectCamera = new PhotonCamera("OV5647");
   // Camera for the reflective tape and apriltag. 
-  private final PhotonCamera targetCamera = new PhotonCamera("limelightCamera");
-  
-  private final PhotonCamera feederCamera = new PhotonCamera("feederCamera");
+  private final PhotonCamera targetCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000");  
+  // private final PhotonCamera feederCamera = new PhotonCamera("feederCamera"); Need to define.
+
   
 
   public PhotonVisionSubsystem() {}
 
+
+
+//   PhotonTrackedTarget target = result.getBestTarget();
+//   //GENERAL CAMERA TARGET INFO
+//   double yaw = target.getYaw();
+//   double pitch = target.getPitch();
+//   double area = target.getArea();
+//   double skew = target.getSkew();
+//   Transform3d pose = target.getBestCameraToTarget();
+//   // List<TargetCorner> corners = target.getCorners();
+
+//   // Get APRILTAG from target camera
+//   int targetID = target.getFiducialId();
+//   double poseAmbiguity = target.getPoseAmbiguity();
+//   Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+//   Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+
+
+
+//   var resultLime = cameraLime.getLatestResult();
+//   boolean hasTargetsLime = resultLime.hasTargets();
+//   List<PhotonTrackedTarget> targetsLime = result.getTargets();
+//   System.out.println("Lime" + targetsLime);
+//   CommandScheduler.getInstance().run();
+// }
+
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    var result = targetCamera.getLatestResult();
+    boolean hasTargets = result.hasTargets();
+    System.out.println("PI: " + hasTargets);
+
   }
 }
