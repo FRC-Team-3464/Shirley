@@ -4,11 +4,22 @@
 
 package frc.robot.subsystems;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVisionSubsystem extends SubsystemBase {
   /** Creates a new PhotonVisionSubsystem. */
-  private final PhotonCamera
+  
+  // Get the camera focused on cones/cubes. 
+  //  We need to update the name.
+  private final PhotonCamera objectCamera = new PhotonCamera("objectCamera");
+  
+  // Camera for the reflective tape and apriltag. 
+  private final PhotonCamera targetCamera = new PhotonCamera("limelightCamera");
+  
+  private final PhotonCamera feederCamera = new PhotonCamera("feederCamera");
+  
 
   public PhotonVisionSubsystem() {}
 
