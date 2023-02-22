@@ -194,6 +194,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Get left and right encoder meter values - distance traveled. 
     SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());
     SmartDashboard.putNumber("Right Encoder Meter Value:", getRightPosition());
-
   }
 }
