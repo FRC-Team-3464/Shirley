@@ -15,46 +15,45 @@ import frc.robot.Constants.PivoterConstants;
 
 public class PivoterSubsystem extends SubsystemBase {
   /** Creates a new ArmPivoterSubsystem. */
+  // Clockwise spins down that moves the pivoter down
   
-  private final CANSparkMax
-    leftPivoter = new CANSparkMax(PivoterConstants.kPivoterLeftMotorPort, MotorType.kBrushless), //Left Motor for Arm Pivoter
-    rightPivoter = new CANSparkMax(PivoterConstants.kPivoterRightMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
+  private final CANSparkMax pivoterMotor = new CANSparkMax(PivoterConstants.kPivoterRightMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
 
-  private final RelativeEncoder leftPivotEncoder = leftPivoter.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
+  private final RelativeEncoder pivoterEncoder = pivoterMotor.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
   public PivoterSubsystem() {
-    // Which way should the pivoter rotate? 
-    leftPivoter.setInverted(true);
+    pivoterMotor.setInverted(true);
+    pivoterEncoder.setInverted(true);
   }
 
-
   public void pivot(double speed) { 
-    rightPivoter.set(speed);
-    leftPivoter.follow(rightPivoter);
+    pivoterMotor.set(speed);
   }
 
   public double getPivoterSpeed() {
-    return rightPivoter.get();
+    return pivoterMotor.get();
   }
 
-  public double getPivoterTicks(){
-    return leftPivotEncoder.getPosition();
+  public double getPivoterRotation(){
+    // Return the pivoter position in rotations. 
+    return pivoterEncoder.getPosition();
   }
 
   public double getPivoterDegrees(){
     // Multiply the position  - in ticks - by the conversion factor that changes it from ticks to degrees. 
-    return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterRotationToDegree; 
+    return pivoterEncoder.getPosition() * PivoterConstants.kPivoterRotationToDegree; 
   }
 
-  public void resetEncoders(){
-    leftPivotEncoder.setPosition(0);
+  public void resetEncoder(){
+    // Set the encoder back to normal
+    pivoterEncoder.setPosition(0);
   }
 
   @Override
   public void periodic() {
     // Print out pivoter degrees and speed
     SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
+    SmartDashboard.putNumber("Pivoter Rotations", getPivoterRotation());
     SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());
-
   }
 }

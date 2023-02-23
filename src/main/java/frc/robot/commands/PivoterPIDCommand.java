@@ -10,19 +10,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PivoterSubsystem;
 
 public class PivoterPIDCommand extends CommandBase {
-  /** Creates a new SetGrabberCommand. */
   private final PivoterSubsystem pivoterSub;
-
-  // private final PIDController armPIDController = new PIDController(0.00555555555, 0, 0);
-  private final PIDController pivotPIDController = new PIDController(0.01111111111, 0, 0);
+  private final PIDController pivotPIDController = new PIDController(0.01111111111, 0, 0); // SysID will update the value. 
   private double speed;
 
   public PivoterPIDCommand(PivoterSubsystem pivoterSubsystem, double target) {
-    // Use addRequirements() here to declare subsystem dependencies.
     pivoterSub = pivoterSubsystem;
-    addRequirements(pivoterSubsystem);
     pivotPIDController.setSetpoint(target);
-    pivotPIDController.setTolerance(15); // Change tolarance
+    pivotPIDController.setTolerance(15); // Change tolarance // HELP this will be wrong. 
+    addRequirements(pivoterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -33,21 +29,26 @@ public class PivoterPIDCommand extends CommandBase {
   @Override
   public void execute() {
     speed = pivotPIDController.calculate(pivoterSub.getPivoterDegrees()); // This should help. 
+    // Constrain the speed to be 0.35 speed. 
     if(speed > 0.35){
       speed = 0.35;
     }
+
     pivoterSub.pivot(speed); // This doesn't seem to be working
     SmartDashboard.putNumber("Pivoter Error", pivotPIDController.getPositionError());
+    SmartDashboard.putNumber("Output", speed);
     SmartDashboard.putBoolean("Pivot Command Complete:" , pivotPIDController.atSetpoint());    
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(pivotPIDController.atSetpoint()){
+      return true;
+    } else {
+      return false;
+    }
   }
 }
