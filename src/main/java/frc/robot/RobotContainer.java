@@ -14,6 +14,7 @@ import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.UltrasonicSubsystem;
 
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -44,6 +46,8 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
+  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
+  
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
   private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
@@ -55,7 +59,7 @@ public class RobotContainer {
   private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
   private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 
-
+  
   // Alternate forms - use in test
   private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
   private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
@@ -85,7 +89,7 @@ public class RobotContainer {
       // Run default command as the arcade drive command.
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       
-      // Trigger command execution. 
+      // Trigger command execution.
       OI.triggerAux.toggleOnTrue(openGrabber);
       OI.triggerAux.toggleOnFalse(closeGrabber);
 
@@ -95,6 +99,7 @@ public class RobotContainer {
       OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
       OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
       
+      //OI.button2Aux.onTrue();
       // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
       // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
 

@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
+//import org.apache.commons.collections4.sequence.InsertCommand;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-
+  static double pipeIndex;
+  NetworkTableEntry pipelineIndex;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -27,7 +35,13 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     OI oi = new OI();
-    m_robotContainer = new RobotContainer();    
+    m_robotContainer = new RobotContainer();  
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000");
+    
+    //defines variables by recieving values from limelight network table
+    pipelineIndex = table.getEntry("pipelineIndexState");
+    
+    
   }
 
   /**
@@ -42,8 +56,21 @@ public class Robot extends TimedRobot {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
-   
+   //if(OI.button11Aux.getAsBoolean()==true){
+     // System.out.println("Set to one");
+   //}
     CommandScheduler.getInstance().run();
+    pipeIndex = pipelineIndex.getDouble(7.0D);
+    System.out.println(pipeIndex);
+    //pipeIndex = pipelineIndex.getDouble(-1.0D);
+    if(OI.button10Aux.getAsBoolean() == true){
+      pipelineIndex.setDouble(1.0D);
+    }
+    if(OI.button11Aux.getAsBoolean()==true){
+      pipelineIndex.setDouble(0.0D);
+    }
+    NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000").getEntry("pipelineIndexState").setDouble(0.0D); 
+ 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

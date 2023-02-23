@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import org.photonvision.PhotonCamera;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVisionSubsystem extends SubsystemBase {
@@ -20,9 +21,20 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
   
 
-  public PhotonVisionSubsystem() {}
+  public PhotonVisionSubsystem() {
+    targetCamera.setPipelineIndex(1);
+    System.out.println("IM ALIVE");
+  }
 
 
+  public void switchIndex(){
+    // if(targetCamera.getPipelineIndex() == 1){
+    //   targetCamera.setPipelineIndex(0);
+    // }else{
+      targetCamera.setPipelineIndex(1);
+      System.out.println("Set to one");
+    // }
+  }
 
 //   PhotonTrackedTarget target = result.getBestTarget();
 //   //GENERAL CAMERA TARGET INFO
@@ -55,7 +67,9 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     var result = targetCamera.getLatestResult();
     boolean hasTargets = result.hasTargets();
-    System.out.println("PI: " + hasTargets);
 
+    SmartDashboard.putBoolean("Has Targets: ", hasTargets);
+    SmartDashboard.putNumber("ID", targetCamera.getPipelineIndex());
+    System.out.println(targetCamera.getPipelineIndex());
   }
 }

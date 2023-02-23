@@ -17,7 +17,7 @@ public class GrabberSubsystem extends SubsystemBase {
   /** Creates a new GrabberSubsystem. */
   
   // Creates a CANSparkMax for the grabber motor
-  private final CANSparkMax grabberMotor = new CANSparkMax(1, MotorType.kBrushless);
+  private final CANSparkMax grabberMotor = new CANSparkMax(9, MotorType.kBrushless);
 
   // Gets encoder value of the motor
   private final RelativeEncoder grabberEncoder = grabberMotor.getEncoder();
