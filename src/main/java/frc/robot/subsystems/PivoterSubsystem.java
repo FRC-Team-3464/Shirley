@@ -43,7 +43,7 @@ public class PivoterSubsystem extends SubsystemBase {
 
   public double getPivoterDegrees(){
     // Multiply the position  - in ticks - by the conversion factor that changes it from ticks to degrees. 
-    return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterTickToDegree; 
+    return leftPivotEncoder.getPosition() * PivoterConstants.kPivoterRotationToDegree; 
   }
 
   public void resetEncoders(){

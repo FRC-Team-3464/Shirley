@@ -28,7 +28,7 @@ public final class Constants {
   
   }
   public static class PivoterConstants{
-    public static final double kPivoterTickToDegree = ((1/42) * (1/64) *  (12/24)  *360);
+    public static final double kPivoterRotationToDegree = ((1/42) * (1/64) *  (12/24)  *360);
     public static final int kPivoterLeftMotorPort = 1;
     public static final int kPivoterRightMotorPort = 3;
 
@@ -37,7 +37,7 @@ public final class Constants {
   public static class ExtenderConstants{
     public static final int kExtenderMotorPort = 2;
     // 3 1/2 rotations  = max extention. 
-    public static final double kEncoderTickToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
+    public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); // Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
     public static final double tolerance = 0.75; // How much we'll tolerate from the set commands. 
   }
 

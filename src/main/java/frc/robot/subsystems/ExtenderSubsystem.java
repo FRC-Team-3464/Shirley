@@ -32,7 +32,7 @@ public class ExtenderSubsystem extends SubsystemBase {
 
   public double getExtenderInchPosition(){
     // Return the current extender encoder position in inches. 
-    return getExtenderPosition() * Constants.ExtenderConstants.kEncoderTickToInch;
+    return getExtenderPosition() * Constants.ExtenderConstants.kEncoderRotationToInch;
   }
 
   public void resetExtenderEncoder(){
