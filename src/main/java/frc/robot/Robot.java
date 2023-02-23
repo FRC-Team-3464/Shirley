@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 //import org.apache.commons.collections4.sequence.InsertCommand;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   static double pipeIndex;
   NetworkTableEntry pipelineIndex;
+  //DifferentialDrivetrainSim dtSim;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -124,9 +126,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    //dtSim = new DifferentialDrivetrainSim();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    //dtSim.update();
+  }
 }

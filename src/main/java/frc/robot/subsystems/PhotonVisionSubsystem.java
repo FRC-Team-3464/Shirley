@@ -16,26 +16,38 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   //  We need to update the name.
   // private final PhotonCamera objectCamera = new PhotonCamera("OV5647");
   // Camera for the reflective tape and apriltag. 
-  private final PhotonCamera targetCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000");  
+  private final PhotonCamera colorCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000");  
   // private final PhotonCamera feederCamera = new PhotonCamera("feederCamera"); Need to define.
 
   
 
   public PhotonVisionSubsystem() {
-    targetCamera.setPipelineIndex(1);
+    //targetCamera.setPipelineIndex(1);
     System.out.println("IM ALIVE");
   }
 
 
-  public void switchIndex(){
+  public void switchIndex(int num){
     // if(targetCamera.getPipelineIndex() == 1){
     //   targetCamera.setPipelineIndex(0);
     // }else{
-      targetCamera.setPipelineIndex(1);
+      colorCamera.setPipelineIndex(num);
       System.out.println("Set to one");
     // }
   }
 
+  public void trackBest(){
+    
+  }
+
+
+  //public var getResult(){
+    //colorCamera.getLatestResult();
+  //}
+
+  public PhotonCamera getColorCamera(){
+    return colorCamera;
+  }
 //   PhotonTrackedTarget target = result.getBestTarget();
 //   //GENERAL CAMERA TARGET INFO
 //   double yaw = target.getYaw();
@@ -65,11 +77,10 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    var result = targetCamera.getLatestResult();
+    var result = colorCamera.getLatestResult();
     boolean hasTargets = result.hasTargets();
 
     SmartDashboard.putBoolean("Has Targets: ", hasTargets);
-    SmartDashboard.putNumber("ID", targetCamera.getPipelineIndex());
-    System.out.println(targetCamera.getPipelineIndex());
+    SmartDashboard.putNumber("ID", colorCamera.getPipelineIndex());
   }
 }
