@@ -17,7 +17,6 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static class DrivetrainConstants{
-
     public static final int kLeftFrontPort = 4;
     public static final int kLeftBackPort = 5;
     public static final int kRightFrontPort = 6;
@@ -37,11 +36,12 @@ public final class Constants {
 
   public static class ExtenderConstants{
     public static final int kExtenderMotorPort = 2;
+    // 3 1/2 rotations  = max extention. 
     public static final double kEncoderTickToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
     public static final double tolerance = 0.75; // How much we'll tolerate from the set commands. 
   }
 
   public static class GrabberConstants {
-    public static final double kTickToDegrees = 360/42;
-  }
+    public static final int kGrabberMotorPort = 8;
+    }
 }

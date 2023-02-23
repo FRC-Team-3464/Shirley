@@ -43,7 +43,7 @@ public class ExtenderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Extender Encoder", getExtenderPosition());
+    SmartDashboard.putNumber("Extender Encoder", getExtenderPosition()); // See how many rotations are there. 
     SmartDashboard.putNumber("Extender Encoder (in)", getExtenderInchPosition());
     
   }
