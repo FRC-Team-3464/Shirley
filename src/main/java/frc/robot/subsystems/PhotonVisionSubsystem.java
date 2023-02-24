@@ -4,7 +4,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
+import javax.naming.spi.DirStateFactory.Result;
+
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +22,25 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
   public PhotonVisionSubsystem() {}
   
+  // Return the highest target - useful (not) when trying to target the high pole on the grid. 
+  public PhotonTrackedTarget getLimelightHighestTarget(){ // Turns out that this is useless 
+    var limelightOutput = limelightCamera.getLatestResult();
+    PhotonTrackedTarget bestTarget = limelightOutput.getBestTarget();
+    if(limelightOutput.hasTargets()){ // Make sure we have targets. 
+      double highestPitch = 0;
+      List<PhotonTrackedTarget> targets = limelightOutput.getTargets(); // create a list of targets. 
+      for(int target = 1; target < targets.size(); target++){
+        PhotonTrackedTarget targetSelected = targets.get(target);
+        if((targetSelected.getPitch() > highestPitch) && (Math.abs(targetSelected.getYaw()) < 60)){ // Get the highest point that fits +- 60. 
+          bestTarget = targets.get(target); // This will be the current target. 
+        } 
+      }
+      return bestTarget; // return the best target. 
+    }else{
+      return null;
+    }      
+  }
+
   // Return the color camera. 
   public PhotonCamera getColorCamera(){
     return aprilCamera;
@@ -26,7 +50,6 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   public PhotonCamera getLimelightCamera(){
     return limelightCamera;
   }
-
   
 
   public void switchIndex(PhotonCamera camera, int index){
