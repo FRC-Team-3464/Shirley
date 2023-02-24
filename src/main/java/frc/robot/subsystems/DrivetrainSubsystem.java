@@ -21,10 +21,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
-public class DrivetrainSubsystem extends SubsystemBase {
+public class DrivetrainSubsystem extends PIDSubsystem {
   /** Creates a new DriveTrainSubsystem. */
   
   // Defining the drive train motors
@@ -59,7 +60,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Store our robot position with Pose - contains x, y and heading.
   private Pose2d pose; 
 
+  private double speed;
+
   public DrivetrainSubsystem() {
+    super(new PIDController(0,0,0));
     // Inverts the left motor, allowing it to go straight
     leftFront.setInverted(true);
     leftFrontEncoder.setInverted(true);
@@ -75,6 +79,43 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
 
   }
+
+  @Override
+  public void useOutput(double output, double setpoint){
+      speed = getController().calculate(output, setpoint);
+      if(speed > .35){
+          speed = .35;
+      }
+      else if(speed < -.35){
+          speed = -.35;
+      }
+      
+      
+      arcadeDrive(speed, 0);
+      //System.out.println(speed);
+  }
+
+  public void useOutputRotation(double output, double setpoint){
+    speed = getController().calculate(output, setpoint);
+    if(speed > .35){
+        speed = .35;
+    }
+    else if(speed < -.35){
+        speed = -.35;
+    }
+    
+    
+    arcadeDrive(0, speed);
+    //System.out.println(speed);
+}
+
+  @Override  
+  public double getMeasurement(){
+      //return navXSub.getDegrees();
+      return getController().getPositionError();
+  }
+
+
 
   public void driveTank(double left, double right) {
     // Gets rid of the joystick drift
@@ -125,10 +166,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return rightFrontEncoder.getPosition();
   }
 
-  public double getForwardSpeed() {
+  /*public double getForwardSpeed() {
     // Returns the average value of both encoders
     return ((getLeftSpeed() + getRightSpeed()) /2 );
-  }
+  }*/
 
   public void resetEncoders() {
     // Sets the position the motors are at to 0
@@ -192,7 +233,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return rightPIDController;
   }
   
-  public void setVolts(double leftVolts, double rightVolts){
+  public void setDriveMotorVolts(double leftVolts, double rightVolts){
     leftFront.set(leftVolts / 12); // Covert from volts to speeds we input to the sparkMax. 
     rightFront.set(rightVolts / 12);
   }
