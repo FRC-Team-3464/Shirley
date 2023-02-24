@@ -28,7 +28,7 @@ public final class Constants {
   
   }
   public static class PivoterConstants{
-    public static final double kPivoterRotationToDegree = ((1/42) * (1/64) *  (12/24)  *360);
+    public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  *360);
     public static final int kPivoterLeftMotorPort = 1;
     public static final int kPivoterRightMotorPort = 3;
 
