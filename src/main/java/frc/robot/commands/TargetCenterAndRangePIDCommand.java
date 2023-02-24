@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PhotonVisionSubsystem;
 
-public class TargetRangePIDCommand extends CommandBase {
-// Command to get into range of the target only. 
+public class TargetCenterAndRangePIDCommand extends CommandBase {
+// Auto center and get in range of a target simultaneously. 
   private final PhotonVisionSubsystem photonSub;
   private final DrivetrainSubsystem driveSub;
 
@@ -32,10 +32,15 @@ public class TargetRangePIDCommand extends CommandBase {
   final double LINEAR_D = 0.0;
   PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
 
+  final double ANGULAR_P = 0.1;
+  final double ANGULAR_D = 0.0;
+  PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+
   private final PhotonCamera camera;
   private double forwardSpeed;
+  private double rotationSpeed;
   
-  public TargetRangePIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive) {
+  public TargetCenterAndRangePIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     photonSub = photon;
     driveSub = drive;
@@ -49,6 +54,7 @@ public class TargetRangePIDCommand extends CommandBase {
   public void initialize() {  
     // Reset the controllers. 
     forwardController.setSetpoint(0);
+    turnController.setSetpoint(0); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,17 +71,24 @@ public class TargetRangePIDCommand extends CommandBase {
                     CAMERA_PITCH_RADIANS,
                     Units.degreesToRadians(result.getBestTarget().getPitch()));
             forwardSpeed = -forwardController.calculate(range, GOAL_RANGE_METERS);
+            rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0);
           } 
         else{
           forwardSpeed = 0;
+          rotationSpeed = 0;
         }
         
         if((forwardSpeed < .2 && forwardSpeed > -.2)) {
              // If we have no targets, stay still.
              forwardSpeed = 0;
         }
+        if((rotationSpeed < .2 && rotationSpeed > -.2)) {
+          // If we have no targets, stay still.
+          forwardSpeed = 0;
+        }
+
         // Use our forward/turn speeds to control the drivetrain
-        driveSub.arcadeDrive(forwardSpeed, 0);
+        driveSub.arcadeDrive(forwardSpeed, rotationSpeed);
   }
 
   // Called once the command ends or is interrupted.

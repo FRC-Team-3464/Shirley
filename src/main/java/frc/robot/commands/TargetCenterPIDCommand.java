@@ -18,8 +18,8 @@ public class TargetCenterPIDCommand extends CommandBase {
   private final PhotonVisionSubsystem photonSub;
   private final DrivetrainSubsystem driveSub;
 
-  // Constants such as camera and target height stored. Change per robot and goal!
-  final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
+  // Constants such as camera and target height stored. Change per robot and goal
+    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
   final double TARGET_HEIGHT_METERS = Units.feetToMeters(5);
 
   // Angle between horizontal and the camera.
@@ -38,12 +38,9 @@ public class TargetCenterPIDCommand extends CommandBase {
   PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
   private final XboxController controller = OI.xBoxController;
-  
   private final PhotonCamera camera;
-
   private double forwardSpeed;
   private double rotationSpeed;
-  
 
   public TargetCenterPIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -53,12 +50,12 @@ public class TargetCenterPIDCommand extends CommandBase {
     camera = photonSub.getColorCamera();  
     addRequirements(driveSub);
     addRequirements(photonSub);
-    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // Reset controllers. 
     forwardController.setSetpoint(0);
     turnController.setSetpoint(0);
     
@@ -67,26 +64,22 @@ public class TargetCenterPIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    forwardSpeed = controller.getLeftY();
+    forwardSpeed = controller.getLeftY(); // Move the forward speed by the left value of the controller. 
     // Vision-alignment mode
-    // Query the latest result from PhotonVision
     var result = camera.getLatestResult();
 
     if (result.hasTargets()) {
         // Calculate angular turn power
-        // -1.0 required to ensure positive PID controller effort _increases_ yaw
-        rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0);
+        rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0); // Calculate it from current position to 0. 
       } 
     else{
-      rotationSpeed = 0;
+      rotationSpeed = 0; // Don't do anything if there's no targets. 
     }
     
     if(rotationSpeed < .2 && rotationSpeed > -.2) {
       // If the rotation speed is too small - set it to zero.
         rotationSpeed = 0;
     }
-    // Use our forward/turn speeds to control the drivetrain
     driveSub.arcadeDrive(forwardSpeed, rotationSpeed);
   }
 
