@@ -12,75 +12,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PhotonVisionSubsystem extends SubsystemBase {
   /** Creates a new PhotonVisionSubsystem. */
   
-  // Get the camera focused on cones/cubes. 
-  //  We need to update the name.
-  // private final PhotonCamera objectCamera = new PhotonCamera("OV5647");
-  // Camera for the reflective tape and apriltag. 
-  private final PhotonCamera colorCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000");  
-  // private final PhotonCamera feederCamera = new PhotonCamera("feederCamera"); Need to define.
+  private final PhotonCamera limelightCamera = new PhotonCamera("OV5647");
+  private final PhotonCamera aprilCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000"); 
 
+  public PhotonVisionSubsystem() {}
   
-
-  public PhotonVisionSubsystem() {
-    //targetCamera.setPipelineIndex(1);
-    System.out.println("IM ALIVE");
-  }
-
-
-  public void switchIndex(int num){
-    // if(targetCamera.getPipelineIndex() == 1){
-    //   targetCamera.setPipelineIndex(0);
-    // }else{
-      colorCamera.setPipelineIndex(num);
-      System.out.println("Set to one");
-    // }
-  }
-
-  public void trackBest(){
-    
-  }
-
-
-  //public var getResult(){
-    //colorCamera.getLatestResult();
-  //}
-
+  // Return the color camera. 
   public PhotonCamera getColorCamera(){
-    return colorCamera;
+    return aprilCamera;
   }
-//   PhotonTrackedTarget target = result.getBestTarget();
-//   //GENERAL CAMERA TARGET INFO
-//   double yaw = target.getYaw();
-//   double pitch = target.getPitch();
-//   double area = target.getArea();
-//   double skew = target.getSkew();
-//   Transform3d pose = target.getBestCameraToTarget();
-//   // List<TargetCorner> corners = target.getCorners();
 
-//   // Get APRILTAG from target camera
-//   int targetID = target.getFiducialId();
-//   double poseAmbiguity = target.getPoseAmbiguity();
-//   Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-//   Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+  public PhotonCamera getLimelightCamera(){
+    return limelightCamera;
+  }
 
-
-
-//   var resultLime = cameraLime.getLatestResult();
-//   boolean hasTargetsLime = resultLime.hasTargets();
-//   List<PhotonTrackedTarget> targetsLime = result.getTargets();
-//   System.out.println("Lime" + targetsLime);
-//   CommandScheduler.getInstance().run();
-// }
-
-
+  public void switchIndex(PhotonCamera camera, int num){
+    // When this works - we should be able to switch pipelines. 
+    camera.setPipelineIndex(num);
+    System.out.println(camera.getName() + "set ");
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    var result = colorCamera.getLatestResult();
-    boolean hasTargets = result.hasTargets();
-
-    SmartDashboard.putBoolean("Has Targets: ", hasTargets);
-    SmartDashboard.putNumber("ID", colorCamera.getPipelineIndex());
+    // Make sure that color camera is connected. 
+    boolean aprilConnected = aprilCamera.isConnected();
+    var aprilResult = aprilCamera.getLatestResult();
+    boolean aprilHasTargets = aprilResult.hasTargets();
+    SmartDashboard.putBoolean("AprilTag Cam", aprilConnected);
+    SmartDashboard.putBoolean("AprilTag Has Targets: ", aprilHasTargets);
   }
 }
