@@ -5,9 +5,6 @@
 package frc.robot.subsystems;
 
 import java.util.List;
-
-import javax.naming.spi.DirStateFactory.Result;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -21,7 +18,6 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   private final PhotonCamera aprilCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000"); 
 
   public PhotonVisionSubsystem() {}
-  
   // Return the highest target - useful (not) when trying to target the high pole on the grid. 
   public PhotonTrackedTarget getLimelightHighestTarget(){ // Turns out that this is useless 
     var limelightOutput = limelightCamera.getLatestResult();
@@ -51,7 +47,6 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     return limelightCamera;
   }
   
-
   public void switchIndex(PhotonCamera camera, int index){
     // When this works - we should be able to switch pipelines. 
     camera.setPipelineIndex(index);
@@ -60,15 +55,18 @@ public class PhotonVisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     // Make sure that color camera is connected. 
     boolean aprilConnected = aprilCamera.isConnected();
     // Make sure that lime camera is connected. 
     boolean limeConnected = limelightCamera.isConnected();
-
+    var limeResult = limelightCamera.getLatestResult();
     var aprilResult = aprilCamera.getLatestResult();
     boolean aprilHasTargets = aprilResult.hasTargets();
+    boolean limeHasTargets = limeResult.hasTargets();
+
+    SmartDashboard.getBoolean("Limelight", limeConnected);
+    SmartDashboard.getBoolean("Limelight Targets?", limeHasTargets);
     SmartDashboard.putBoolean("AprilTag Cam", aprilConnected);
-    SmartDashboard.putBoolean("AprilTag Has Targets: ", aprilHasTargets);
+    SmartDashboard.putBoolean("AprilTag Targets?", limeConnected);
   }
 }
