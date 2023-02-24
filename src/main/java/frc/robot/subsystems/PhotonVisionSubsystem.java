@@ -22,20 +22,27 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     return aprilCamera;
   }
 
+  // Get the limelight camera. 
   public PhotonCamera getLimelightCamera(){
     return limelightCamera;
   }
 
-  public void switchIndex(PhotonCamera camera, int num){
+  
+
+  public void switchIndex(PhotonCamera camera, int index){
     // When this works - we should be able to switch pipelines. 
-    camera.setPipelineIndex(num);
-    System.out.println(camera.getName() + "set ");
+    camera.setPipelineIndex(index);
+    System.out.println(camera.getName() + "set id to " + index);
   }
 
   @Override
   public void periodic() {
+
     // Make sure that color camera is connected. 
     boolean aprilConnected = aprilCamera.isConnected();
+    // Make sure that lime camera is connected. 
+    boolean limeConnected = limelightCamera.isConnected();
+
     var aprilResult = aprilCamera.getLatestResult();
     boolean aprilHasTargets = aprilResult.hasTargets();
     SmartDashboard.putBoolean("AprilTag Cam", aprilConnected);
