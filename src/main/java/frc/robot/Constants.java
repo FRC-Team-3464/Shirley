@@ -50,7 +50,12 @@ public final class Constants {
       CAMERA_PITCH_RADIANS = Units.degreesToRadians(0),
       // How far from the target we want to be
       GOAL_RANGE_METERS = Units.feetToMeters(3);
+  }
 
+  public static class UltrasonicConstants{
+    public static final int  
+      pingPort = 1,
+      echoPort = 2;
   }
 
 

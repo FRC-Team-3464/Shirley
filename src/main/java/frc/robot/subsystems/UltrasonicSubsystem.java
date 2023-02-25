@@ -9,11 +9,12 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.UltrasonicConstants;
 
 public class UltrasonicSubsystem extends SubsystemBase {
   /** Creates a new UltrasonicSubsystem. */
-  DigitalOutput ping = new DigitalOutput(1);
-  DigitalInput echo = new DigitalInput(2);
+  DigitalOutput ping = new DigitalOutput(UltrasonicConstants.pingPort);
+  DigitalInput echo = new DigitalInput(UltrasonicConstants.echoPort);
   private final Ultrasonic vexUltrasonic = new Ultrasonic(ping, echo);
   
   public UltrasonicSubsystem() {
@@ -24,6 +25,7 @@ public class UltrasonicSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     double distanceInches = vexUltrasonic.getRangeInches();
+    // Write the distnace
     SmartDashboard.putNumber("Ping Distance", distanceInches);
   }
 }
