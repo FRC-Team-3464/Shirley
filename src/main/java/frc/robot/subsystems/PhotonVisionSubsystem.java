@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PhotonVisionSubsystem extends SubsystemBase {
   /** Creates a new PhotonVisionSubsystem. */
   
-  private final PhotonCamera limelightCamera = new PhotonCamera("OV5647");
-  private final PhotonCamera aprilCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000"); 
+  private final static PhotonCamera limelightCamera = new PhotonCamera("OV5647");
+  private final static PhotonCamera aprilCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000"); // Change name. 
 
   public PhotonVisionSubsystem() {}
   // Return the highest target - useful (not) when trying to target the high pole on the grid. 
@@ -67,6 +67,6 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     SmartDashboard.getBoolean("Limelight", limeConnected);
     SmartDashboard.getBoolean("Limelight Targets?", limeHasTargets);
     SmartDashboard.putBoolean("AprilTag Cam", aprilConnected);
-    SmartDashboard.putBoolean("AprilTag Targets?", limeConnected);
+    SmartDashboard.putBoolean("AprilTag Targets?", aprilHasTargets);
   }
 }

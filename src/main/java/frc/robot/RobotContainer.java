@@ -7,6 +7,9 @@ package frc.robot;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.PivoterPIDCommand;
 import frc.robot.commands.PivoterSetCommand;
+import frc.robot.commands.TargetCenterAndRangePIDCommand;
+import frc.robot.commands.TargetCenterPIDCommand;
+import frc.robot.commands.TargetRangePIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
 import frc.robot.commands.GrabberSetCommand;
@@ -64,10 +67,20 @@ public class RobotContainer {
   private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
   private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
   
-
   private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
   private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
-  
+
+  // PID Aim Commands
+  // Auto center and get in range with the limelight or the apriltag camera. 
+  private final TargetCenterAndRangePIDCommand limeCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
+  private final TargetCenterAndRangePIDCommand aprilCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+
+  private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
+  private final TargetCenterPIDCommand aprilCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+
+  private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
+  private final TargetRangePIDCommand aprilRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -98,6 +111,11 @@ public class RobotContainer {
  
       OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
       OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
+      
+      // 
+      
+      OI.buttonRB.whileTrue(limeCenterAndRange);
+      OI.buttonLB.whileTrue(aprilCenterAndRange);
       
       //OI.button2Aux.onTrue();
       // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this

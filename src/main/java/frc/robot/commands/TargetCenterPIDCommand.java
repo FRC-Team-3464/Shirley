@@ -7,7 +7,6 @@ package frc.robot.commands;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
@@ -17,16 +16,6 @@ import frc.robot.subsystems.PhotonVisionSubsystem;
 public class TargetCenterPIDCommand extends CommandBase {
   private final PhotonVisionSubsystem photonSub;
   private final DrivetrainSubsystem driveSub;
-
-  // Constants such as camera and target height stored. Change per robot and goal
-    final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
-  final double TARGET_HEIGHT_METERS = Units.feetToMeters(5);
-
-  // Angle between horizontal and the camera.
-  final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
-
-  // How far from the target we want to be
-  final double GOAL_RANGE_METERS = Units.feetToMeters(3);
 
 // PID constants should be tuned per robot - GET THIS UPDATED
   final double LINEAR_P = 0.1;
@@ -42,12 +31,12 @@ public class TargetCenterPIDCommand extends CommandBase {
   private double forwardSpeed;
   private double rotationSpeed;
 
-  public TargetCenterPIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive) {
+  public TargetCenterPIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive, PhotonCamera inputCamera) {
     // Use addRequirements() here to declare subsystem dependencies.
     photonSub = photon;
     driveSub = drive;
 
-    camera = photonSub.getColorCamera();  
+    camera = inputCamera;  
     addRequirements(driveSub);
     addRequirements(photonSub);
   }
@@ -58,7 +47,7 @@ public class TargetCenterPIDCommand extends CommandBase {
     // Reset controllers. 
     forwardController.setSetpoint(0);
     turnController.setSetpoint(0);
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -66,7 +55,7 @@ public class TargetCenterPIDCommand extends CommandBase {
   public void execute() {
     forwardSpeed = controller.getLeftY(); // Move the forward speed by the left value of the controller. 
     // Vision-alignment mode
-    var result = camera.getLatestResult();
+    var result = camera.getLatestResult(); // Get the most recent result from the camera. 
 
     if (result.hasTargets()) {
         // Calculate angular turn power
