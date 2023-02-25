@@ -18,10 +18,10 @@ public final class Constants {
 
   public static class DrivetrainConstants{
     public static final int 
-      kLeftFrontPort = 4,
-      kLeftBackPort = 5,
-      kRightFrontPort = 6,
-      kRightBackPort = 7,
+      kLeftFrontPort = 1,
+      kLeftBackPort = 2,
+      kRightFrontPort = 3,
+      kRightBackPort = 4,
 
      ktrackWidthInches = 27; // We convert to meters in drivetrain sub; This might be 28 idk
     public static final double kRotationToMeters = ((1/7.31) * (2 * Math.PI * Units.inchesToMeters(3))); // Conversion factor from rotation to meters
