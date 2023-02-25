@@ -30,20 +30,20 @@ public final class Constants {
   }
   
   public static class ExtenderConstants{
+    public static final int kExtenderMotorPort = 5;
     public static final double tolerance = 0.75;
-    public static final int kExtenderMotorPort = 2;
     public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
   }
 
   public static class GrabberConstants {
-    public static final int kGrabberMotorPort = 8;
+    public static final int kGrabberMotorPort = 7;
     public static final double kTickToDegrees = 360;
   }
   
   public static class PivoterConstants{
+    public static final int kPivoterMotorPort = 6;
     public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  *360);
-    public static final int kPivoterLeftMotorPort = 1;
-    public static final int kPivoterRightMotorPort = 3;
+
   }
 
   public static class PhotonConstants{

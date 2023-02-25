@@ -110,24 +110,25 @@ public class RobotContainer {
       OI.triggerAux.toggleOnTrue(openGrabber);
       OI.triggerAux.toggleOnFalse(closeGrabber);
 
-      OI.button5Aux.toggleOnTrue(PIDPivotForward);
-      OI.button5Aux.toggleOnFalse(PIDPivotBack);
- 
-      OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
-      OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
+
+      // OI.button5Aux.toggleOnTrue(PIDPivotForward);
+      // OI.button5Aux.toggleOnFalse(PIDPivotBack);
+
+      OI.button5Aux.toggleOnTrue(PivoterHighPoint);
+      OI.button5Aux.toggleOnFalse(PivoterLowPoint);
+
+      OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
+      OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
+
       
-      // 
+      // OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
+      // OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
+      
+      
 
       OI.buttonX.whileTrue(limeCenterAndRange);
       OI.buttonA.whileTrue(aprilCenterAndRange);
       
-      //OI.button2Aux.onTrue();
-      // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
-      // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
-
-      // OI.button11Aux.toggleOnTrue(simpleSetExtenderExtend); // Uncomment to test
-      // There is no code for simpleSetExtenderRetract
-
     }
 
   /**

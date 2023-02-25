@@ -17,7 +17,7 @@ public class PivoterSubsystem extends SubsystemBase {
   /** Creates a new ArmPivoterSubsystem. */
   // Clockwise spins down that moves the pivoter down
   
-  private final CANSparkMax pivoterMotor = new CANSparkMax(PivoterConstants.kPivoterRightMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
+  private final CANSparkMax pivoterMotor = new CANSparkMax(PivoterConstants.kPivoterMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
 
   private final RelativeEncoder pivoterEncoder = pivoterMotor.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
