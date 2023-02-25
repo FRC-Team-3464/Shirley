@@ -52,8 +52,13 @@ public class RobotContainer {
   
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
+
   private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
   private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
+
+  private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
+  private final PivoterSetCommand PivoterRotateBack = new PivoterSetCommand(pivoterSub, 0);
+  
 
   private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
   private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 

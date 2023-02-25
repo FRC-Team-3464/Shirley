@@ -21,10 +21,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivetrainConstants;
 
-public class DrivetrainSubsystem extends SubsystemBase {
+public class DrivetrainSubsystem extends PIDSubsystem {
   /** Creates a new DriveTrainSubsystem. */
   
   // Defining the drive train motors
@@ -59,22 +60,67 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Store our robot position with Pose - contains x, y and heading.
   private Pose2d pose; 
 
+  private double speed;
+
   public DrivetrainSubsystem() {
+    super(new PIDController(0,0,0));
     // Inverts the left motor, allowing it to go straight
     leftFront.setInverted(true);
-    
+    leftFrontEncoder.setInverted(true);
     // Make sure that the back motors follow the front motors. 
     leftBack.follow(leftFront);
     rightBack.follow(rightFront);
 
+    // Set the encoder conversion factor so getPosition() automatically has it converted to meters. 
+
     leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // Set it our rotation to meters conversion factor so it applies to .getPosition()
     rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
+    leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); // Set it our rotation to meters conversion factor so it applies to .getPosition()
+    rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
+
   }
+
+  @Override
+  public void useOutput(double output, double setpoint){
+      speed = getController().calculate(output, setpoint);
+      if(speed > .35){
+          speed = .35;
+      }
+      else if(speed < -.35){
+          speed = -.35;
+      }
+      
+      
+      arcadeDrive(speed, 0);
+      //System.out.println(speed);
+  }
+
+  public void useOutputRotation(double output, double setpoint){
+    speed = getController().calculate(output, setpoint);
+    if(speed > .35){
+        speed = .35;
+    }
+    else if(speed < -.35){
+        speed = -.35;
+    }
+    
+    
+    arcadeDrive(0, speed);
+    //System.out.println(speed);
+}
+
+  @Override  
+  public double getMeasurement(){
+      //return navXSub.getDegrees();
+      return getController().getPositionError();
+  }
+
+
 
   public void driveTank(double left, double right) {
     // Gets rid of the joystick drift
-    if (Math.abs(left) < 0.07) {
-      left = 0;
+    if (Math.abs(left) < 0.07) { // Update to be the volts needed to overcome friction. 
+      left = 0; 
     }
     if (Math.abs(right) < 0.07) {
       right = 0;
@@ -88,36 +134,42 @@ public class DrivetrainSubsystem extends SubsystemBase {
     drive.arcadeDrive(speed, rotation);
   }
   
-  public void stopDrive() {
-    // Stops the arcadeDrive
-    arcadeDrive(0, 0);
+  public void tankDrive(double leftSpeed, double rightSpeed){
+    // Move the driveSub based on the passed in left and right speeds. 
+    drive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  public void stopDrive() {
+    // Stops the arcadeDrive
+    drive.stopMotor(); 
+    // drive.arcadeDrive(0, 0); // Alternate form of stoping the drive. 
+  }
 
   public double getLeftSpeed() {
-    // Returns the left encoder value
-    return leftFront.get();
+    // Should be velocity in m/s
+    return leftFrontEncoder.getVelocity();
   }
 
   public double getRightSpeed() {
-    // Returns the right encoder value
-    return rightFront.get();
+    // Should be velocity in m/s
+    return rightFrontEncoder.getVelocity();
   }
 
   // Create get left and right positions - should be in meters. 
   public double getLeftPosition(){
+    // Should be in meters. 
     return leftFrontEncoder.getPosition();
   }
 
   public double getRightPosition(){
+    // Should be in meters. 
     return rightFrontEncoder.getPosition();
   }
-  
 
-  public double getForwardSpeed() {
+  /*public double getForwardSpeed() {
     // Returns the average value of both encoders
     return ((getLeftSpeed() + getRightSpeed()) /2 );
-  }
+  }*/
 
   public void resetEncoders() {
     // Sets the position the motors are at to 0
@@ -132,7 +184,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void enableMotors(boolean on) {
     // Sets the motors to either kBrake (no movement) or kCoast (can push to move)
-    // if Mode is on, then kBrake will be on, elsem kCoast will be on
+    // if Mode is on, then kBrake will be on, else if on is false, kCoast will be on
     IdleMode mode;
     if(on) {
       mode = IdleMode.kBrake;
@@ -159,7 +211,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(
       leftFrontEncoder.getVelocity() * DrivetrainConstants.kRotationToMeters,
-      rightFrontEncoder.getVelocity()* DrivetrainConstants.kRotationToMeters);
+      rightFrontEncoder.getVelocity() * DrivetrainConstants.kRotationToMeters);
   }
 
   public DifferentialDriveKinematics getKinematics(){
@@ -172,22 +224,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public PIDController getLeftPIDController(){
+    // Returns the PID Controller for the left side. 
     return leftPIDController;
   }
   
   public PIDController getRightPIDController(){
+    // Returns the PID Controller for the right side. 
     return rightPIDController;
   }
   
-  public void setVolts(double leftVolts, double rightVolts){
-    leftFront.set(leftVolts/12); // Covert from volts to speeds we input to the sparkMax. 
-    rightFront.set(rightVolts/12);
+  public void setDriveMotorVolts(double leftVolts, double rightVolts){
+    leftFront.set(leftVolts / 12); // Covert from volts to speeds we input to the sparkMax. 
+    rightFront.set(rightVolts / 12);
   }
 
   @Override
   public void periodic() {
     // Update our odometry to get the new heading every 20 ms. 
-    pose = odometry.update(getHeading(), getLeftPosition(), getRightPosition());
+    // pose = odometry.update(getHeading(), getLeftPosition(), getRightPosition());
 
     // Get left and right encoder meter values - distance traveled. 
     SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());

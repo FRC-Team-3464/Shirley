@@ -11,23 +11,20 @@ public class PivoterSetCommand extends CommandBase {
   /** Creates a new ArmPivotCommand. */
 
   private final PivoterSubsystem pivoterSub;
-  private double setpoint;
+  private double setpoint;// Is target position. 
 
-
-  public PivoterSetCommand(PivoterSubsystem armPivotSubsystem, double target) {
+  public PivoterSetCommand(PivoterSubsystem PivotSubsystem, double target) {
     // Use addRequirements() here to declare subsystem dependencies.
     // Makes variables with the same values as the others in order to use them later in the Command
     setpoint = target;
-    pivoterSub = armPivotSubsystem;
-    addRequirements(armPivotSubsystem);
-  }
+    pivoterSub = PivotSubsystem;
+    addRequirements(PivotSubsystem);
+    }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    pivoterSub.resetEncoders();
-  }
-
+  public void initialize() {}
+  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

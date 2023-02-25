@@ -17,14 +17,16 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static class DrivetrainConstants{
+    public static final int 
+      kLeftFrontPort = 4,
+      kLeftBackPort = 5,
+      kRightFrontPort = 6,
+      kRightBackPort = 7,
 
-    public static final int kLeftFrontPort = 4;
-    public static final int kLeftBackPort = 5;
-    public static final int kRightFrontPort = 6;
-    public static final int kRightBackPort = 7;
-
-    public static final int ktrackWidthInches = 27; // We convert to meters in drivetrain sub; This might be 28 idk
+     ktrackWidthInches = 27; // We convert to meters in drivetrain sub; This might be 28 idk
     public static final double kRotationToMeters = ((1/7.31) * (2 * Math.PI * Units.inchesToMeters(3))); // Conversion factor from rotation to meters
+  
+  
   }
   
   public static class ExtenderConstants{
@@ -37,7 +39,7 @@ public final class Constants {
   }
   
   public static class PivoterConstants{
-    public static final double kPivoterTickToDegree = ((1/42) * (1/64) *  (12/24)  *360);
+    public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  *360);
     public static final int kPivoterLeftMotorPort = 1;
     public static final int kPivoterRightMotorPort = 3;
   }

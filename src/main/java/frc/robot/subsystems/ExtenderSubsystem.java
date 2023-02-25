@@ -6,46 +6,45 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.SparkMaxAbsoluteEncoder;
-// import com.revrobotics.SparkMaxRelativeEncoder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ExtenderConstants;
 
 public class ExtenderSubsystem extends SubsystemBase {
-  /** Creates a new ElevatorSubsystem. */
 
-  // Camden wrote it... gotta find the branch. 
-  private final CANSparkMax elevatorMotor = new CANSparkMax(ExtenderConstants.kExtenderMotorPort, CANSparkMax.MotorType.kBrushless); // How is this working
-  private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
-  // private final 
+  // Positive is clockwise, and is extended. 
+  private final CANSparkMax extenderMotor = new CANSparkMax(ExtenderConstants.kExtenderMotorPort, CANSparkMax.MotorType.kBrushless); // How is this working
+  
+  // Extender encoder
+  private final RelativeEncoder extenderEncoder = extenderMotor.getEncoder();
 
-    public ExtenderSubsystem() {}
+  public ExtenderSubsystem() {}
 
-    public void translateExtender(double speed){
-      elevatorMotor.set(speed);
-    }
+  public void translateExtender(double speed){
+    extenderMotor.set(speed);
+  }
 
-    public double getElevatorPosition(){
-      return elevatorEncoder.getPosition(); // Return the current elevator encoder position
-    }
+  public double getExtenderPosition(){
+    // Return the current extender encoder position in rotation
+    return extenderEncoder.getPosition(); // Return the current extender encoder position
+  }
 
-    public double getElevatorInchPosition(){
-      return getElevatorPosition() * Constants.ExtenderConstants.kEncoderTickToInch;
-    }
-    public void resetElevatorEncoder(){
-      elevatorEncoder.setPosition(0); // Reset encoder value to 0
-    }
+  public double getExtenderInchPosition(){
+    // Return the current extender encoder position in inches. 
+    return getExtenderPosition() * Constants.ExtenderConstants.kEncoderRotationToInch;
+  }
+
+  public void resetExtenderEncoder(){
+    extenderEncoder.setPosition(0); // Reset encoder value to 0
+  }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Encoder", getElevatorPosition());
-    SmartDashboard.putNumber("Elevator Encoder (IN)", getElevatorInchPosition());
+    SmartDashboard.putNumber("Extender Encoder", getExtenderPosition()); // See how many rotations are there. 
+    SmartDashboard.putNumber("Extender Encoder (in)", getExtenderInchPosition());
     
   }
 }
