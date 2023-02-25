@@ -28,21 +28,37 @@ public final class Constants {
   
   
   }
+  
+  public static class ExtenderConstants{
+    public static final int kExtenderMotorPort = 2;
+    public static final double kEncoderTickToInch = ((1/42) * (Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
+  }
+
+  public static class GrabberConstants {
+    public static final double kTickToDegrees = 360/42;
+  }
+  
   public static class PivoterConstants{
     public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  *360);
     public static final int kPivoterLeftMotorPort = 1;
     public static final int kPivoterRightMotorPort = 3;
-
   }
 
-  public static class ExtenderConstants{
-    public static final int kExtenderMotorPort = 2;
-    // 3 1/2 rotations  = max extention. 
-    public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); // Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
-    public static final double tolerance = 0.75; // How much we'll tolerate from the set commands. 
+  public static class PhotonConstants{
+    public static final double
+      CAMERA_HEIGHT_METERS = Units.inchesToMeters(24),
+      TARGET_HEIGHT_METERS = Units.feetToMeters(5),
+      // Angle between horizontal and the camera.
+      CAMERA_PITCH_RADIANS = Units.degreesToRadians(0),
+      // How far from the target we want to be
+      GOAL_RANGE_METERS = Units.feetToMeters(3);
   }
 
-  public static class GrabberConstants {
-    public static final int kGrabberMotorPort = 8;
-    }
+  public static class UltrasonicConstants{
+    public static final int  
+      pingPort = 1,
+      echoPort = 2;
+  }
+
+
 }

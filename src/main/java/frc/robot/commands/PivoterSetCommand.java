@@ -19,12 +19,12 @@ public class PivoterSetCommand extends CommandBase {
     setpoint = target;
     pivoterSub = PivotSubsystem;
     addRequirements(PivotSubsystem);
-  }
+    }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
-
+  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -42,10 +42,10 @@ public class PivoterSetCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // Makes sure that the position is where you want it to be at
-    if (pivoterSub.getPivoterDegrees() >= setpoint) {//When the extendor reaches the setpoint 
-      return true;
-    } else {
+    if (pivoterSub.getPivoterDegrees() <= setpoint) {
       return false;
+    } else {
+      return true;
     }
   }
 }

@@ -15,6 +15,7 @@ import frc.robot.Constants.GrabberConstants;
 
 public class GrabberSubsystem extends SubsystemBase {
   
+  // Creates a CANSparkMax for the grabber motor
   // Clockwise closes
   private final CANSparkMax grabberMotor = new CANSparkMax(GrabberConstants.kGrabberMotorPort, MotorType.kBrushless);
 
