@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -74,6 +73,10 @@ public class TrajectoryTrackingSubsystem extends SubsystemBase {
     return rightPIDController;
   }
 
+  //  Return our odometry. 
+  public DifferentialDriveOdometry getOdometry(){
+    return odometry;
+  }
 
   @Override
   public void periodic() {
