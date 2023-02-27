@@ -9,6 +9,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,7 +33,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
   
 
-
+  private PIDController forwardController = new PIDController(0, 0, 0); // WE need a turn PID and a forward PID> 
+  private PIDController rotateController = new PIDController(0, 0, 0); // WE need a turn PID and a forward PID> 
 
 
   public DrivetrainSubsystem() {
@@ -77,6 +80,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void stopDrive() {
     // Stops the arcadeDrive
     drive.stopMotor(); 
+  }
+
+
+  // Return the PID Controllers we need in the PID Command. 
+  public PIDController getForwardController(){
+    return forwardController;
+  }
+
+  public PIDController getRotationController(){
+    return rotateController;
   }
 
   /*

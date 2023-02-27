@@ -4,33 +4,28 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.ExtenderConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ExtenderSubsystem;
-
 public class DriveForward extends PIDCommand {
-  
-    //private final DrivetrainSubsystem driveSub;
-    //private final double setpoint;
-  
     public DriveForward(double targetDistance, DrivetrainSubsystem drive) {
         super(
-            drive.getController(),
+            drive.getForwardController(), // Get the PID Controller for driving forward. 
             // Close loop on heading
-            drive::getMeasurement,
+            drive::getLeftPosition, // Get our encoder's left position
             // Set reference to target
             targetDistance,
-            // Pipe output to turn robot
-            output -> drive.arcadeDrive(output, 0),
+            // Pipe output to move robot forward
+            output -> drive.arcadeDrive(MathUtil.clamp(output, -0.75, 0.75), 0), // Clamp output to 75% speed. 
             // Require the drive
             drive);
     }
+
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    getController().reset(); // We want to reset the controller before using it.
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
