@@ -4,21 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,21 +30,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Differential drive, allows arcade drive and tank drive
   private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
   
-  // NavX Gyro
-  private final AHRS gyro = new AHRS(Port.kMXP);
 
-  // Follow along Green Hope Falcon's Trajectory Tracking Tutorial: 
-  // Create drive kinemeatics
-  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.ktrackWidthInches)); // Might be 27
-  // Create drive odometry
-  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading(), leftFrontEncoder.getPosition(), rightFrontEncoder.getPosition());
-  // Get a feedforward 
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.268, 1.89, 0.243); // We need to run frc-characterization in order to do this. 
-  private final PIDController leftPIDController = new PIDController(9.95, 0, 0); // Also need to get values from frc-characterization. 
-  private final PIDController rightPIDController = new PIDController(9.95, 0, 0); // Also need to get values from frc-characterization. 
- 
-  // Store our robot position with Pose - contains x, y and heading.
-  private Pose2d pose; 
+
+
 
   public DrivetrainSubsystem() {
     // Inverts the left motor, allowing it to go straight
@@ -64,11 +42,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightBack.follow(rightFront);
 
     // Set the encoder conversion factor so getPosition() automatically has it converted to meters. 
-    leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // Set it our rotation to meters conversion factor so it applies to .getPosition()
-    rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
-    leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); // Set it our rotation to meters conversion factor so it applies to .getPosition()
-    rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); // I believe that our gear ratio is 7.31:1
-
+    leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
   }
 
   /*
@@ -149,48 +126,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightBack.setIdleMode(mode);
   }
 
-    /*
-   * Localization/Trajectory Tracking Methods. 
-   */
 
-  public Rotation2d getHeading(){
-    return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
+  public RelativeEncoder getLeftFrontRelativeEncoder(){
+    return leftFrontEncoder;
   }
 
-  // Return the pose, which is suppoed odometry that's fed in our newloy updated heading and left/right positions. 
-  public Pose2d getPose(){
-    return pose; // We should be able to get it from periodic()...
-  }
-
-  // Return the drivewheel speeds - which are useful for creating the ramsete controller in robotContainer. 
-  public DifferentialDriveWheelSpeeds getSpeeds(){
-    return new DifferentialDriveWheelSpeeds(
-      leftFrontEncoder.getVelocity() * DrivetrainConstants.kRotationToMeters,
-      rightFrontEncoder.getVelocity() * DrivetrainConstants.kRotationToMeters);
-  }
-
-  public DifferentialDriveKinematics getKinematics(){
-    return kinematics;
-  }
-
-  // Return the feedforward as well as the left and right PID Controllers. 
-  public SimpleMotorFeedforward getFeedforward(){
-    return feedforward;
-  }
-
-  public PIDController getLeftPIDController(){
-    // Returns the PID Controller for the left side. 
-    return leftPIDController;
-  }
-  
-  public PIDController getRightPIDController(){
-    // Returns the PID Controller for the right side. 
-    return rightPIDController;
-  }
-  
-  public void setDriveMotorVolts(double leftVolts, double rightVolts){
-    leftFront.set(leftVolts / 12); // Covert from volts to speeds we input to the sparkMax. 
-    rightFront.set(rightVolts / 12);
+  public RelativeEncoder getRightFrontRelativeEncoder(){
+    return rightFrontEncoder;
   }
 
   @Override
