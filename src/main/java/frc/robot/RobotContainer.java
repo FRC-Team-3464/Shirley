@@ -7,12 +7,15 @@ package frc.robot;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.PivoterPIDCommand;
 import frc.robot.commands.PivoterSetCommand;
+import frc.robot.commands.PivoterSpeed;
 import frc.robot.commands.TargetCenterAndRangePIDCommand;
 import frc.robot.commands.TargetCenterPIDCommand;
 import frc.robot.commands.TargetRangePIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
+import frc.robot.commands.ExtenderSpeed;
 import frc.robot.commands.GrabberSetCommand;
+import frc.robot.commands.GrabberSpeed;
 import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
@@ -31,6 +34,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -84,6 +88,15 @@ public class RobotContainer {
 
   private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
   private final TargetRangePIDCommand aprilRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+ 
+  private final PivoterSpeed pivotSpeedDown = new PivoterSpeed(pivoterSub, .125);
+  private final ExtenderSpeed extenderSpeedIn= new ExtenderSpeed(extenderSub, .25);
+
+  private final PivoterSpeed pivotSpeedUp = new PivoterSpeed(pivoterSub, -.5);
+  private final ExtenderSpeed extenderSpeedOut= new ExtenderSpeed(extenderSub, -.25);
+
+  private final GrabberSpeed grabberSpeedClose = new GrabberSpeed(grabberSub, .25);
+  private final GrabberSpeed grabberSpeedOpen = new GrabberSpeed(grabberSub, -.25);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -128,7 +141,15 @@ public class RobotContainer {
 
       OI.buttonX.whileTrue(limeCenterAndRange);
       OI.buttonA.whileTrue(aprilCenterAndRange);
-      
+
+      OI.buttonRB.whileTrue(extenderSpeedIn);
+      OI.buttonB.whileTrue(pivotSpeedDown);
+
+      OI.buttonLB.whileTrue(extenderSpeedOut);
+      OI.buttonY.whileTrue(pivotSpeedUp);
+
+      OI.button3Aux.whileTrue(grabberSpeedClose);
+      OI.button4Aux.whileTrue(grabberSpeedOpen);
     }
 
   /**
