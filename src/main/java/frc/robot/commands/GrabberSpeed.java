@@ -5,9 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ExtenderSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
-import frc.robot.subsystems.PivoterSubsystem;
 
 public class GrabberSpeed extends CommandBase {
   /** Creates a new ArmPivotCommand. */
@@ -38,7 +36,7 @@ public class GrabberSpeed extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    grabberSub.runMotor(0);
+    grabberSub.stopMotor();
   }
 
   // Returns true when the command should end.

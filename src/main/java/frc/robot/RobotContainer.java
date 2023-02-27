@@ -118,28 +118,27 @@ public class RobotContainer {
       // Run default command as the arcade drive command.
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       
-      // Trigger command execution.
-      OI.triggerAux.toggleOnTrue(openGrabber);
-      OI.triggerAux.toggleOnFalse(closeGrabber);
+      // // Trigger command execution.
+      // OI.triggerAux.toggleOnTrue(openGrabber);
+      // OI.triggerAux.toggleOnFalse(closeGrabber);
 
 
-      // OI.button5Aux.toggleOnTrue(PIDPivotForward);
-      // OI.button5Aux.toggleOnFalse(PIDPivotBack);
+      // // OI.button5Aux.toggleOnTrue(PIDPivotForward);
+      // // OI.button5Aux.toggleOnFalse(PIDPivotBack);
 
-      OI.button5Aux.toggleOnTrue(PivoterHighPoint);
-      OI.button5Aux.toggleOnFalse(PivoterLowPoint);
+      // OI.button5Aux.toggleOnTrue(PivoterHighPoint);
+      // OI.button5Aux.toggleOnFalse(PivoterLowPoint);
 
-      OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
-      OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
+      // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
+      // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
 
       
-      // OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
-      // OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
+      // // OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
+      // // OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
       
-      
-
-      OI.buttonX.whileTrue(limeCenterAndRange);
-      OI.buttonA.whileTrue(aprilCenterAndRange);
+  
+      // OI.buttonX.whileTrue(limeCenterAndRange);
+      // OI.buttonA.whileTrue(aprilCenterAndRange);
 
       OI.buttonRB.whileTrue(extenderSpeedIn);
       OI.buttonB.whileTrue(pivotSpeedDown);
