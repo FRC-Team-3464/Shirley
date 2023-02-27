@@ -65,7 +65,7 @@ public class DrivetrainSubsystem extends PIDSubsystem {
     super(new PIDController(0,0,0));
     // Inverts the left motor, allowing it to go straight
     leftFront.setInverted(true);
-    leftFrontEncoder.setInverted(true);
+    //leftFrontEncoder.setInverted(true);
     // Make sure that the back motors follow the front motors. 
     leftBack.follow(leftFront);
     rightBack.follow(rightFront);
