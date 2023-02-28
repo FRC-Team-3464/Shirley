@@ -30,9 +30,19 @@ public final class Constants {
   }
   
   public static class ExtenderConstants{
+    // Ports
+    public static final int maxLimitSwitchPort = 1;
+    public static final int minLimitSwitchPort = 2;
     public static final int kExtenderMotorPort = 5;
-    public static final double tolerance = 0.75;
+
+    // Encoder constants
+    public static final double maxExtensionInch = 22; 
+    // Rotation to inch conversion factor
     public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
+
+
+    // PID stuff
+    public static final double tolerance = 0.75;
   }
 
   public static class GrabberConstants {
