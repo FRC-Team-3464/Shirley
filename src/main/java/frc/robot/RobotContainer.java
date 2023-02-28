@@ -31,6 +31,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.counter.ExternalDirectionCounter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,6 +42,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
+ * 
+ * 
  */
 public class RobotContainer {
   // The robot's subsystems are defined here
@@ -55,12 +58,57 @@ public class RobotContainer {
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
 
   // Pivoter Manual Speed Commands
-  private final Command pivotSpeedDown = pivoterSub.pivot(0.125);
-  private final Command pivotSpeedUp = pivoterSub.pivot(-0.5); // WHY is it inversed
+  private final Command pivotSpeedDown = pivoterSub.pivotManual(0.125);
+  private final Command pivotSpeedUp = pivoterSub.pivotManual(-0.5); // WHY is it inversed
+
+  private final FunctionalCommand pivotToMin = new FunctionalCommand(
+    // what to do in initialize - basically nothing for us
+    null, 
+    // What to do during the command - run the motor unrestrained. 
+    () -> pivoterSub.pivot(-0.3),
+    // On finished command
+    (interrupted) -> pivoterSub.stopMotor(),
+    // isFinished() - get switch value.  
+    pivoterSub::getSwitch,
+    // Give us the requirements. 
+    pivoterSub
+    );
+
+
 
   // Extender Manual Speed Commands
-  private final Command extenderSpeedOut = extenderSub.translateExtender(0.3);
-  private final Command extenderSpeedIn = extenderSub.translateExtender(-0.3);
+  private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
+  private final Command extenderSpeedIn = extenderSub.translateManual(-0.3);
+
+  // Switch based translations
+  // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
+ 
+  private final FunctionalCommand extendToMin = new FunctionalCommand(
+    // what to do in initialize - basically nothing for us
+    null, 
+    // What to do during the command - run the motor unrestrained. 
+    () -> extenderSub.translateExtender(-0.3),
+    // On finished command
+    (interrupted) -> extenderSub.stopMotor(),
+    // isFinished() - get switch value.  
+    extenderSub::getMinSwitch,
+    // Give us the requirements. 
+    extenderSub
+    );
+
+    
+  private final FunctionalCommand extendToMax = new FunctionalCommand(
+    // what to do in initialize - basically nothing for us
+    null, 
+    // What to do during the command - run the motor unrestrained. 
+    () -> extenderSub.translateManual(0.3),
+    // On finished command
+    (interrupted) -> extenderSub.stopMotor(),
+    // isFinished() - get switch value.  
+    extenderSub::getMaxSwitch,
+    // Give us the requirements. 
+    extenderSub
+    );
 
 
   // Grabber Manual Speed Commands
@@ -130,9 +178,18 @@ public class RobotContainer {
 
       // Grabber Commands
       OI.triggerAux.whileTrue(grabberSpeedClose);
-      OI.button2Aux.toggleOnFalse(grabberSpeedOpen); // That will be the default. 
+      OI.button2Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
 
-      // OI.button4Aux.whileTrue(grabberSpeedOpen);
+      // Switich based commands
+      OI.button3Aux.onTrue(extendToMin);
+      OI.button4Aux.onTrue(extendToMax);
+
+      OI.button5Aux.onTrue(pivotToMin);
+      // OI.button6Aux.onTrue(extendToMax);
+
+      
+
+      
 
       // Trigger command execution.
       // OI.triggerAux.toggleOnTrue(openGrabber);
