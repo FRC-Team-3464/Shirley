@@ -31,12 +31,12 @@ public final class Constants {
   
   public static class ExtenderConstants{
     // Ports
-    public static final int maxLimitSwitchPort = 1;
-    public static final int minLimitSwitchPort = 2;
+    public static final int kExtenderMaxSwitchPort = 1;
+    public static final int kExtenderMinSwitchPort = 2;
     public static final int kExtenderMotorPort = 5;
 
     // Encoder constants
-    public static final double maxExtensionInch = 22; 
+    public static final double kMaxExtensionInch = 22; 
     // Rotation to inch conversion factor
     public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
 
@@ -46,17 +46,25 @@ public final class Constants {
   }
 
   public static class GrabberConstants {
+    // Ports
     public static final int kGrabberMotorPort = 7;
+
+    // Encoder Conversion Factor
     public static final double kTickToDegrees = 360;
   }
   
   public static class PivoterConstants{
+    // Ports
     public static final int kPivoterMotorPort = 6;
-    public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  *360);
+    public static final int kPivotMinSwitchPort = 3;
+
+    // Encoder Conversion Factor
+    public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  * 360);
 
   }
 
   public static class PhotonConstants{
+    // Target photon range constants. 
     public static final double
       CAMERA_HEIGHT_METERS = Units.inchesToMeters(24),
       TARGET_HEIGHT_METERS = Units.feetToMeters(5),

@@ -17,8 +17,8 @@ public class ExtenderSubsystem extends SubsystemBase {
 
   // Positive is clockwise, and is extended. 
   private final CANSparkMax extenderMotor = new CANSparkMax(ExtenderConstants.kExtenderMotorPort, CANSparkMax.MotorType.kBrushless); // How is this working
-  private final DigitalInput maxLimitSwitch = new DigitalInput(ExtenderConstants.maxLimitSwitchPort);
-  private final DigitalInput minLimitSwitch = new DigitalInput(ExtenderConstants.minLimitSwitchPort);
+  private final DigitalInput maxLimitSwitch = new DigitalInput(ExtenderConstants.kExtenderMaxSwitchPort);
+  private final DigitalInput minLimitSwitch = new DigitalInput(ExtenderConstants.kExtenderMinSwitchPort);
 
   // Extender encoder
   private final RelativeEncoder extenderEncoder = extenderMotor.getEncoder();
@@ -34,7 +34,7 @@ public class ExtenderSubsystem extends SubsystemBase {
   public void translateExtender(double speed){
     // Logic to control when we hit the limit switch or not. 
     if(maxLimitSwitch.get()){ // When the max limit switch is triggered. 
-      extenderEncoder.setPosition(ExtenderConstants.maxExtensionInch); // It should be 22 inches, but will need to be changed. 
+      extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
       extenderMotor.stopMotor();
     }else if(minLimitSwitch.get()){ // when the min limit switch is triggered. 
       extenderEncoder.setPosition(0);
