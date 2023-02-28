@@ -61,20 +61,19 @@ public class RobotContainer {
   private final Command pivotSpeedDown = pivoterSub.pivotManual(0.125);
   private final Command pivotSpeedUp = pivoterSub.pivotManual(-0.5); // WHY is it inversed
 
+  // Pivot till we hit the mimium. 
   private final FunctionalCommand pivotToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
     null, 
     // What to do during the command - run the motor unrestrained. 
-    () -> pivoterSub.pivot(-0.3),
+    () -> pivoterSub.pivot(0.125), // Why is the number inversed?
     // On finished command
     (interrupted) -> pivoterSub.stopMotor(),
     // isFinished() - get switch value.  
     pivoterSub::getSwitch,
     // Give us the requirements. 
     pivoterSub
-    );
-
-
+  );
 
   // Extender Manual Speed Commands
   private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
@@ -83,18 +82,19 @@ public class RobotContainer {
   // Switch based translations
   // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
  
-  private final FunctionalCommand extendToMin = new FunctionalCommand(
+  // retract till we hit the miminimum. 
+  private final FunctionalCommand retractToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
     null, 
-    // What to do during the command - run the motor unrestrained. 
+    // What to do during the command - run the motor unrestrained and retract the extender. . 
     () -> extenderSub.translateExtender(-0.3),
     // On finished command
-    (interrupted) -> extenderSub.stopMotor(),
+    (interrupted) -> extenderSub.stopMotor(), // When end, stop extender. 
     // isFinished() - get switch value.  
-    extenderSub::getMinSwitch,
+    extenderSub::getMinSwitch, // The minimum switch determines when we've ended. 
     // Give us the requirements. 
     extenderSub
-    );
+  );
 
     
   private final FunctionalCommand extendToMax = new FunctionalCommand(
@@ -108,9 +108,36 @@ public class RobotContainer {
     extenderSub::getMaxSwitch,
     // Give us the requirements. 
     extenderSub
-    );
+  );
 
+  private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
+    // what to do in initialize - basically nothing for us
+    null, 
+    // What to do during the command - run the motor unrestrained. 
+    () -> grabberSub.runMotor(-0.125),
+    // On finished command
+    (interrupted) -> grabberSub.stopMotor(),
+    // isFinished() - get switch value.  
+    () -> (grabberSub.getGrabberDegrees() <= 0),
+    // Give us the requirements. 
+    grabberSub
+  );
 
+   
+  private final FunctionalCommand grabberSetClosed = new FunctionalCommand(
+    // what to do in initialize - basically nothing for us
+    null, 
+    // What to do during the command - run the motor unrestrained. 
+    () -> grabberSub.runMotor(0.125),
+    // On finished command
+    (interrupted) -> grabberSub.stopMotor(),
+    // isFinished() - get switch value.  
+    () -> (grabberSub.getGrabberDegrees() >= 120),
+    // Give us the requirements. 
+    grabberSub
+  );
+
+ 
   // Grabber Manual Speed Commands
   private final Command grabberSpeedClose = grabberSub.runMotor(0.125);
   private final Command grabberSpeedOpen = grabberSub.runMotor(-0.125);
@@ -177,15 +204,22 @@ public class RobotContainer {
       OI.buttonY.whileTrue(pivotSpeedUp);
 
       // Grabber Commands
-      OI.triggerAux.whileTrue(grabberSpeedClose);
-      OI.button2Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
+      OI.triggerAux.onTrue(grabberSetClosed);
+      OI.button2Aux.onTrue(grabberSetOpen);
+      
 
       // Switich based commands
-      OI.button3Aux.onTrue(extendToMin);
+      OI.button3Aux.onTrue(retractToMin);
       OI.button4Aux.onTrue(extendToMax);
 
       OI.button5Aux.onTrue(pivotToMin);
+      
+      // Open Grabber Set command. 
       // OI.button6Aux.onTrue(extendToMax);
+      OI.button6Aux.whileTrue(grabberSpeedClose);
+      OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
+
+      
 
       
 
