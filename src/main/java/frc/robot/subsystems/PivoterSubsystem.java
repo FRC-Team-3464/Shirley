@@ -23,12 +23,24 @@ public class PivoterSubsystem extends SubsystemBase {
   
   public PivoterSubsystem() {
     pivoterMotor.setInverted(true);
-    pivoterEncoder.setInverted(true);
   }
+
+  /*
+  * Pivoter Motor methods. 
+  */
 
   public void pivot(double speed) { 
     pivoterMotor.set(speed);
   }
+
+
+  public void stopMotor(){
+    pivoterMotor.stopMotor();
+  }
+
+  /*
+   * Pivoter Encoder methods. 
+   */
 
   public double getPivoterSpeed() {
     return pivoterMotor.get();

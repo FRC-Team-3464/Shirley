@@ -8,8 +8,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-//import org.apache.commons.collections4.sequence.InsertCommand;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -35,10 +33,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     OI oi = new OI();
     m_robotContainer = new RobotContainer();  
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000");
-    
     //defines variables by recieving values from limelight network table
-    pipelineIndex = table.getEntry("pipelineIndexState"); 
   }
 
   /**
@@ -53,18 +48,7 @@ public class Robot extends TimedRobot {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    CommandScheduler.getInstance().run();
-    pipeIndex = pipelineIndex.getDouble(7.0D);
-    System.out.println(pipeIndex);
-    //pipeIndex = pipelineIndex.getDouble(-1.0D);
-    if(OI.button10Aux.getAsBoolean() == true){
-      pipelineIndex.setDouble(1.0D);
-    }
-    if(OI.button11Aux.getAsBoolean()==true){
-      pipelineIndex.setDouble(0.0D);
-    }
-    NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000").getEntry("pipelineIndexState").setDouble(0.0D); 
- 
+    CommandScheduler.getInstance().run(); 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

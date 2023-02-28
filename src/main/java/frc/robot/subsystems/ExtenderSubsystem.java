@@ -21,9 +21,22 @@ public class ExtenderSubsystem extends SubsystemBase {
 
   public ExtenderSubsystem() {}
 
+  /*
+   * Motor methods.
+   */
+
+
   public void translateExtender(double speed){
     extenderMotor.set(speed);
   }
+
+  public void stopMotor(){
+    extenderMotor.stopMotor(); // Stop the motor.     
+  }
+
+  /*
+   * Encoder methods.
+   */
 
   public double getExtenderPosition(){
     // Return the current extender encoder position in rotation
@@ -38,6 +51,7 @@ public class ExtenderSubsystem extends SubsystemBase {
   public void resetExtenderEncoder(){
     extenderEncoder.setPosition(0); // Reset encoder value to 0
   }
+
 
 
   @Override
