@@ -44,6 +44,16 @@ public class ExtenderSubsystem extends SubsystemBase {
     }
   }
 
+  // Get the pivoter to the maximum position. 
+  public void goToMax(){
+    translateExtender(0.15); // Test speed - it should stop at the max
+  }
+
+  // Get the pivoter to the minimum position. 
+  public void goToMin(){
+    translateExtender(-0.15); // Test speed - it should stop at the max
+  }
+
 
   public void stopMotor(){
     extenderMotor.stopMotor(); // Stop the motor.     
