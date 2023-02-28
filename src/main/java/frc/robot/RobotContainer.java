@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -109,6 +110,13 @@ public class RobotContainer {
     extenderSub
   );
 
+
+ 
+  // Grabber Manual Speed Commands
+  private final Command grabberSpeedClose = grabberSub.runMotor(0.125);
+  private final Command grabberSpeedOpen = grabberSub.runMotor(-0.125);
+  
+
   private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
     null, 
@@ -136,11 +144,9 @@ public class RobotContainer {
     grabberSub
   );
 
- 
-  // Grabber Manual Speed Commands
-  private final Command grabberSpeedClose = grabberSub.runMotor(0.125);
-  private final Command grabberSpeedOpen = grabberSub.runMotor(-0.125);
-  
+
+  private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
+
   
   // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
   // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
@@ -218,11 +224,9 @@ public class RobotContainer {
       OI.button6Aux.whileTrue(grabberSpeedClose);
       OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
 
-      
+      // Retract pivoter to min, rotate extender to min. 
+      // OI.button8Aux.onTrue(goToStorePosition); THIS IS A VERY DANGEROUS LINE
 
-      
-
-      
 
       // Trigger command execution.
       // OI.triggerAux.toggleOnTrue(openGrabber);
