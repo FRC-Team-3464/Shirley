@@ -28,16 +28,22 @@ public class PivoterSubsystem extends SubsystemBase {
   }
 
   //   Return a command 
-  public CommandBase pivot(double speed) {
+  public CommandBase pivotManual(double speed) {
     // Manual pivot command
     return runOnce(
         () -> {
-          if(minLimitSwitch.get()){ // if the min limit switch is triggered. 
+          if(minLimitSwitch.get() && (Math.signum(speed) < 0)){ // if the min limit switch is triggered and we're trying to go down. 
             pivoterMotor.stopMotor();
+            pivoterEncoder.setPosition(0);
           }else{
             pivoterMotor.set(speed); // Else, run the speed we want to set. 
           }
         });
+  }
+
+//  Run unrestrained - for commands. 
+  public void pivot(double speed){
+    pivoterMotor.set(speed);
   }
 
   /*
@@ -73,6 +79,15 @@ public class PivoterSubsystem extends SubsystemBase {
     // Set the encoder back to normal
     pivoterEncoder.setPosition(0);
   }
+
+  /*
+   * Limit switch commands. 
+   */
+
+   public boolean getSwitch(){
+    return minLimitSwitch.get();
+   }
+
 
   @Override
   public void periodic() {

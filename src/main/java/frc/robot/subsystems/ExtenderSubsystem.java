@@ -35,40 +35,45 @@ public class ExtenderSubsystem extends SubsystemBase {
    */
 
    
-  public CommandBase translateExtender(double speed) {
-    // Manual pivot command
+  public CommandBase translateManual(double speed) {
+    // Manual pivot command with safety from limit switches
     return runOnce(
         () -> {
-          if(maxLimitSwitch.get()){ // When the max limit switch is triggered. 
+          if(maxLimitSwitch.get() && (Math.signum(speed) >= 0)){ // When the max limit switch is triggered and we're trying to extend more, 
             extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
             extenderMotor.stopMotor();
-          }else if(minLimitSwitch.get()){ // when the min limit switch is triggered. 
+          }else if(minLimitSwitch.get() && (Math.signum(speed) < 0)){ // when the min limit switch is triggered and we're trying to retract more,
             extenderEncoder.setPosition(0); // Reset limit switch
             extenderMotor.stopMotor();
-          }else{ // if neither of the switches are hit. 
+          }else{ // if neither of the switches are hit or one's yet but we're trying to go in the opposite direciton. 
             extenderMotor.set(speed);
           }
         });
   }
 
-
-  // Get the pivoter to the maximum position. 
-  public void goToMax(){
-    translateExtender(0.15); // Test speed - it should stop at the max
+  // Run motor continuously without any interference from limitswitch
+  public void translateExtender(double speed){
+    extenderMotor.set(speed);
   }
 
-  // Get the pivoter to the minimum position. 
-  public void goToMin(){
-    translateExtender(-0.15); // Test speed - it should stop at the max
-  }
 
-  public void manualSpeedOut(){
-    translateExtender(0.3);
-  }
+  // // Get the pivoter to the maximum position. 
+  // public void goToMax(){
+  //   translateExtender(0.15); // Test speed - it should stop at the max
+  // }
 
-  public void manualSpeedIn(){
-    translateExtender(-0.3);
-  }
+  // // Get the pivoter to the minimum position. 
+  // public void goToMin(){
+  //   translateExtender(-0.15); // Test speed - it should stop at the max
+  // }
+
+  // public void manualSpeedOut(){
+  //   translateExtender(0.3);
+  // }
+
+  // public void manualSpeedIn(){
+  //   translateExtender(-0.3);
+  // }
 
   public void stopMotor(){
     extenderMotor.stopMotor(); // Stop the motor.     
@@ -93,6 +98,19 @@ public class ExtenderSubsystem extends SubsystemBase {
   }
 
 
+  
+  /*
+   * Limit switch Methods 
+   */
+
+   public boolean getMaxSwitch(){
+    return maxLimitSwitch.get();
+   }
+
+
+   public boolean getMinSwitch(){
+    return minLimitSwitch.get();
+   }
 
   @Override
   public void periodic() {
