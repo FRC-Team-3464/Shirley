@@ -45,7 +45,7 @@ public class ExtenderSubsystem extends SubsystemBase {
           }else if(minLimitSwitch.get() && (Math.signum(speed) < 0)){ // when the min limit switch is triggered and we're trying to retract more,
             extenderEncoder.setPosition(0); // Reset limit switch
             extenderMotor.stopMotor();
-          }else{ // if neither of the switches are hit or one's yet but we're trying to go in the opposite direciton. 
+          }else{ // if neither of the switches are hit, or if one of them is hit  but we're trying to go in the opposite direciton. 
             extenderMotor.set(speed);
           }
         });
@@ -98,7 +98,6 @@ public class ExtenderSubsystem extends SubsystemBase {
   }
 
 
-  
   /*
    * Limit switch Methods 
    */

@@ -57,24 +57,31 @@ public class RobotContainer {
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
 
-  // Pivoter Manual Speed Commands
-  private final Command pivotSpeedDown = pivoterSub.pivotManual(0.125);
-  private final Command pivotSpeedUp = pivoterSub.pivotManual(-0.5); // WHY is it inversed
+  /*
+   * Pivoter Commands
+   */
 
-  // Pivot till we hit the mimium. 
+  // Pivoter Manual Speed Commands
+  private final Command pivotSpeedDown = pivoterSub.pivotManual(-0.125);
+  private final Command pivotSpeedUp = pivoterSub.pivotManual(0.25); // WHY is it inversed
+
+  // Pivot till we hit the minimum limit switch. 
   private final FunctionalCommand pivotToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
     null, 
     // What to do during the command - run the motor unrestrained. 
-    () -> pivoterSub.pivot(0.125), // Why is the number inversed?
-    // On finished command
+    () -> pivoterSub.pivot(0.125), // Why is the motor inversed? It should be negative
+    // When we finish the command. 
     (interrupted) -> pivoterSub.stopMotor(),
-    // isFinished() - get switch value.  
+    // isFinished() - get switch value; when we hit the switch  
     pivoterSub::getSwitch,
     // Give us the requirements. 
     pivoterSub
   );
 
+  /* 
+  * Extender Commands
+  */
   // Extender Manual Speed Commands
   private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
   private final Command extenderSpeedIn = extenderSub.translateManual(-0.3);
@@ -96,7 +103,7 @@ public class RobotContainer {
     extenderSub
   );
 
-    
+  // Extend till we hit the maximum. 
   private final FunctionalCommand extendToMax = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
     null, 
@@ -111,7 +118,9 @@ public class RobotContainer {
   );
 
 
- 
+  /*
+   * Grabber commands. 
+   */
   // Grabber Manual Speed Commands
   private final Command grabberSpeedClose = grabberSub.runMotor(0.125);
   private final Command grabberSpeedOpen = grabberSub.runMotor(-0.125);
@@ -121,7 +130,7 @@ public class RobotContainer {
     // what to do in initialize - basically nothing for us
     null, 
     // What to do during the command - run the motor unrestrained. 
-    () -> grabberSub.runMotor(-0.125),
+    () -> grabberSub.runMotor(-0.125), // Counterclockwise closes. 
     // On finished command
     (interrupted) -> grabberSub.stopMotor(),
     // isFinished() - get switch value.  
@@ -135,7 +144,7 @@ public class RobotContainer {
     // what to do in initialize - basically nothing for us
     null, 
     // What to do during the command - run the motor unrestrained. 
-    () -> grabberSub.runMotor(0.125),
+    () -> grabberSub.runMotor(0.125), // CLockwise closes
     // On finished command
     (interrupted) -> grabberSub.stopMotor(),
     // isFinished() - get switch value.  
@@ -144,7 +153,7 @@ public class RobotContainer {
     grabberSub
   );
 
-
+  // Retract extender to min, then pivot -> represents going to the stored position. 
   private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
 
   
@@ -226,6 +235,8 @@ public class RobotContainer {
 
       // Retract pivoter to min, rotate extender to min. 
       // OI.button8Aux.onTrue(goToStorePosition); THIS IS A VERY DANGEROUS LINE
+
+
 
 
       // Trigger command execution.
