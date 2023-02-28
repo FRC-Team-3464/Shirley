@@ -12,7 +12,6 @@ import frc.robot.commands.TargetCenterPIDCommand;
 import frc.robot.commands.TargetRangePIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
-import frc.robot.commands.GrabberSetCommand;
 import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
