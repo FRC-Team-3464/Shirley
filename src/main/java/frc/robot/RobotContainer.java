@@ -140,11 +140,13 @@ public class RobotContainer {
       // OI.buttonX.whileTrue(limeCenterAndRange);
       // OI.buttonA.whileTrue(aprilCenterAndRange);
 
-      OI.buttonRB.whileTrue(extenderSpeedIn);
-      OI.buttonB.whileTrue(pivotSpeedDown);
 
+      OI.buttonRB.whileTrue(extenderSpeedIn);
       OI.buttonLB.whileTrue(extenderSpeedOut);
+
+      OI.buttonB.whileTrue(pivotSpeedDown);
       OI.buttonY.whileTrue(pivotSpeedUp);
+
 
       OI.button3Aux.whileTrue(grabberSpeedClose);
       OI.button4Aux.whileTrue(grabberSpeedOpen);
