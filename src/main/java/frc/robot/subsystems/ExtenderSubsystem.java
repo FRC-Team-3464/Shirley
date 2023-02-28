@@ -30,6 +30,7 @@ public class ExtenderSubsystem extends SubsystemBase {
     extenderMotor.set(speed);
   }
 
+
   public void stopMotor(){
     extenderMotor.stopMotor(); // Stop the motor.     
   }
