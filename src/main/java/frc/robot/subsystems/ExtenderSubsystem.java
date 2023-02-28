@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,19 +18,31 @@ public class ExtenderSubsystem extends SubsystemBase {
 
   // Positive is clockwise, and is extended. 
   private final CANSparkMax extenderMotor = new CANSparkMax(ExtenderConstants.kExtenderMotorPort, CANSparkMax.MotorType.kBrushless); // How is this working
-  
+  private final DigitalInput maxLimitSwitch = new DigitalInput(ExtenderConstants.maxLimitSwitchPort);
+  private final DigitalInput minLimitSwitch = new DigitalInput(ExtenderConstants.minLimitSwitchPort);
+
   // Extender encoder
   private final RelativeEncoder extenderEncoder = extenderMotor.getEncoder();
 
-  public ExtenderSubsystem() {}
+  public ExtenderSubsystem() {
+    extenderEncoder.setPositionConversionFactor(ExtenderConstants.kEncoderRotationToInch); // Set the conversion factor so setPosition() returns the distance in inches. 
+  }
 
   /*
    * Motor methods.
    */
 
-
   public void translateExtender(double speed){
-    extenderMotor.set(speed);
+    // Logic to control when we hit the limit switch or not. 
+    if(maxLimitSwitch.get()){ // When the max limit switch is triggered. 
+      extenderEncoder.setPosition(ExtenderConstants.maxExtensionInch); // It should be 22 inches, but will need to be changed. 
+      extenderMotor.stopMotor();
+    }else if(minLimitSwitch.get()){ // when the min limit switch is triggered. 
+      extenderEncoder.setPosition(0);
+      extenderMotor.stopMotor();
+    }else{ // if neither of the switches are hit. 
+      extenderMotor.set(speed);
+    }
   }
 
 
