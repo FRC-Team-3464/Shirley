@@ -7,15 +7,12 @@ package frc.robot;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.PivoterPIDCommand;
 import frc.robot.commands.PivoterSetCommand;
-import frc.robot.commands.PivoterSpeed;
 import frc.robot.commands.TargetCenterAndRangePIDCommand;
 import frc.robot.commands.TargetCenterPIDCommand;
 import frc.robot.commands.TargetRangePIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderSetPositionCommand;
-import frc.robot.commands.ExtenderSpeed;
 import frc.robot.commands.GrabberSetCommand;
-import frc.robot.commands.GrabberSpeed;
 import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
@@ -31,6 +28,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.counter.ExternalDirectionCounter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -56,46 +54,52 @@ public class RobotContainer {
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
 
-  private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
-  private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
+  // Pivoter Manual Speed Commands
+  private final Command pivotSpeedDown = pivoterSub.pivot(0.125);
+  private final Command pivotSpeedUp = pivoterSub.pivot(-0.5); // WHY is it inversed
 
-  private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
-  private final PivoterSetCommand PivoterRotateBack = new PivoterSetCommand(pivoterSub, 0);
+  // Extender Manual Speed Commands
+  private final Command extenderSpeedOut = extenderSub.translateExtender(0.3);
+  private final Command extenderSpeedIn = extenderSub.translateExtender(-0.3);
+
+
+  // Grabber Manual Speed Commands
+  private final Command grabberSpeedClose = grabberSub.runMotor(0.125);
+  private final Command grabberSpeedOpen = grabberSub.runMotor(-0.125);
+  
+  
+  // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
+  // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
+
+  // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
+  // private final PivoterSetCommand PivoterRotateBack = new PivoterSetCommand(pivoterSub, 0);
   
 
-  private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
-  private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
+  // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
+  // private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
  
-  private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
-  private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
+  // private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
+  // private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 
   
-  // Alternate forms - use in test
-  private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
-  private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
+  // // Alternate forms - use in test
+  // private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
+  // private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
   
-  private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
-  private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
+  // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
+  // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
 
-  // PID Aim Commands
-  // Auto center and get in range with the limelight or the apriltag camera. 
-  private final TargetCenterAndRangePIDCommand limeCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  private final TargetCenterAndRangePIDCommand aprilCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+  // // PID Aim Commands
+  // // Auto center and get in range with the limelight or the apriltag camera. 
+  // private final TargetCenterAndRangePIDCommand limeCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
+  // private final TargetCenterAndRangePIDCommand aprilCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
 
-  private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  private final TargetCenterPIDCommand aprilCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+  // private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
+  // private final TargetCenterPIDCommand aprilCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getColorCamera());
 
-  private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  private final TargetRangePIDCommand aprilRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
+  // private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
+  // private final TargetRangePIDCommand aprilRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
  
-  private final PivoterSpeed pivotSpeedDown = new PivoterSpeed(pivoterSub, .125);
-  private final ExtenderSpeed extenderSpeedIn= new ExtenderSpeed(extenderSub, .25);
-
-  private final PivoterSpeed pivotSpeedUp = new PivoterSpeed(pivoterSub, -.5);
-  private final ExtenderSpeed extenderSpeedOut= new ExtenderSpeed(extenderSub, -.25);
-
-  private final GrabberSpeed grabberSpeedClose = new GrabberSpeed(grabberSub, .25);
-  private final GrabberSpeed grabberSpeedOpen = new GrabberSpeed(grabberSub, -.25);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -113,12 +117,24 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true` hmmmm...
-      
       // Run default command as the arcade drive command.
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       
-      // // Trigger command execution.
+      // Extender Executables
+      OI.buttonRB.whileTrue(extenderSpeedIn);
+      OI.buttonLB.whileTrue(extenderSpeedOut);
+
+      // Pivoter Commands
+      OI.buttonB.whileTrue(pivotSpeedDown);
+      OI.buttonY.whileTrue(pivotSpeedUp);
+
+      // Grabber Commands
+      OI.triggerAux.whileTrue(grabberSpeedClose);
+      OI.button2Aux.toggleOnFalse(grabberSpeedOpen); // That will be the default. 
+
+      // OI.button4Aux.whileTrue(grabberSpeedOpen);
+
+      // Trigger command execution.
       // OI.triggerAux.toggleOnTrue(openGrabber);
       // OI.triggerAux.toggleOnFalse(closeGrabber);
 
@@ -141,15 +157,6 @@ public class RobotContainer {
       // OI.buttonA.whileTrue(aprilCenterAndRange);
 
 
-      OI.buttonRB.whileTrue(extenderSpeedIn);
-      OI.buttonLB.whileTrue(extenderSpeedOut);
-
-      OI.buttonB.whileTrue(pivotSpeedDown);
-      OI.buttonY.whileTrue(pivotSpeedUp);
-
-
-      OI.button3Aux.whileTrue(grabberSpeedClose);
-      OI.button4Aux.whileTrue(grabberSpeedOpen);
     }
 
   /**

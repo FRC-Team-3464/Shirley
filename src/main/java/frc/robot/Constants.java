@@ -35,6 +35,9 @@ public final class Constants {
     public static final int kExtenderMinSwitchPort = 2;
     public static final int kExtenderMotorPort = 5;
 
+    // Motor Constants
+
+
     // Encoder constants
     public static final double kMaxExtensionInch = 22; 
     // Rotation to inch conversion factor

@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PivoterConstants;
 
@@ -26,22 +27,25 @@ public class PivoterSubsystem extends SubsystemBase {
     pivoterMotor.setInverted(true);
   }
 
+  //   Return a command 
+  public CommandBase pivot(double speed) {
+    // Manual pivot command
+    return runOnce(
+        () -> {
+          if(minLimitSwitch.get()){ // if the min limit switch is triggered. 
+            pivoterMotor.stopMotor();
+          }else{
+            pivoterMotor.set(speed); // Else, run the speed we want to set. 
+          }
+        });
+  }
+
   /*
   * Pivoter Motor methods. 
   */
-
-  public void pivot(double speed) { 
-    if(minLimitSwitch.get()){ // if the min limit switch is triggered. 
-      pivoterMotor.stopMotor();
-    }else{
-      pivoterMotor.set(speed); // Else, run the speed we want to set. 
-    }
-  }
-
   public void pivotToMin(){
     pivot(-0.25); // Run pivot continously till we hit the switch, which it should do. 
   }
-
 
   public void stopMotor(){
     pivoterMotor.stopMotor(); // Stop motor. 

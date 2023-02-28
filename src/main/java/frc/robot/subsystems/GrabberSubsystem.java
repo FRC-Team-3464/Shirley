@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.GrabberConstants;
@@ -26,10 +27,19 @@ public class GrabberSubsystem extends SubsystemBase {
     grabberMotor.setInverted(false);
   }
 
-  public void runMotor(double speed) { 
-    // Clockwise closes
-    grabberMotor.set(speed);
+  /*
+  * Grabber methods
+  */
+
+
+  public CommandBase runMotor(double speed) {
+    // Manual pivot command
+    return runOnce(
+        () -> {    
+          grabberMotor.set(speed);
+        });
   }
+
 
   public void stopMotor() {
     // Sets the speed of the motor to 0

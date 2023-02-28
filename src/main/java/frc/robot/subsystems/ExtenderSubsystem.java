@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ExtenderConstants;
@@ -27,22 +28,29 @@ public class ExtenderSubsystem extends SubsystemBase {
     extenderEncoder.setPositionConversionFactor(ExtenderConstants.kEncoderRotationToInch); // Set the conversion factor so setPosition() returns the distance in inches. 
   }
 
+
+  
   /*
    * Motor methods.
    */
 
-  public void translateExtender(double speed){
-    // Logic to control when we hit the limit switch or not. 
-    if(maxLimitSwitch.get()){ // When the max limit switch is triggered. 
-      extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
-      extenderMotor.stopMotor();
-    }else if(minLimitSwitch.get()){ // when the min limit switch is triggered. 
-      extenderEncoder.setPosition(0);
-      extenderMotor.stopMotor();
-    }else{ // if neither of the switches are hit. 
-      extenderMotor.set(speed);
-    }
+   
+  public CommandBase translateExtender(double speed) {
+    // Manual pivot command
+    return runOnce(
+        () -> {
+          if(maxLimitSwitch.get()){ // When the max limit switch is triggered. 
+            extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
+            extenderMotor.stopMotor();
+          }else if(minLimitSwitch.get()){ // when the min limit switch is triggered. 
+            extenderEncoder.setPosition(0); // Reset limit switch
+            extenderMotor.stopMotor();
+          }else{ // if neither of the switches are hit. 
+            extenderMotor.set(speed);
+          }
+        });
   }
+
 
   // Get the pivoter to the maximum position. 
   public void goToMax(){
@@ -54,6 +62,13 @@ public class ExtenderSubsystem extends SubsystemBase {
     translateExtender(-0.15); // Test speed - it should stop at the max
   }
 
+  public void manualSpeedOut(){
+    translateExtender(0.3);
+  }
+
+  public void manualSpeedIn(){
+    translateExtender(-0.3);
+  }
 
   public void stopMotor(){
     extenderMotor.stopMotor(); // Stop the motor.     
