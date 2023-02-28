@@ -8,9 +8,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants.PivoterConstants;
 import frc.robot.Constants.PivoterConstants;
 
 public class PivoterSubsystem extends SubsystemBase {
@@ -18,6 +18,7 @@ public class PivoterSubsystem extends SubsystemBase {
   // Clockwise spins down that moves the pivoter down
   
   private final CANSparkMax pivoterMotor = new CANSparkMax(PivoterConstants.kPivoterMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
+  private final DigitalInput minLimitSwitch = new DigitalInput(PivoterConstants.kPivotMinSwitchPort);
 
   private final RelativeEncoder pivoterEncoder = pivoterMotor.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
@@ -30,12 +31,20 @@ public class PivoterSubsystem extends SubsystemBase {
   */
 
   public void pivot(double speed) { 
-    pivoterMotor.set(speed);
+    if(minLimitSwitch.get()){ // if the min limit switch is triggered. 
+      pivoterMotor.stopMotor();
+    }else{
+      pivoterMotor.set(speed); // Else, run the speed we want to set. 
+    }
+  }
+
+  public void pivotToMin(){
+    pivot(-0.25); // Run pivot continously till we hit the switch, which it should do. 
   }
 
 
   public void stopMotor(){
-    pivoterMotor.stopMotor();
+    pivoterMotor.stopMotor(); // Stop motor. 
   }
 
   /*
