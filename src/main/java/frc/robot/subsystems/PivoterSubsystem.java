@@ -24,8 +24,12 @@ public class PivoterSubsystem extends SubsystemBase {
   private final RelativeEncoder pivoterEncoder = pivoterMotor.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
   public PivoterSubsystem() {
-    pivoterMotor.setInverted(true);
+    pivoterMotor.setInverted(false);
   }
+
+ /*
+  * Pivoter Motor methods. 
+  */
 
   //   Return a command 
   public CommandBase pivotManual(double speed) {
@@ -46,12 +50,10 @@ public class PivoterSubsystem extends SubsystemBase {
     pivoterMotor.set(speed);
   }
 
-  /*
-  * Pivoter Motor methods. 
-  */
-  public void pivotToMin(){
-    pivot(-0.25); // Run pivot continously till we hit the switch, which it should do. 
-  }
+
+  // public void pivotToMin(){
+  //   pivot(-0.25); // Run pivot continously till we hit the switch, which it should do. 
+  // }
 
   public void stopMotor(){
     pivoterMotor.stopMotor(); // Stop motor. 
