@@ -23,12 +23,12 @@ public class GyroSubsystem extends SubsystemBase {
 
   // get our heading for trajectory tracking based on the gyro angle. 
   public Rotation2d getHeading(){
-    return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
+    return Rotation2d.fromDegrees(gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
   }
 
   // Return the gyro degrees. 
   public double getDegrees(){
-    return -gyro.getAngle();
+    return gyro.getAngle();
   }
 
   // Reset our gyro. 
