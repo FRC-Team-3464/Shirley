@@ -7,8 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-public class DriveForward extends PIDCommand {
-    public DriveForward(double targetDistance, DrivetrainSubsystem drive) {
+public class AutoPIDFoward extends PIDCommand {
+    public AutoPIDFoward(double targetDistance, DrivetrainSubsystem drive) {
         super(
             drive.getForwardController(), // Get the PID Controller for driving forward. 
             // Close loop on heading

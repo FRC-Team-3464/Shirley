@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
-public class DriveRotation extends CommandBase {
+public class AutoPIDRotate extends CommandBase {
   
 private final DrivetrainSubsystem driveSub;
 private final GyroSubsystem gyroSub;
 
-public DriveRotation(double degrees, DrivetrainSubsystem drive, GyroSubsystem gyro) {
+public AutoPIDRotate(double degrees, DrivetrainSubsystem drive, GyroSubsystem gyro) {
     driveSub = drive;
     gyroSub = gyro;
     driveSub.getRotationController().setSetpoint(degrees);
