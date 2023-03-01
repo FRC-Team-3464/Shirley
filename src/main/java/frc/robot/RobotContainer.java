@@ -47,12 +47,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems are defined here
-  private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
+  // private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
   private final ExtenderSubsystem extenderSub = new ExtenderSubsystem();
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
-  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
+  // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
   
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
@@ -68,7 +68,7 @@ public class RobotContainer {
   // Pivot till we hit the minimum limit switch. 
   private final FunctionalCommand pivotToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    null, 
+    () -> pivoterSub.pivot(0), // Fix
     // What to do during the command - run the motor unrestrained. 
     () -> pivoterSub.pivot(0.125), // Why is the motor inversed? It should be negative
     // When we finish the command. 
@@ -92,7 +92,7 @@ public class RobotContainer {
   // retract till we hit the miminimum. 
   private final FunctionalCommand retractToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    null, 
+    () -> extenderSub.translateExtender(0), // Stop the motor first
     // What to do during the command - run the motor unrestrained and retract the extender. . 
     () -> extenderSub.translateExtender(-0.3),
     // On finished command
@@ -106,7 +106,7 @@ public class RobotContainer {
   // Extend till we hit the maximum. 
   private final FunctionalCommand extendToMax = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    null, 
+    () -> extenderSub.translateExtender(0), 
     // What to do during the command - run the motor unrestrained. 
     () -> extenderSub.translateManual(0.3),
     // On finished command
@@ -128,7 +128,7 @@ public class RobotContainer {
 
   private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    null, 
+    () -> grabberSub.runMotor(0), 
     // What to do during the command - run the motor unrestrained. 
     () -> grabberSub.runMotor(-0.125), // Counterclockwise closes. 
     // On finished command
@@ -142,7 +142,7 @@ public class RobotContainer {
    
   private final FunctionalCommand grabberSetClosed = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    null, 
+    () -> grabberSub.runMotor(0), 
     // What to do during the command - run the motor unrestrained. 
     () -> grabberSub.runMotor(0.125), // CLockwise closes
     // On finished command
@@ -210,12 +210,12 @@ public class RobotContainer {
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       
       // Extender Executables
-      OI.buttonRB.whileTrue(extenderSpeedIn);
-      OI.buttonLB.whileTrue(extenderSpeedOut);
+      OI.povButtonLeft.whileTrue(extenderSpeedIn);
+      OI.povButtonRight.whileTrue(extenderSpeedOut);
 
       // Pivoter Commands
-      OI.buttonB.whileTrue(pivotSpeedDown);
-      OI.buttonY.whileTrue(pivotSpeedUp);
+      OI.povButtonDown.whileTrue(pivotSpeedDown);
+      OI.povButtonUp.whileTrue(pivotSpeedUp);
 
       // Grabber Commands
       OI.triggerAux.onTrue(grabberSetClosed);

@@ -79,8 +79,8 @@ public final class Constants {
 
   public static class UltrasonicConstants{
     public static final int  
-      pingPort = 1,
-      echoPort = 2;
+      pingPort = 5,
+      echoPort = 6;
   }
 
 
