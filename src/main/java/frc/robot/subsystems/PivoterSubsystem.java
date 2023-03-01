@@ -97,5 +97,7 @@ public class PivoterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
     SmartDashboard.putNumber("Pivoter Rotations", getPivoterRotation());
     SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());
+    SmartDashboard.putBoolean("Pivot Switch", getSwitch());
+
   }
 }

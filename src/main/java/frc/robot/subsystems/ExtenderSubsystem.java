@@ -116,6 +116,8 @@ public class ExtenderSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Extender Encoder", getExtenderPosition()); // See how many rotations are there. 
     SmartDashboard.putNumber("Extender Encoder (in)", getExtenderInchPosition());
+    SmartDashboard.putBoolean("Extender MIN Limit", getMinSwitch());
+    SmartDashboard.putBoolean("Extender Max Limit", getMaxSwitch());
     
   }
 }
