@@ -32,13 +32,11 @@ public class GrabberSubsystem extends SubsystemBase {
   */
 
 
-  public CommandBase runMotor(double speed) {
-    // Manual pivot command
-    return runOnce(
-        () -> {    
-          grabberMotor.set(speed);
-        });
+  public void runMotor(double speed) {
+    grabberMotor.set(speed);
   }
+
+
 
 
   public void stopMotor() {

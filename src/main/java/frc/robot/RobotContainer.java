@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.CloseGrabber;
 import frc.robot.commands.ExtenderExtendLimit;
 import frc.robot.commands.PivoterPIDCommand;
 import frc.robot.commands.PivoterPivotMin;
@@ -15,6 +16,7 @@ import frc.robot.commands.TargetRangePIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
 import frc.robot.commands.ExtenderReactLimit;
 import frc.robot.commands.ExtenderSetPositionCommand;
+import frc.robot.commands.OpenGrabber;
 import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExtenderSubsystem;
@@ -95,7 +97,14 @@ public class RobotContainer {
   private final ExtenderExtendLimit extendExtender = new ExtenderExtendLimit(extenderSub);
   private final ExtenderReactLimit retractExtender = new ExtenderReactLimit(extenderSub);
   private final PivoterPivotMin pivotMin = new PivoterPivotMin(pivoterSub);
-  private final Command testGo = new SequentialCommandGroup(retractExtender, pivotMin);
+  private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
+  private final CloseGrabber closeGrabber = new CloseGrabber(grabberSub);
+  
+  private final ExtenderReactLimit retractStore = new ExtenderReactLimit(extenderSub);
+  private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
+  
+
+  private final Command testGo = new SequentialCommandGroup(retractStore, pivotStore);
 
   // Switch based translations
   // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
@@ -134,10 +143,6 @@ public class RobotContainer {
   /*
    * Grabber commands. 
    */
-  // Grabber Manual Speed Commands
-  private final Command grabberSpeedClose = grabberSub.runMotor(0.125);
-  private final Command grabberSpeedOpen = grabberSub.runMotor(-0.125);
-  
 
   private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
@@ -223,6 +228,7 @@ public class RobotContainer {
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       // CommandScheduler.getInstance().setDefaultCommand(extenderSub, new InstantCommand(extenderSub, ));
       // Extender Executables
+      // OI.button10Aux.onTrue(new InstantCommand(grabberSub::resetGrabberDistance));
       OI.povButtonLeft.whileTrue(retractExtender);
       // OI.povButtonLeft.onFalse(extenderSub.commandStop());
       // OI.povButtonLeft.whileFalse(extenderSub::stopMotor);
@@ -231,12 +237,12 @@ public class RobotContainer {
       // Pivoter Commands
       OI.povButtonDown.whileTrue(pivotMin);
       OI.povButtonUp.whileTrue(PivoterRotateUp);
-
       OI.button8Aux.onTrue(testGo);
 
       // Grabber Commands
-      OI.triggerAux.onTrue(grabberSetClosed);
-      OI.button2Aux.onTrue(grabberSetOpen);
+
+      OI.triggerAux.whileTrue(closeGrabber);
+      OI.button2Aux.whileTrue(openGrabber);
       
     
 

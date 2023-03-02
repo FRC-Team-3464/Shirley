@@ -86,6 +86,9 @@ public class PivoterSubsystem extends SubsystemBase {
     pivoterEncoder.setPosition(0);
   }
 
+  public void addFeedFoward(){
+    pivot(0.05);
+  }
   /*
    * Limit switch commands. 
    */
@@ -98,6 +101,7 @@ public class PivoterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Print out pivoter degrees and speed
+    addFeedFoward();
     SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
     SmartDashboard.putNumber("Pivoter Rotations", getPivoterRotation());
     SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());
