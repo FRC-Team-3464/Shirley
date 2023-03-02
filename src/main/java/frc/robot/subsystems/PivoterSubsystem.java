@@ -87,7 +87,7 @@ public class PivoterSubsystem extends SubsystemBase {
    */
 
    public boolean getSwitch(){
-    return minLimitSwitch.get();
+    return !minLimitSwitch.get();
    }
 
 

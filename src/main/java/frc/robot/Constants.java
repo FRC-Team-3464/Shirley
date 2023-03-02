@@ -31,12 +31,11 @@ public final class Constants {
   
   public static class ExtenderConstants{
     // Ports
-    public static final int kExtenderMaxSwitchPort = 1;
-    public static final int kExtenderMinSwitchPort = 2;
+    public static final int kExtenderMaxSwitchPort = 0;
+    public static final int kExtenderMinSwitchPort = 1;
     public static final int kExtenderMotorPort = 5;
 
     // Motor Constants
-
 
     // Encoder constants
     public static final double kMaxExtensionInch = 22; 
@@ -59,7 +58,8 @@ public final class Constants {
   public static class PivoterConstants{
     // Ports
     public static final int kPivoterMotorPort = 6;
-    public static final int kPivotMinSwitchPort = 3;
+
+    public static final int kPivotMinSwitchPort = 2;
 
     // Encoder Conversion Factor
     public static final double kPivoterRotationToDegree = ((1/64) *  (24/36)  * 360);

@@ -25,6 +25,7 @@ public class ExtenderSubsystem extends SubsystemBase {
   private final RelativeEncoder extenderEncoder = extenderMotor.getEncoder();
 
   public ExtenderSubsystem() {
+    extenderMotor.setInverted(true);
     extenderEncoder.setPositionConversionFactor(ExtenderConstants.kEncoderRotationToInch); // Set the conversion factor so setPosition() returns the distance in inches. 
   }
 
@@ -39,17 +40,42 @@ public class ExtenderSubsystem extends SubsystemBase {
     // Manual pivot command with safety from limit switches
     return runOnce(
         () -> {
-          if(maxLimitSwitch.get() && (Math.signum(speed) >= 0)){ // When the max limit switch is triggered and we're trying to extend more, 
+          if(maxLimitSwitch.get() && speed > 0){ // When the max limit switch is triggered and we're trying to extend more, 
             extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
             extenderMotor.stopMotor();
-          }else if(minLimitSwitch.get() && (Math.signum(speed) < 0)){ // when the min limit switch is triggered and we're trying to retract more,
+          }else if(minLimitSwitch.get() && speed < 0){ // when the min limit switch is triggered and we're trying to retract more,
             extenderEncoder.setPosition(0); // Reset limit switch
             extenderMotor.stopMotor();
           }else{ // if neither of the switches are hit, or if one of them is hit  but we're trying to go in the opposite direciton. 
             extenderMotor.set(speed);
           }
         });
+
+  
   }
+
+  public void extend(){
+        extenderMotor.set(0.125);
+  }
+
+
+  public CommandBase commandStop(){
+    return runOnce(() -> {extenderMotor.stopMotor();});
+  }
+  
+  public CommandBase retract(){
+    return runOnce(() -> {
+      if(getMinSwitch()){ // When the max limit switch is triggered and we're trying to extend more, 
+        extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
+        extenderMotor.stopMotor();
+        System.out.println("REACHED MIN");
+        extenderMotor.set(0);
+      } else{
+        extenderMotor.set(-0.125);
+    }
+  });
+  }
+
 
   // Run motor continuously without any interference from limitswitch
   public void translateExtender(double speed){
@@ -103,12 +129,12 @@ public class ExtenderSubsystem extends SubsystemBase {
    */
 
    public boolean getMaxSwitch(){
-    return maxLimitSwitch.get();
+    return !maxLimitSwitch.get();
    }
 
 
    public boolean getMinSwitch(){
-    return minLimitSwitch.get();
+    return !minLimitSwitch.get();
    }
 
   @Override

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.ExtenderExtendLimit;
 import frc.robot.commands.PivoterPIDCommand;
 import frc.robot.commands.PivoterSetCommand;
 import frc.robot.commands.TargetCenterAndRangePIDCommand;
@@ -68,7 +69,7 @@ public class RobotContainer {
   // Pivot till we hit the minimum limit switch. 
   private final FunctionalCommand pivotToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    () -> pivoterSub.pivot(0), // Fix
+    pivoterSub::stopMotor, // Fix
     // What to do during the command - run the motor unrestrained. 
     () -> pivoterSub.pivot(0.125), // Why is the motor inversed? It should be negative
     // When we finish the command. 
@@ -86,17 +87,20 @@ public class RobotContainer {
   private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
   private final Command extenderSpeedIn = extenderSub.translateManual(-0.3);
 
+  private final ExtenderExtendLimit extendExtender = new ExtenderExtendLimit(extenderSub);
+
   // Switch based translations
   // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
  
   // retract till we hit the miminimum. 
   private final FunctionalCommand retractToMin = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    () -> extenderSub.translateExtender(0), // Stop the motor first
+    extenderSub::stopMotor, // Stop the motor first
     // What to do during the command - run the motor unrestrained and retract the extender. . 
     () -> extenderSub.translateExtender(-0.3),
     // On finished command
-    (interrupted) -> extenderSub.stopMotor(), // When end, stop extender. 
+    (interrupted) -> {extenderSub.stopMotor();
+      System.out.println("Command Ended");},
     // isFinished() - get switch value.  
     extenderSub::getMinSwitch, // The minimum switch determines when we've ended. 
     // Give us the requirements. 
@@ -106,11 +110,12 @@ public class RobotContainer {
   // Extend till we hit the maximum. 
   private final FunctionalCommand extendToMax = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    () -> extenderSub.translateExtender(0), 
+    extenderSub::stopMotor, 
     // What to do during the command - run the motor unrestrained. 
     () -> extenderSub.translateManual(0.3),
     // On finished command
-    (interrupted) -> extenderSub.stopMotor(),
+    (interrupted) -> {extenderSub.stopMotor();
+                      System.out.println("Command Ended");},
     // isFinished() - get switch value.  
     extenderSub::getMaxSwitch,
     // Give us the requirements. 
@@ -128,7 +133,7 @@ public class RobotContainer {
 
   private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    () -> grabberSub.runMotor(0), 
+    grabberSub::stopMotor, 
     // What to do during the command - run the motor unrestrained. 
     () -> grabberSub.runMotor(-0.125), // Counterclockwise closes. 
     // On finished command
@@ -142,7 +147,7 @@ public class RobotContainer {
    
   private final FunctionalCommand grabberSetClosed = new FunctionalCommand(
     // what to do in initialize - basically nothing for us
-    () -> grabberSub.runMotor(0), 
+    grabberSub::stopMotor, 
     // What to do during the command - run the motor unrestrained. 
     () -> grabberSub.runMotor(0.125), // CLockwise closes
     // On finished command
@@ -154,7 +159,8 @@ public class RobotContainer {
   );
 
   // Retract extender to min, then pivot -> represents going to the stored position. 
-  private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
+  // private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
+  private final Command testGo = retractToMin.andThen(pivotToMin);
 
   
   // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
@@ -208,11 +214,13 @@ public class RobotContainer {
   private void configureBindings() {
       // Run default command as the arcade drive command.
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
-      
+      // CommandScheduler.getInstance().setDefaultCommand(extenderSub, new InstantCommand(extenderSub, ));
       // Extender Executables
-      OI.povButtonLeft.whileTrue(extenderSpeedIn);
-      OI.povButtonRight.whileTrue(extenderSpeedOut);
-
+      OI.povButtonLeft.whileTrue(extenderSub.retract());
+      OI.povButtonLeft.onFalse(extenderSub.commandStop());
+      // OI.povButtonLeft.whileFalse(extenderSub::stopMotor);
+      OI.povButtonRight.whileTrue(extendExtender);
+      // OI.povButtonRight.onFalse(extenderSub.commandStop());
       // Pivoter Commands
       OI.povButtonDown.whileTrue(pivotSpeedDown);
       OI.povButtonUp.whileTrue(pivotSpeedUp);
@@ -221,20 +229,21 @@ public class RobotContainer {
       OI.triggerAux.onTrue(grabberSetClosed);
       OI.button2Aux.onTrue(grabberSetOpen);
       
+    
 
-      // Switich based commands
-      OI.button3Aux.onTrue(retractToMin);
-      OI.button4Aux.onTrue(extendToMax);
+      // // Switich based commands
+      // OI.button3Aux.onTrue(retractToMin);
+      // OI.button4Aux.onTrue(extendToMax);
 
-      OI.button5Aux.onTrue(pivotToMin);
+      // OI.button5Aux.onTrue(pivotToMin);
       
-      // Open Grabber Set command. 
-      // OI.button6Aux.onTrue(extendToMax);
-      OI.button6Aux.whileTrue(grabberSpeedClose);
-      OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
+      // // Open Grabber Set command. 
+      // // OI.button6Aux.onTrue(extendToMax);
+      // OI.button6Aux.whileTrue(grabberSpeedClose);
+      // OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
 
       // Retract pivoter to min, rotate extender to min. 
-      // OI.button8Aux.onTrue(goToStorePosition); THIS IS A VERY DANGEROUS LINE
+      OI.button8Aux.onTrue(testGo); //THIS IS A VERY DANGEROUS LINE
 
 
 
