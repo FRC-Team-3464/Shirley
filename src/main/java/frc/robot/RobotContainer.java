@@ -7,11 +7,13 @@ package frc.robot;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.ExtenderExtendLimit;
 import frc.robot.commands.PivoterPIDCommand;
+import frc.robot.commands.PivoterPivotMin;
 import frc.robot.commands.PivoterSetCommand;
 import frc.robot.commands.TargetCenterAndRangePIDCommand;
 import frc.robot.commands.TargetCenterPIDCommand;
 import frc.robot.commands.TargetRangePIDCommand;
 import frc.robot.commands.ExtenderPIDCommand;
+import frc.robot.commands.ExtenderReactLimit;
 import frc.robot.commands.ExtenderSetPositionCommand;
 import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -87,7 +89,13 @@ public class RobotContainer {
   private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
   private final Command extenderSpeedIn = extenderSub.translateManual(-0.3);
 
+
+
+  // ----------- DEBUG
   private final ExtenderExtendLimit extendExtender = new ExtenderExtendLimit(extenderSub);
+  private final ExtenderReactLimit retractExtender = new ExtenderReactLimit(extenderSub);
+  private final PivoterPivotMin pivotMin = new PivoterPivotMin(pivoterSub);
+  private final Command testGo = new SequentialCommandGroup(retractExtender, pivotMin);
 
   // Switch based translations
   // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
@@ -160,14 +168,13 @@ public class RobotContainer {
 
   // Retract extender to min, then pivot -> represents going to the stored position. 
   // private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
-  private final Command testGo = retractToMin.andThen(pivotToMin);
 
   
   // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
   // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
 
   // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
-  // private final PivoterSetCommand PivoterRotateBack = new PivoterSetCommand(pivoterSub, 0);
+  private final PivoterSetCommand PivoterRotateUp = new PivoterSetCommand(pivoterSub);
   
 
   // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
@@ -216,14 +223,16 @@ public class RobotContainer {
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       // CommandScheduler.getInstance().setDefaultCommand(extenderSub, new InstantCommand(extenderSub, ));
       // Extender Executables
-      OI.povButtonLeft.whileTrue(extenderSub.retract());
-      OI.povButtonLeft.onFalse(extenderSub.commandStop());
+      OI.povButtonLeft.whileTrue(retractExtender);
+      // OI.povButtonLeft.onFalse(extenderSub.commandStop());
       // OI.povButtonLeft.whileFalse(extenderSub::stopMotor);
       OI.povButtonRight.whileTrue(extendExtender);
       // OI.povButtonRight.onFalse(extenderSub.commandStop());
       // Pivoter Commands
-      OI.povButtonDown.whileTrue(pivotSpeedDown);
-      OI.povButtonUp.whileTrue(pivotSpeedUp);
+      OI.povButtonDown.whileTrue(pivotMin);
+      OI.povButtonUp.whileTrue(PivoterRotateUp);
+
+      OI.button8Aux.onTrue(testGo);
 
       // Grabber Commands
       OI.triggerAux.onTrue(grabberSetClosed);

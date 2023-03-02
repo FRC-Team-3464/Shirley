@@ -55,7 +55,7 @@ public class ExtenderSubsystem extends SubsystemBase {
   }
 
   public void extend(){
-        extenderMotor.set(0.125);
+        extenderMotor.set(0.5);
   }
 
 
@@ -63,18 +63,9 @@ public class ExtenderSubsystem extends SubsystemBase {
     return runOnce(() -> {extenderMotor.stopMotor();});
   }
   
-  public CommandBase retract(){
-    return runOnce(() -> {
-      if(getMinSwitch()){ // When the max limit switch is triggered and we're trying to extend more, 
-        extenderEncoder.setPosition(ExtenderConstants.kMaxExtensionInch); // It should be 22 inches, but will need to be changed. 
-        extenderMotor.stopMotor();
-        System.out.println("REACHED MIN");
-        extenderMotor.set(0);
-      } else{
-        extenderMotor.set(-0.125);
-    }
-  });
-  }
+  public void retract(){
+        extenderMotor.set(-0.5);
+  };
 
 
   // Run motor continuously without any interference from limitswitch

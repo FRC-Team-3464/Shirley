@@ -13,7 +13,6 @@ public class ExtenderExtendLimit extends CommandBase {
   private final ExtenderSubsystem extenderSub;
   public ExtenderExtendLimit(ExtenderSubsystem extenderSub) {
     this.extenderSub = extenderSub;
-
     addRequirements(extenderSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }

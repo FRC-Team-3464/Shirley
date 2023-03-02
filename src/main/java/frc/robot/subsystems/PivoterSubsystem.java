@@ -51,6 +51,10 @@ public class PivoterSubsystem extends SubsystemBase {
   }
 
 
+  public void pivotForward(){
+    pivot(0.125);
+  }
+
   // public void pivotToMin(){
   //   pivot(-0.25); // Run pivot continously till we hit the switch, which it should do. 
   // }

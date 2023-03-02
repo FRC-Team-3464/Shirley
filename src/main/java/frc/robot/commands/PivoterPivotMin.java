@@ -7,35 +7,23 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PivoterSubsystem;
 
-
-
-// Stolen for debug. 
-
-
-
-public class PivoterSetCommand extends CommandBase {
-  /** Creates a new ArmPivotCommand. */
-
+public class PivoterPivotMin extends CommandBase {
+  /** Creates a new PivoterPivotMin. */
   private final PivoterSubsystem pivoterSub;
-  // private double setpoint;// Is target position. 
-
-  public PivoterSetCommand(PivoterSubsystem PivotSubsystem) {
+  public PivoterPivotMin(PivoterSubsystem pivoterSub) {
+    this.pivoterSub = pivoterSub;
+    addRequirements(pivoterSub);
     // Use addRequirements() here to declare subsystem dependencies.
-    // Makes variables with the same values as the others in order to use them later in the Command
-    // setpoint = target;
-    pivoterSub = PivotSubsystem;
-    addRequirements(PivotSubsystem);
-    }
+  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
-  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivot(0.375);
+    pivoterSub.pivot(-0.125);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,7 +35,6 @@ public class PivoterSetCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // Makes sure that the position is where you want it to be at
-    return false;
+    return pivoterSub.getSwitch();
   }
 }
