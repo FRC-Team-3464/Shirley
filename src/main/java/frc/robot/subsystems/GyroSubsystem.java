@@ -31,6 +31,9 @@ public class GyroSubsystem extends SubsystemBase {
     return gyro.getAngle();
   }
 
+  public double getPitch(){
+    return gyro.getPitch();
+  }
   // Reset our gyro. 
   public void resetGyro(){
     gyro.reset();
@@ -50,6 +53,7 @@ public class GyroSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
     SmartDashboard.putNumber("Gyro Angle", getDegrees());
+    SmartDashboard.putNumber("Gyro Pitch", getPitch());
 
     // This method will be called once per scheduler run
   }

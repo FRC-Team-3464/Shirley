@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.List;
 import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +19,14 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   private final static PhotonCamera aprilCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000"); // Change name. 
 
   public PhotonVisionSubsystem() {}
+
+  public void turnLEDOn(){
+    limelightCamera.setLED(VisionLEDMode.kDefault);
+  }
+  public void turnLEDOff(){
+    limelightCamera.setLED(VisionLEDMode.kOff);
+  }  
+
   // Return the highest target - useful (not) when trying to target the high pole on the grid. 
   public PhotonTrackedTarget getLimelightHighestTarget(){ // Turns out that this is useless 
     var limelightOutput = limelightCamera.getLatestResult();
@@ -41,6 +50,8 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   public PhotonCamera getColorCamera(){
     return aprilCamera;
   }
+
+
 
   // Get the limelight camera. 
   public PhotonCamera getLimelightCamera(){

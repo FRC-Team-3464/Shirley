@@ -39,6 +39,9 @@ public final class Constants {
 
     // Encoder constants
     public static final double kMaxExtensionInch = 22; 
+    public static final double kEncoderHighSetpoint = 107;
+    public static final double kEncoderMidSetpoint = 25.16;
+    
     // Rotation to inch conversion factor
     public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1/20) * (16/26)); //Tick to rotation is 1/42, Math.PI * 2.074 is the Pitch Diameter, (1/20) * (16/26) are gear ratios. 
 

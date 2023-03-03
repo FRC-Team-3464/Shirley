@@ -41,7 +41,7 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
-  // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
+  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
   
   // Commands defined here
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
@@ -51,8 +51,8 @@ public class RobotContainer {
    */
 
   // Pivoter Manual Speed Commands
-  private final Command pivotSpeedDown = pivoterSub.pivotManual(-0.125);
-  private final Command pivotSpeedUp = pivoterSub.pivotManual(0.25); // WHY is it inversed
+  // private final Command pivotSpeedDown = pivoterSub.pivotManual(-0.125);
+  // private final Command pivotSpeedUp = pivoterSub.pivotManual(0.25); // WHY is it inversed
 
   // Pivot till we hit the minimum limit switch. 
   private final FunctionalCommand pivotToMin = new FunctionalCommand(
@@ -81,17 +81,34 @@ public class RobotContainer {
   private final ExtenderExtendLimit extendExtender = new ExtenderExtendLimit(extenderSub);
   private final ExtenderReactLimit retractExtender = new ExtenderReactLimit(extenderSub);
   private final PivoterPivotMin pivotMin = new PivoterPivotMin(pivoterSub);
+  private final PivoterSetCommand PivoterRotateUp = new PivoterSetCommand(pivoterSub);
+
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
+  // private final 
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
   private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
   private final AddFeedFoward addFeedFoward = new AddFeedFoward(pivoterSub);
+  private final InstantCommand limelightOff = new InstantCommand(photonSub::turnLEDOff, photonSub);
+  private final InstantCommand limelightOn = new InstantCommand(photonSub::turnLEDOn, photonSub);
 
+
+
+  // Store commands
   private final ExtenderReactLimit retractStore = new ExtenderReactLimit(extenderSub);
   private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
   private final InstantCommand pivotEncoderReset = new InstantCommand(pivoterSub::resetEncoder, pivoterSub);
   private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
-  
+  // private final InstantCommand manualForward = new InstantCommand(pivoterSub::pivotForward, pivoterSub);
+  private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
 
+  private final PivotToEncoderValue pivotToBottomPos = new PivotToEncoderValue(pivoterSub, 0);
+  private final PivotToEncoderValue pivotToMiddlePos = new PivotToEncoderValue(pivoterSub, 0);
+  private final PivotToEncoderValue pivotToTopPos = new PivotToEncoderValue(pivoterSub, 0);
+  
+  private final ExtenderExtendToEncoderValue extendToBottomPos = new ExtenderExtendToEncoderValue(extenderSub, 0);
+  private final ExtenderExtendToEncoderValue extendToMiddlePos = new ExtenderExtendToEncoderValue(extenderSub, 0);
+  private final ExtenderExtendToEncoderValue extendToTopPos = new ExtenderExtendToEncoderValue(extenderSub, 0);
+  
   public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore,pivotEncoderReset,extenderEncoderReset);
 
   // Switch based translations
@@ -167,7 +184,7 @@ public class RobotContainer {
   // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
 
   // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
-  private final PivoterSetCommand PivoterRotateUp = new PivoterSetCommand(pivoterSub);
+
   
 
   // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
@@ -189,7 +206,6 @@ public class RobotContainer {
   // private final TargetCenterAndRangePIDCommand limeCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
   // private final TargetCenterAndRangePIDCommand aprilCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
 
-  // private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
   // private final TargetCenterPIDCommand aprilCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getColorCamera());
 
   // private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
@@ -226,13 +242,20 @@ public class RobotContainer {
       // Pivoter Commands
       OI.povButtonDown.whileTrue(pivotMin);
       OI.povButtonUp.whileTrue(PivoterRotateUp);
+
       OI.button2Aux.onTrue(stowArm);
 
       // Grabber Commands
 
       OI.button6Aux.whileTrue(grabCone);
-      OI.button4Aux.whileTrue(grabCube);
+      // OI.button4Aux.toggleOnTrue(grabCube);
       OI.button3Aux.whileTrue(openGrabber);
+
+      OI.button11Aux.onTrue(limelightOff);
+      OI.button12Aux.onTrue(limelightOn);
+
+      OI.buttonY.whileTrue(limeCenter);
+      
       
     
 

@@ -17,12 +17,12 @@ public class TargetCenterPIDCommand extends CommandBase {
   private final PhotonVisionSubsystem photonSub;
   private final DrivetrainSubsystem driveSub;
 
-// PID constants should be tuned per robot - GET THIS UPDATED
-  final double LINEAR_P = 0.1;
-  final double LINEAR_D = 0.0;
-  PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
+// // PID constants should be tuned per robot - GET THIS UPDATED
+//   final double LINEAR_P = 0.1;
+//   final double LINEAR_D = 0.0;
+//   PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
 
-  final double ANGULAR_P = 0.1;
+  final double ANGULAR_P = 0.0166667;
   final double ANGULAR_D = 0.0;
   PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
@@ -45,7 +45,7 @@ public class TargetCenterPIDCommand extends CommandBase {
   @Override
   public void initialize() {
     // Reset controllers. 
-    forwardController.setSetpoint(0);
+    // forwardController.setSetpoint(0);
     turnController.setSetpoint(0);
 
   }

@@ -42,11 +42,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     leftBack.follow(leftFront);
     rightBack.follow(rightFront);
 
-    // Set the encoder conversion factor so getPosition() automatically has it converted to meters. 
-    leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
-    rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
-    leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
-    rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    // // Set the encoder conversion factor so getPosition() automatically has it converted to meters. 
+    // leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    // rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    // leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    // rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
   }
 
   /*
@@ -150,7 +150,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     // Update our odometry to get the new heading every 20 ms. 
     // Get left and right encoder meter values - distance traveled. 
-    SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());
-    SmartDashboard.putNumber("Right Encoder Meter Value:", getRightPosition());
+    SmartDashboard.putNumber("Drive Left Encoder Meter Value:", getLeftPosition());
+    SmartDashboard.putNumber("Drive Right Encoder Meter Value:", getRightPosition());
+
+
   }
 }

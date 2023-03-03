@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PivoterConstants;
 
@@ -32,18 +32,18 @@ public class PivoterSubsystem extends SubsystemBase {
   */
 
   //   Return a command 
-  public CommandBase pivotManual(double speed) {
-    // Manual pivot command
-    return runOnce(
-        () -> {
-          if(minLimitSwitch.get() && (Math.signum(speed) < 0)){ // if the min limit switch is triggered and we're trying to go down. 
-            pivoterMotor.stopMotor();
-            pivoterEncoder.setPosition(0);
-          }else{
-            pivoterMotor.set(speed); // Else, run the speed we want to set. 
-          }
-        });
-  }
+  // public CommandBase pivotManual(double speed) {
+  //   // Manual pivot command
+  //   return runOnce(
+  //       () -> {
+  //         if(minLimitSwitch.get() && (Math.signum(speed) < 0)){ // if the min limit switch is triggered and we're trying to go down. 
+  //           pivoterMotor.stopMotor();
+  //           pivoterEncoder.setPosition(0);
+  //         }else{
+  //           pivoterMotor.set(speed); // Else, run the speed we want to set. 
+  //         }
+  //       });
+  // }
 
 //  Run unrestrained - for commands. 
   public void pivot(double speed){
@@ -52,7 +52,7 @@ public class PivoterSubsystem extends SubsystemBase {
 
 
   public void pivotForward(){
-    pivot(0.125);
+    pivot(0.65);
   }
 
   // public void pivotToMin(){
@@ -105,6 +105,7 @@ public class PivoterSubsystem extends SubsystemBase {
   public void periodic() {
     // Print out pivoter degrees and speed
     // addFeedFoward();
+    SmartDashboard.putNumber("Signum Speed", Math.signum(getPivoterSpeed()));
     SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
     SmartDashboard.putNumber("Pivoter Rotations", getPivoterRotation());
     SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());

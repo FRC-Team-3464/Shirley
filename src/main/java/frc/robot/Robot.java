@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
     OI oi = new OI();
     m_robotContainer = new RobotContainer();  
     //defines variables by recieving values from limelight network table
+    System.out.println("Can Stow When Disabled: " + m_robotContainer.stowArm.runsWhenDisabled());
+    //m_robotContainer.stowArm.execute();
   }
 
   /**
