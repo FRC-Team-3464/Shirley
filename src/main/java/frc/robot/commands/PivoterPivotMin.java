@@ -24,6 +24,7 @@ public class PivoterPivotMin extends CommandBase {
   @Override
   public void execute() {
     pivoterSub.pivot(-0.125);
+    System.out.println("Pivoter " + pivoterSub.getPivoterRotation());
   }
 
   // Called once the command ends or is interrupted.

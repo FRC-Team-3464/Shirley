@@ -35,7 +35,8 @@ public class PivoterSetCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivot(0.375);
+    pivoterSub.pivot(0.5);
+    System.out.println("Pivoter " + pivoterSub.getPivoterRotation());
   }
 
   // Called once the command ends or is interrupted.

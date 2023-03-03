@@ -87,7 +87,10 @@ public class PivoterSubsystem extends SubsystemBase {
   }
 
   public void addFeedFoward(){
-    pivot(0.05);
+    if(!getSwitch()){
+      pivot(0.05);
+      //System.out.println("feedforwarding");
+    }
   }
   /*
    * Limit switch commands. 
@@ -101,7 +104,7 @@ public class PivoterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Print out pivoter degrees and speed
-    addFeedFoward();
+    // addFeedFoward();
     SmartDashboard.putNumber("Pivoter Degrees", getPivoterDegrees());
     SmartDashboard.putNumber("Pivoter Rotations", getPivoterRotation());
     SmartDashboard.putNumber("Pivoter Speed", getPivoterSpeed());

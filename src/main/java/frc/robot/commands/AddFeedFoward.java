@@ -5,14 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.PivoterSubsystem;
 
-public class OpenGrabber extends CommandBase {
-  /** Creates a new OpenGrabber. */
-  private final GrabberSubsystem grabberSub;
-  public OpenGrabber(GrabberSubsystem grabberSub) {
-    this.grabberSub = grabberSub;
-    addRequirements(grabberSub);
+public class AddFeedFoward extends CommandBase {
+  /** Creates a new AddFeedFoward. */
+  private final PivoterSubsystem pivoterSub;
+
+  public AddFeedFoward(PivoterSubsystem pivoterSub) {
+    this.pivoterSub = pivoterSub;
+    addRequirements(pivoterSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -23,22 +24,16 @@ public class OpenGrabber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabberSub.runMotor(0.125);
-    System.out.println(grabberSub.getGrabberDegrees());
+    pivoterSub.addFeedFoward();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    grabberSub.stopMotor();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(grabberSub.getGrabberDegrees()>1100){
-      return true;
-    }
     return false;
   }
 }

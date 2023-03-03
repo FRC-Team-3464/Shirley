@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class CloseGrabber extends CommandBase {
+public class CloseGrabberCone extends CommandBase {
   /** Creates a new CloseGrabber. */
   private final GrabberSubsystem grabberSub;
 
-  public CloseGrabber(GrabberSubsystem grabberSub) {
+  public CloseGrabberCone(GrabberSubsystem grabberSub) {
     this.grabberSub = grabberSub;
     addRequirements(grabberSub);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,7 +24,7 @@ public class CloseGrabber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabberSub.runMotor(0.125);
+    grabberSub.runMotor(-0.3);
   }
 
   // Called once the command ends or is interrupted.

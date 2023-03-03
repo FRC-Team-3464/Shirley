@@ -31,6 +31,7 @@ public class ExtenderExtendLimit extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     extenderSub.stopMotor();
+    System.out.println("Extender " + extenderSub.getExtenderPosition());
   }
 
   // Returns true when the command should end.

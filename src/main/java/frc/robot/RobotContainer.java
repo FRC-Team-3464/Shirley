@@ -4,25 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.CloseGrabber;
-import frc.robot.commands.ExtenderExtendLimit;
-import frc.robot.commands.PivoterPIDCommand;
-import frc.robot.commands.PivoterPivotMin;
-import frc.robot.commands.PivoterSetCommand;
-import frc.robot.commands.TargetCenterAndRangePIDCommand;
-import frc.robot.commands.TargetCenterPIDCommand;
-import frc.robot.commands.TargetRangePIDCommand;
-import frc.robot.commands.ExtenderPIDCommand;
-import frc.robot.commands.ExtenderReactLimit;
-import frc.robot.commands.ExtenderSetPositionCommand;
-import frc.robot.commands.OpenGrabber;
-import frc.robot.subsystems.PivoterSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ExtenderSubsystem;
-import frc.robot.subsystems.GrabberSubsystem;
-import frc.robot.subsystems.PhotonVisionSubsystem;
-import frc.robot.subsystems.UltrasonicSubsystem;
+
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 import java.util.Arrays;
 import edu.wpi.first.math.controller.RamseteController;
@@ -98,13 +82,17 @@ public class RobotContainer {
   private final ExtenderReactLimit retractExtender = new ExtenderReactLimit(extenderSub);
   private final PivoterPivotMin pivotMin = new PivoterPivotMin(pivoterSub);
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
-  private final CloseGrabber closeGrabber = new CloseGrabber(grabberSub);
-  
+  private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
+  private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
+  private final AddFeedFoward addFeedFoward = new AddFeedFoward(pivoterSub);
+
   private final ExtenderReactLimit retractStore = new ExtenderReactLimit(extenderSub);
   private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
+  private final InstantCommand pivotEncoderReset = new InstantCommand(pivoterSub::resetEncoder, pivoterSub);
+  private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
   
 
-  private final Command testGo = new SequentialCommandGroup(retractStore, pivotStore);
+  public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore,pivotEncoderReset,extenderEncoderReset);
 
   // Switch based translations
   // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
@@ -225,6 +213,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
       // Run default command as the arcade drive command.
+      CommandScheduler.getInstance().setDefaultCommand(pivoterSub, addFeedFoward);
       CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
       // CommandScheduler.getInstance().setDefaultCommand(extenderSub, new InstantCommand(extenderSub, ));
       // Extender Executables
@@ -237,12 +226,13 @@ public class RobotContainer {
       // Pivoter Commands
       OI.povButtonDown.whileTrue(pivotMin);
       OI.povButtonUp.whileTrue(PivoterRotateUp);
-      OI.button8Aux.onTrue(testGo);
+      OI.button2Aux.onTrue(stowArm);
 
       // Grabber Commands
 
-      OI.triggerAux.whileTrue(closeGrabber);
-      OI.button2Aux.whileTrue(openGrabber);
+      OI.button6Aux.whileTrue(grabCone);
+      OI.button4Aux.whileTrue(grabCube);
+      OI.button3Aux.whileTrue(openGrabber);
       
     
 
@@ -258,7 +248,7 @@ public class RobotContainer {
       // OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
 
       // Retract pivoter to min, rotate extender to min. 
-      OI.button8Aux.onTrue(testGo); //THIS IS A VERY DANGEROUS LINE
+      //OI.button8Aux.onTrue(testGo); //THIS IS A VERY DANGEROUS LINE
 
 
 
@@ -284,7 +274,8 @@ public class RobotContainer {
   
       // OI.buttonX.whileTrue(limeCenterAndRange);
       // OI.buttonA.whileTrue(aprilCenterAndRange);
-
+     // runs StowArm command once when robot is initialized
+     CommandScheduler.getInstance().schedule(stowArm);
 
     }
 
