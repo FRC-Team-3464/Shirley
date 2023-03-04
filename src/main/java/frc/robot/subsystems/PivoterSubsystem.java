@@ -27,8 +27,6 @@ public class PivoterSubsystem extends SubsystemBase {
     pivoterMotor.setInverted(false);
     secondPivoterMotor.setInverted(true);
 
-    secondPivoterMotor.follow(pivoterMotor);
-
   }
 
  /*
@@ -38,11 +36,14 @@ public class PivoterSubsystem extends SubsystemBase {
   //  Run the motor to our inputted speed. 
   public void pivot(double speed){
     pivoterMotor.set(speed);
+    secondPivoterMotor.follow(pivoterMotor);
+
   }
 
   // Stop motor. 
   public void stopMotor(){
     pivoterMotor.stopMotor();
+    secondPivoterMotor.stopMotor();
   }
 
   // public void pivotForward(){
@@ -95,6 +96,7 @@ public class PivoterSubsystem extends SubsystemBase {
     // Add some power to the pivoter to have it hold against gravity. 
     if(!getSwitch()){ // Make sure the trigger isn't activated. 
       pivot(0.05);
+      // secondPivoterMotor.fo
     }
   }
 
@@ -110,6 +112,7 @@ public class PivoterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Print out pivoter degrees and speed
+    // SmartDashboard.putBoolean("Motor Connected", pivoterMotor.con)
     SmartDashboard.putNumber("Pivoter Degrees:", getPivoterDegrees()); // get the pivoter value in degrees. 
     SmartDashboard.putNumber("Pivoter Rotations:", getPivoterRotation()); // Get the pivoter encoder rotation.
     SmartDashboard.putNumber("Pivoter Speed:", getPivoterSpeed()); // Get the speed of the pivoter. 
