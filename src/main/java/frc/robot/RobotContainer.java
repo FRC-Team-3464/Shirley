@@ -255,19 +255,25 @@ public class RobotContainer {
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
     
+    OI.button2Aux.onTrue(stowArm);
+
+    OI.button3Aux.whileTrue(openGrabber);
+    OI.button4Aux.whileTrue(grabCube);
+    OI.button6Aux.toggleOnTrue(grabCone);
+
     OI.button7Aux.onTrue(goToHigh);
     OI.button8Aux.onTrue(goToMid);
     OI.button9Aux.onTrue(goToLow);
     
-    OI.button2Aux.onTrue(stowArm);
-
     OI.button12Aux.onTrue(drivetrainEncoderReset);
+    
+    /*
+     * Command junk
+     */
+
+
     // Grabber Commands
 
-    OI.button6Aux.toggleOnTrue(grabCone);
-    OI.button4Aux.whileTrue(grabCube);
-    OI.button3Aux.whileTrue(openGrabber);
-    
     // OI.povButtonRight.onFalse(extenderSub.commandStop());
     // OI.povButtonLeft.onFalse(extenderSub.commandStop());
     // OI.povButtonLeft.whileFalse(extenderSub::stopMotor);
@@ -311,7 +317,6 @@ public class RobotContainer {
     // OI.buttonA.whileTrue(aprilCenterAndRange);
     // runs StowArm command once when robot is initialized
     // CommandScheduler.getInstance().schedule(stowArm);
-
     }
 
   /**
