@@ -42,8 +42,8 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
-  private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // This may be wrong. 
-  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
+  private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
+  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
   
   /*
    * Drivetrain Commands
@@ -51,7 +51,6 @@ public class RobotContainer {
 
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
   private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
-
 
   /* 
    * Extender Commands
