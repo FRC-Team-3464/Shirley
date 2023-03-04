@@ -67,9 +67,9 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     boolean limeHasTargets = limeResult.hasTargets();
 
     // Report the results on the SmartDashboard. 
-    SmartDashboard.getBoolean("Limelight:", limeConnected);
-    SmartDashboard.getBoolean("Limelight Targets:", limeHasTargets);
-    SmartDashboard.putBoolean("AprilTag Cam:", aprilConnected);
+    SmartDashboard.putBoolean("Limelight:", limeConnected);
+    SmartDashboard.putBoolean("Limelight Targets:", limeHasTargets);
+    SmartDashboard.putNumber("Limelight Best Target X:", limeResult.getBestTarget().getYaw()); // Get the yaw - x difference of the limelight's best target. 
     SmartDashboard.putBoolean("AprilTag Targets:", aprilHasTargets);
   }
 }

@@ -18,13 +18,14 @@ public class TargetCenterPIDCommand extends CommandBase {
   private final DrivetrainSubsystem driveSub;
 
 // PID constants should be tuned per robot - GET THIS UPDATED
-  final double LINEAR_P = 0.1;
-  final double LINEAR_D = 0.0;
-  PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
+//   final double LINEAR_P = 0.1;
+//   final double LINEAR_D = 0.0;
+//   PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
 
-  final double ANGULAR_P = 0.1;
-  final double ANGULAR_D = 0.0;
-  PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+// Get our angular P and D values. 
+  final double turnP = 0.02666666666; // Max yaw error is 30, which Yifan sets to 80% so 0.8/30 = 0.0266..
+  final double turnD = 0.0;
+  PIDController turnController = new PIDController(turnP, 0, turnD);
 
   private final XboxController controller = OI.xBoxController;
   private final PhotonCamera camera;
@@ -45,9 +46,8 @@ public class TargetCenterPIDCommand extends CommandBase {
   @Override
   public void initialize() {
     // Reset controllers. 
-    forwardController.setSetpoint(0);
+    // forwardController.setSetpoint(0);
     turnController.setSetpoint(0);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
