@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -80,6 +81,8 @@ public class RobotContainer {
   // ----------- DEBUG
   private final ExtenderExtendLimit extendExtender = new ExtenderExtendLimit(extenderSub);
   private final ExtenderReactLimit retractExtender = new ExtenderReactLimit(extenderSub);
+  
+  private final PivoterPivotUp PivoterRotateUp = new PivoterPivotUp(pivoterSub);
   private final PivoterPivotMin pivotMin = new PivoterPivotMin(pivoterSub);
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
@@ -90,7 +93,19 @@ public class RobotContainer {
   private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
   private final InstantCommand pivotEncoderReset = new InstantCommand(pivoterSub::resetEncoder, pivoterSub);
   private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
-  
+  private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
+
+  private final PivotToHighPosition pivotToHigh = new PivotToHighPosition(pivoterSub, PivoterConstants.kMaxPivoterValue);
+  private final PivotToHighPosition pivotToMid = new PivotToHighPosition(pivoterSub, 15);
+  private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, 6.5);
+
+  private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, 107);
+  private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, 29);
+  private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, 60);
+
+  public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
+  public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
+  public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
 
   public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore,pivotEncoderReset,extenderEncoderReset);
 
@@ -167,7 +182,6 @@ public class RobotContainer {
   // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
 
   // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
-  private final PivoterSetCommand PivoterRotateUp = new PivoterSetCommand(pivoterSub);
   
 
   // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
@@ -226,11 +240,18 @@ public class RobotContainer {
       // Pivoter Commands
       OI.povButtonDown.whileTrue(pivotMin);
       OI.povButtonUp.whileTrue(PivoterRotateUp);
+      OI.button7Aux.onTrue(goToHigh);
+      OI.button8Aux.onTrue(goToMid);
+      OI.button9Aux.onTrue(goToLow);
+      
+
       OI.button2Aux.onTrue(stowArm);
 
+
+      OI.button12Aux.onTrue(drivetrainEncoderReset);
       // Grabber Commands
 
-      OI.button6Aux.whileTrue(grabCone);
+      OI.button6Aux.toggleOnTrue(grabCone);
       OI.button4Aux.whileTrue(grabCube);
       OI.button3Aux.whileTrue(openGrabber);
       

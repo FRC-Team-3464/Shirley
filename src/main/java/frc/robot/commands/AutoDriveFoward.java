@@ -24,24 +24,25 @@ public class AutoDriveFoward extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    target += driveSub.getLeftSpeed(); // This should be in inches. 
+    driveSub.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveSub.arcadeDrive(0.25 * Math.signum(target), 0);
+    driveSub.arcadeDrive(0.5, 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     driveSub.stopDrive();
+    driveSub.resetEncoders();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(target - driveSub.getLeftPosition()) > 0.5);
+    return (Math.abs(driveSub.getLeftPosition()) > target);
   }
 }

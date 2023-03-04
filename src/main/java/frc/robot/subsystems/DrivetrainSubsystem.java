@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -150,7 +151,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     // Update our odometry to get the new heading every 20 ms. 
     // Get left and right encoder meter values - distance traveled. 
-    SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());
-    SmartDashboard.putNumber("Right Encoder Meter Value:", getRightPosition());
+    SmartDashboard.putNumber("Drivetrain Inch", (getLeftPosition()));
+    // SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());
+    // SmartDashboard.putNumber("Right Encoder Meter Value:", getRightPosition());
   }
 }

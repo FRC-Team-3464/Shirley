@@ -10,12 +10,12 @@ import frc.robot.subsystems.ExtenderSubsystem;
 
 public class ExtenderSetPositionCommand extends CommandBase {
   private final ExtenderSubsystem extenderSub;
-  // private double setpoint;
+  private double setpoint;
   // private double speed;
 
-  public ExtenderSetPositionCommand(ExtenderSubsystem extenderSubsystem) {
+  public ExtenderSetPositionCommand(ExtenderSubsystem extenderSubsystem, double target) {
     // Use addRequirements() here to declare subsystem dependencies.
-    // setpoint = target;
+    setpoint = target;
     extenderSub = extenderSubsystem;
     addRequirements(extenderSubsystem);
   }
@@ -29,7 +29,7 @@ public class ExtenderSetPositionCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    extenderSub.translateExtender(-0.375);
+    extenderSub.extend();
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +41,9 @@ public class ExtenderSetPositionCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return extenderSub.getMinSwitch();
+    if(extenderSub.getExtenderPosition() >= setpoint){
+      return true;
+    }
+    return extenderSub.getMaxSwitch();
   }
 }

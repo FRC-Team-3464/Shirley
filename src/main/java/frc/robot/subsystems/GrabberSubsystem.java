@@ -24,7 +24,7 @@ public class GrabberSubsystem extends SubsystemBase {
   private final RelativeEncoder grabberEncoder = grabberMotor.getEncoder();
 
   public GrabberSubsystem() {
-    grabberMotor.setInverted(false);
+    grabberMotor.setInverted(true);
   }
 
   /*
