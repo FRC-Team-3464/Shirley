@@ -18,12 +18,17 @@ public class PivoterSubsystem extends SubsystemBase {
   // Create motor and limit switch. 
   private final CANSparkMax pivoterMotor = new CANSparkMax(PivoterConstants.kPivoterMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
   private final DigitalInput minLimitSwitch = new DigitalInput(PivoterConstants.kPivotMinSwitchPort);
+  private final CANSparkMax secondPivoterMotor = new CANSparkMax(PivoterConstants.kPivoterSecondMotorPort, MotorType.kBrushless);
 
   // Get the encoder from the motor. 
   private final RelativeEncoder pivoterEncoder = pivoterMotor.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
   public PivoterSubsystem() {
     pivoterMotor.setInverted(false);
+    secondPivoterMotor.setInverted(true);
+
+    secondPivoterMotor.follow(pivoterMotor);
+
   }
 
  /*
