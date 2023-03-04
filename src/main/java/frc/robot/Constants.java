@@ -60,6 +60,7 @@ public final class Constants {
   public static class PivoterConstants {
     // Ports
     public static final int kPivoterMotorPort = 6;
+    public static final int kPivoterSecondMotorPort = 9;
     public static final int kPivotMinSwitchPort = 2;
 
     public static final double kMaxPivoterValue = 18.99; // The setpoint to rotate the pivoter to the highest position.
