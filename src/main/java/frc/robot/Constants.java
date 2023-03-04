@@ -27,7 +27,7 @@ public final class Constants {
         kRightBackPort = 4,
 
         ktrackWidthInches = 27; // We convert to meters in drivetrain sub; This might be 28 idk
-    public static final double kRotationToMeters = ((1 / 7.31) * (2 * Math.PI * 3)); // Conversion factor from rotation
+    public static final double kRotationToInch = ((1 / 7.31) * (2 * Math.PI * 3)); // Conversion factor from rotation
                                                                                      // to meters
 
   }
@@ -38,17 +38,12 @@ public final class Constants {
     public static final int kExtenderMinSwitchPort = 1;
     public static final int kExtenderMotorPort = 5;
 
-    // Motor Constants
-
     // Encoder constants
     public static final double kMaxExtensionInch = 22;
+
     // Rotation to inch conversion factor
-    public static final double kEncoderRotationToInch = ((Math.PI * 2.074) * (1 / 20) * (16 / 26)); // Tick to rotation
-                                                                                                    // is 1/42, Math.PI
-                                                                                                    // * 2.074 is the
-                                                                                                    // Pitch Diameter,
-                                                                                                    // (1/20) * (16/26)
-                                                                                                    // are gear ratios.
+    // public static final double kEncoderRotationToInch = (Math.PI * 2.074)*(1/20)*(16/26);
+    public static final double kEncoderRotationToInch = 0.20048194349;
 
     // PID stuff
     public static final double tolerance = 0.75;
@@ -65,12 +60,13 @@ public final class Constants {
   public static class PivoterConstants {
     // Ports
     public static final int kPivoterMotorPort = 6;
-
     public static final int kPivotMinSwitchPort = 2;
 
     public static final double kMaxPivoterValue = 18.99; // The setpoint to rotate the pivoter to the highest position.
+
     // Encoder Conversion Factor
-    public static final double kPivoterRotationToDegree = ((1 / 64) * (24 / 36) * 360);
+    // public static final double kPivoterRotationToDegree = ((1 / 64) * (24 / 36) * 360);
+    public static final double kPivoterRotationToDegree = 3.75;
 
   }
 
