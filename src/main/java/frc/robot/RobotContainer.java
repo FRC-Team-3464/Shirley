@@ -90,6 +90,7 @@ public class RobotContainer {
   private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
 
   public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore, pivotEncoderReset, extenderEncoderReset);
+  // public final Command stowArm = new SequentialCommandGroup(new ExtenderRetractLimit, pivotStore, pivotEncoderReset, extenderEncoderReset);
 
   /*
    * Position based commands:
@@ -121,7 +122,7 @@ public class RobotContainer {
   
 
 
-  public final Autos Autos = new Autos() ;
+  public final Autos Autos = new Autos(); 
   public final Command driveandBalance = frc.robot.commands.Autos.DriveForward(driveFoward, balance, balanceHold); // IDK if this will work. 
   /*
    * ---- Trash bin -----
@@ -253,6 +254,17 @@ public class RobotContainer {
     configureBindings();
   }
 
+
+  /*
+   * --------- GET our drive balance autonomous commands.  -----------
+   */
+
+  public Command getDriveBalanceAuto(){
+    return driveandBalance;
+  }
+
+  // public Command getDr
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -347,6 +359,8 @@ public class RobotContainer {
     // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(Arrays.asList(new Pose2d(), new Pose2d(1.0, 0, new Rotation2d())), config); // Move forward to 1.0, which is one meter forward. 
     // RamseteCommand command = new RamseteCommand(trajectory, driveSub::getPose, new RamseteController(2.0, 0.7), driveSub.getFeedforward(), driveSub.getKinematics(), driveSub::getSpeeds, driveSub.getLeftPIDController(), driveSub.getRightPIDController(), driveSub::setVolts, driveSub);
     // return command; 
+
+
     return null;
   }
 }
