@@ -42,6 +42,10 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
+  private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
+  private final GyroSubsystem gyroSub = new GyroSubsystem();
+  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
   
   /*
@@ -105,7 +109,20 @@ public class RobotContainer {
   public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
   public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
 
+  // public final 
 
+  /*
+   * Auto Sequences
+   */
+  public final AutoDriveFoward driveFoward = new AutoDriveFoward(driveSub, 50);  // Drive forward` 160 inches. change later
+  public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
+
+  public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
+  
+
+
+  public final Autos Autos = new Autos() ;
+  public final Command driveandBalance = frc.robot.commands.Autos.DriveForward(driveFoward, balance, balanceHold); // IDK if this will work. 
   /*
    * ---- Trash bin -----
    */

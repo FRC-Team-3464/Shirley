@@ -29,7 +29,7 @@ public class AutoDriveRotate extends CommandBase {
   @Override
   public void initialize() {
     target += gyroSub.getDegrees();
-    directionSet = Math.signum(target);
+    directionSet = Math.signum(target); // Sign of 1 or -1
   }
 
   // Called every time the scheduler runs while the command is scheduled.
