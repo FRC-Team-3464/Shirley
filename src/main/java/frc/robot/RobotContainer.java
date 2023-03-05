@@ -123,7 +123,7 @@ public class RobotContainer {
 
 
   public final Autos Autos = new Autos(); 
-  public final Command driveandBalance = frc.robot.commands.Autos.DriveForward(driveFoward, balance, balanceHold); // IDK if this will work. 
+  public final Command driveandBalance = frc.robot.commands.Autos.BalanceOnly(driveFoward, balance, balanceHold); // IDK if this will work. 
   /*
    * ---- Trash bin -----
    */

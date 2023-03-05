@@ -12,8 +12,8 @@ public final class Autos {
   /** Example static factory for an autonomous command. */
   // private final AutoDriveFoward autoForward;
   
-  // Autocommand to drive foward onto the ramp, auto balance, and then hold your position on the ramp. 
-  public static CommandBase DriveForward(AutoDriveFoward forward, BalanceDistance distance, BalanceHold holdDrivetrain) {
+  // Auto Command to go forward and balance. 
+  public static CommandBase BalanceOnly(AutoDriveFoward forward, BalanceDistance distance, BalanceHold holdDrivetrain) {
   //  autoForward = forward;
     return new SequentialCommandGroup(forward, distance, holdDrivetrain);
   }
