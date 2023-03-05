@@ -41,12 +41,12 @@ public class TrajectoryTrackingSubsystem extends SubsystemBase {
   // Return the drivewheel speeds - which are useful for creating the ramsete controller in robotContainer. 
   public DifferentialDriveWheelSpeeds getSpeeds(){
     return new DifferentialDriveWheelSpeeds(
-      driveSub.getLeftSpeed() * DrivetrainConstants.kRotationToMeters,
-      driveSub.getRightSpeed() * DrivetrainConstants.kRotationToMeters);
+      driveSub.getLeftSpeed() * DrivetrainConstants.kRotationToInch,
+      driveSub.getRightSpeed() * DrivetrainConstants.kRotationToInch);
   }
 
   public void setDriveMotorVolts(double leftVolts, double rightVolts){
-    driveSub.tankDrive(leftVolts / 12, rightVolts / 12);
+    driveSub.tankDrive(leftVolts / 12, rightVolts / 12); // Run the drive, but the speed should be from -1 to 1. 
   }
 
   public Pose2d getPose(){
@@ -81,6 +81,7 @@ public class TrajectoryTrackingSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Update our odometry. 
     odometry =  new DifferentialDriveOdometry(gyroSub.getHeading(), driveSub.getLeftPosition(), driveSub.getRightPosition());
   }
 }

@@ -13,30 +13,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class GyroSubsystem extends SubsystemBase {
-  /** Creates a new GyroSubsystem. */
-  // NavX Gyro
+  // Create a gyroscope.
   private final AHRS gyro = new AHRS(Port.kMXP);
 
-  public GyroSubsystem() {
-  }
+  public GyroSubsystem() {}
 
-
-  // get our heading for trajectory tracking based on the gyro angle. 
-  public Rotation2d getHeading(){
-    return Rotation2d.fromDegrees(-gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
-  }
-
-  // Return the gyro degrees. 
   public double getDegrees(){
-    return -gyro.getAngle();
+    // Get turn degrees 
+    return gyro.getAngle();
   }
 
-  // Reset our gyro. 
+  public double getPitch(){
+    // Get gyro pitch
+    return gyro.getPitch();
+  }
+
+  public double getYaw(){
+    // Get gyro yaw
+    return gyro.getYaw();
+  }
+
   public void resetGyro(){
+    // Reset gyro. 
     gyro.reset();
   }
 
   public void calibrateGyro(){
+    // Calibrate the gyro. 
     gyro.calibrate();
   }
 
@@ -44,13 +47,16 @@ public class GyroSubsystem extends SubsystemBase {
   public AHRS getGyro(){
     return gyro; 
   }
+  
+  // get our heading for trajectory tracking based on the gyro angle. 
+  public Rotation2d getHeading(){
+    return Rotation2d.fromDegrees(gyro.getAngle()); // It's negative because we want degrees to incrase turning clockwise; the default is counterclockwise to follow the unit circle.  
+  }
 
 
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
     SmartDashboard.putNumber("Gyro Angle", getDegrees());
-
-    // This method will be called once per scheduler run
   }
 }

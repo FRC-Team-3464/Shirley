@@ -75,6 +75,8 @@ public static JoystickButton
   //POV buttons for logitech joystick, with directional input
   public static POVButton 
     povButtonUp,
+    povButtonLeft,
+    povButtonRight,
     povButtonDown;
   
   //constructor which runs once, and defines all joysticks and buttons
@@ -120,6 +122,9 @@ public static JoystickButton
 
     povButtonUp = new POVButton(auxStick, 0);
     povButtonDown = new POVButton(auxStick, 180);
+    povButtonLeft = new POVButton(auxStick, 270);
+    povButtonRight = new POVButton(auxStick, 90);
+    
 
     button2Left = new JoystickButton(leftStick, 2);
     button3Left = new JoystickButton(leftStick, 3); 

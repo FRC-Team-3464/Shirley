@@ -5,45 +5,37 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ExtenderConstants;
-import frc.robot.subsystems.ExtenderSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 
-public class ExtenderSetPositionCommand extends CommandBase {
-  private final ExtenderSubsystem extenderSub;
-  private double setpoint;
-  // private double speed;
+public class CloseGrabberCone extends CommandBase {
+  /** Creates a new CloseGrabber. */
+  private final GrabberSubsystem grabberSub;
 
-  public ExtenderSetPositionCommand(ExtenderSubsystem extenderSubsystem, double target) {
+  public CloseGrabberCone(GrabberSubsystem grabberSub) {
+    this.grabberSub = grabberSub;
+    addRequirements(grabberSub);
     // Use addRequirements() here to declare subsystem dependencies.
-    setpoint = target;
-    extenderSub = extenderSubsystem;
-    addRequirements(extenderSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    extenderSub.extend();
+    grabberSub.runMotor(-0.225);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    extenderSub.stopMotor();
+    grabberSub.stopMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(extenderSub.getExtenderPosition() >= setpoint){
-      return true;
-    }
-    return extenderSub.getMaxSwitch();
+    return false;
   }
 }

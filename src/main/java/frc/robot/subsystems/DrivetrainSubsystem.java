@@ -17,7 +17,7 @@ import frc.robot.Constants.DrivetrainConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /** Creates a new DriveTrainSubsystem. */
-  // Defining the drive train motors
+  // Define the drive train motors
   private final CANSparkMax
     leftFront = new CANSparkMax(DrivetrainConstants.kLeftFrontPort, MotorType.kBrushless),
     leftBack = new CANSparkMax(DrivetrainConstants.kLeftBackPort, MotorType.kBrushless),
@@ -31,7 +31,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Differential drive, allows arcade drive and tank drive
   private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
   
-
+  // Define PID loops for the drivetrain
   private PIDController forwardController = new PIDController(0, 0, 0); // WE need a turn PID and a forward PID> 
   private PIDController rotateController = new PIDController(0, 0, 0); // WE need a turn PID and a forward PID> 
 
@@ -43,27 +43,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightBack.follow(rightFront);
 
     // Set the encoder conversion factor so getPosition() automatically has it converted to meters. 
-    leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
-    rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToMeters); 
-    leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
-    rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToMeters); 
+    leftFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToInch); 
+    rightFrontEncoder.setPositionConversionFactor(DrivetrainConstants.kRotationToInch); 
+    leftFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToInch); 
+    rightFrontEncoder.setVelocityConversionFactor(DrivetrainConstants.kRotationToInch); 
   }
 
   /*
    * Drivetrain Methods
    */
-
-  public void driveTank(double left, double right) {
-    // Gets rid of the joystick drift
-    if (Math.abs(left) < 0.07) { // Update to be the volts needed to overcome friction. 
-      left = 0; 
-    }
-    if (Math.abs(right) < 0.07) {
-      right = 0;
-    }
-    // Uses the existing tankDrive() from the DifferentialDrive along with modified values
-    drive.tankDrive(left, right);
-  }
 
   public void arcadeDrive(double speed, double rotation) {
     // Uses the built in arcadeDrive() from DifferentialDrive
@@ -79,7 +67,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Stops the arcadeDrive
     drive.stopMotor(); 
   }
-
 
   // Return the PID Controllers we need in the PID Command. 
   public PIDController getForwardController(){
@@ -137,7 +124,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightBack.setIdleMode(mode);
   }
 
-
   public RelativeEncoder getLeftFrontRelativeEncoder(){
     return leftFrontEncoder;
   }
@@ -149,8 +135,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update our odometry to get the new heading every 20 ms. 
-    // Get left and right encoder meter values - distance traveled. 
-    SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());
-    SmartDashboard.putNumber("Right Encoder Meter Value:", getRightPosition());
+    // Get the position of the left encoder in inches. 
+    SmartDashboard.putNumber("Drivetrain Inch", (getLeftPosition()));
+    // SmartDashboard.putNumber("Left Encoder Meter Value:", getLeftPosition());
+    // SmartDashboard.putNumber("Right Encoder Meter Value:", getRightPosition());
   }
 }

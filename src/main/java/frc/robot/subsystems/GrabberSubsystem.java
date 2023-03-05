@@ -9,32 +9,35 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.GrabberConstants;
 
 public class GrabberSubsystem extends SubsystemBase {
-  
-  // Creates a CANSparkMax for the grabber motor
-  // Clockwise closes
+  // Creates a CANSparkMax for the grabber motor - Need to verify direction. 
   private final CANSparkMax grabberMotor = new CANSparkMax(GrabberConstants.kGrabberMotorPort, MotorType.kBrushless);
 
-  // Gets encoder value of the motor
+  // Gets encoder of the motor
   private final RelativeEncoder grabberEncoder = grabberMotor.getEncoder();
 
   public GrabberSubsystem() {
-    grabberMotor.setInverted(false);
+    // Invert the grabber. 
+    grabberMotor.setInverted(true);
   }
 
-  public void runMotor(double speed) { 
-    // Clockwise closes
+  /*
+  * Grabber methods
+  */
+
+  public void runMotor(double speed) {
+    // Set motor to the passed-in speed. 
     grabberMotor.set(speed);
   }
 
   public void stopMotor() {
-    // Sets the speed of the motor to 0
-    // grabberMotor.set(0);
-    grabberMotor.stopMotor(); // This might work... 
+    // Stop motor
+    grabberMotor.stopMotor(); 
   }
 
   public double getGrabberRotation() {
@@ -45,7 +48,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public double getGrabberDegrees() {
     // Gets the encoder value of the grabbery motor in degrees
-    return (grabberEncoder.getPosition() * 360); 
+    return (grabberEncoder.getPosition() * GrabberConstants.kTickToDegrees);
   }
 
   public void resetGrabberDistance() {
@@ -55,9 +58,8 @@ public class GrabberSubsystem extends SubsystemBase {
   
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // Puts encoder value on the SmartDashboard
-    SmartDashboard.putNumber("Grabber Rotation", getGrabberRotation());
+    // Puts encoder values on the SmartDashboard - in degree and rotation. 
+    SmartDashboard.putNumber("Grabber Rotation", getGrabberRotation()); 
     SmartDashboard.putNumber("Grabber Degrees", getGrabberDegrees());
 
   }
