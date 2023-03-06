@@ -22,7 +22,6 @@ public class AutoDriveRotate extends CommandBase {
 
     addRequirements(drive);
     addRequirements(gyro);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -48,6 +47,5 @@ public class AutoDriveRotate extends CommandBase {
   @Override
   public boolean isFinished() {
     return(Math.abs(target - gyroSub.getDegrees()) < 0.5); // Stop when we're close. 
-    
   }
 }

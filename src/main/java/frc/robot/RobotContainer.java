@@ -71,7 +71,6 @@ public class RobotContainer {
   /*
    * Grabber Commands
    */ 
-
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
   private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
@@ -267,10 +266,11 @@ public class RobotContainer {
     
     OI.button2Aux.onTrue(stowArm);
 
-    OI.button3Aux.whileTrue(openGrabber);
-    OI.button4Aux.whileTrue(grabCube);
-    OI.button6Aux.toggleOnTrue(grabCone);
+    OI.button3Aux.whileTrue(openGrabber); // Open grabber 
+    OI.button4Aux.toggleOnTrue(grabCube); // Grab at a weak grip. 
+    OI.button6Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
 
+    
     OI.button7Aux.onTrue(goToHigh);
     OI.button8Aux.onTrue(goToMid);
     OI.button9Aux.onTrue(goToLow);

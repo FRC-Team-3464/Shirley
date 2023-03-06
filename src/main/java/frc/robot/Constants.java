@@ -55,6 +55,10 @@ public final class Constants {
 
     // Encoder Conversion Factor
     public static final double kTickToDegrees = 360;
+
+    // Grabber Speeds
+    public static final double kStrongGrabSpeed = -0.3;
+    public static final double kWeakGrabSpeed = -0.125;
   }
 
   public static class PivoterConstants {
