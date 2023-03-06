@@ -216,8 +216,6 @@ public class RobotContainer {
   
   // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
   // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
-
-  // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
   
 
   // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
@@ -226,11 +224,7 @@ public class RobotContainer {
   // private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
   // private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 
-  
-  // // Alternate forms - use in test
-  // private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
-  // private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
-  
+    
   // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
   // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
 
