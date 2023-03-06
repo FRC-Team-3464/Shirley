@@ -61,6 +61,7 @@ public class GrabberSubsystem extends SubsystemBase {
     // Puts encoder values on the SmartDashboard - in degree and rotation. 
     SmartDashboard.putNumber("Grabber Rotation", getGrabberRotation()); 
     SmartDashboard.putNumber("Grabber Degrees", getGrabberDegrees());
+    SmartDashboard.putNumber("Grabber Speed", grabberMotor.get()); // Give us the speed. 
 
   }
 }

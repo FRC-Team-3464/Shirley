@@ -8,7 +8,7 @@ package frc.robot;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-
+import edu.wpi.first.wpilibj.SerialPort.StopBits;
 // import java.util.Arrays;
 // import edu.wpi.first.math.controller.RamseteController;
 // import edu.wpi.first.math.geometry.Pose2d;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -75,6 +76,7 @@ public class RobotContainer {
   /*
    * Grabber Commands
    */ 
+  private final InstantCommand stopGrabber = new InstantCommand(grabberSub::stopMotor, grabberSub); // Stops the grabber. 
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
   private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
@@ -293,7 +295,7 @@ public class RobotContainer {
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
     
-    OI.button2Aux.onTrue(stowArm);
+    OI.button2Aux.onTrue(new SequentialCommandGroup(stowArm, stopGrabber));
 
     OI.button3Aux.whileTrue(openGrabber); // Open grabber 
     OI.button4Aux.toggleOnTrue(grabCube); // Grab at a weak grip. 

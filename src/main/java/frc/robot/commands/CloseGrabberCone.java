@@ -26,6 +26,7 @@ public class CloseGrabberCone extends CommandBase {
   @Override
   public void execute() {
     grabberSub.runMotor(GrabberConstants.kStrongGrabSpeed);
+
   }
 
   // Called once the command ends or is interrupted.
