@@ -25,8 +25,8 @@ public class PivoterSubsystem extends SubsystemBase {
   
   public PivoterSubsystem() {
     pivoterMotor.setInverted(false);
-    secondPivoterMotor.setInverted(true);
-
+    // secondPivoterMotor.setInverted(false);
+    secondPivoterMotor.follow(pivoterMotor, true); // This inversts the motor and tells it to follow the other. 
   }
 
  /*
@@ -36,7 +36,7 @@ public class PivoterSubsystem extends SubsystemBase {
   //  Run the motor to our inputted speed. 
   public void pivot(double speed){
     pivoterMotor.set(speed);
-    secondPivoterMotor.follow(pivoterMotor);
+    // secondPivoterMotor.follow(pivoterMotor); // Does this work?
 
   }
 
@@ -96,6 +96,7 @@ public class PivoterSubsystem extends SubsystemBase {
     // Add some power to the pivoter to have it hold against gravity. 
     if(!getSwitch()){ // Make sure the trigger isn't activated. 
       pivot(0.05);
+
       // secondPivoterMotor.fo
     }
   }
