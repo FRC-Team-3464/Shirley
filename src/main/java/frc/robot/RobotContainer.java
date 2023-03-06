@@ -43,9 +43,9 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
-  private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
+  // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
-  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
   // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
@@ -131,14 +131,14 @@ public class RobotContainer {
    * Auto Sequences
    */
   public final AutoDriveFoward driveFoward = new AutoDriveFoward(driveSub, 50);  // Drive forward` 160 inches. change later
-  public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
+  // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
 
-  public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
+  // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
   
 
 
-  public final Autos Autos = new Autos(); 
-  public final Command driveandBalance = frc.robot.commands.Autos.BalanceOnly(driveFoward, balance, balanceHold); // IDK if this will work. 
+  // public final Autos Autos = new Autos(); 
+  // public final Command driveandBalance = frc.robot.commands.Autos.BalanceOnly(driveFoward, balance, balanceHold); // IDK if this will work. 
   /*
    * ---- Trash bin -----
    */
@@ -268,9 +268,9 @@ public class RobotContainer {
    * --------- GET our drive balance autonomous commands.  -----------
    */
 
-  public Command getDriveBalanceAuto(){
-    return driveandBalance;
-  }
+  // public Command getDriveBalanceAuto(){
+  //   return driveandBalance;
+  // }
 
   // public Command getDr
 
