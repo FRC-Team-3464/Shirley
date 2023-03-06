@@ -6,14 +6,23 @@ package frc.robot.commands;
 // HUH?
 // import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static CommandBase DriveForward() {
-    return null;
+  // private final AutoDriveFoward autoForward;
+  
+  // Auto Command to go forward and balance. 
+  public static CommandBase BalanceOnly(AutoDriveFoward forward, BalanceDistance distance, BalanceHold holdDrivetrain) {
+  //  autoForward = forward;
+    return new SequentialCommandGroup(forward, distance, holdDrivetrain);
   }
 
-  private Autos() {
+  
+
+  // 
+
+  public Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
 }
