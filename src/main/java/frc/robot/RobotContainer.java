@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -99,6 +100,21 @@ public class RobotContainer {
   private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, 107);
   private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, 29);
   private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, 60);
+
+  // // Feedforward testing. 
+  
+  // private final AddFeedFoward extendHighFeed = new AddFeedFoward(pivoterSub);
+  // private final AddFeedFoward extendMidFeed = new AddFeedFoward(pivoterSub);
+  // private final AddFeedFoward extendLowFeed = new AddFeedFoward(pivoterSub);
+
+  // private final ParallelRaceGroup ExtenderSetPositionHighCommandWithFeedFoward = new ParallelRaceGroup(extendToHigh, extendHighFeed);
+  // private final ParallelRaceGroup ExtenderSetPositionMidCommandWithFeedFoward = new ParallelRaceGroup(extendToMid, extendMidFeed);
+  // private final ParallelRaceGroup ExtenderSetPositionLowCommandWithFeedFoward = new ParallelRaceGroup(extendToLow, extendLowFeed);
+
+
+  // public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, ExtenderSetPositionHighCommandWithFeedFoward);
+  // public final Command goToMid = new SequentialCommandGroup(pivotToMid, ExtenderSetPositionMidCommandWithFeedFoward);
+  // public final Command goToLow = new SequentialCommandGroup(pivotToLow, ExtenderSetPositionLowCommandWithFeedFoward);  
 
   // Merge commands using sequential commands. 
   public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
