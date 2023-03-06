@@ -5,28 +5,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PivoterSubsystem;
+import frc.robot.subsystems.BalanceHoldPIDSubsystem;
+// import frc.robot.subsystems.EncoderSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class AddFeedFoward extends CommandBase {
-  /* Creates a new AddFeedFoward. */
-  private final PivoterSubsystem pivoterSub;
-
-  public AddFeedFoward(PivoterSubsystem pivoterSub) {
-    this.pivoterSub = pivoterSub;
-    addRequirements(pivoterSub);
+public class BalanceHold extends CommandBase {
+ 
+  
+  private final BalanceHoldPIDSubsystem holdSub;
+  private final DrivetrainSubsystem driveSub;
+  /** Creates a new BalanceHold. */
+  public BalanceHold(BalanceHoldPIDSubsystem balance, DrivetrainSubsystem driveSub) {
+    holdSub = balance;
+    this.driveSub = driveSub;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(holdSub, driveSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    driveSub.resetEncoders();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.addFeedFoward();
+    holdSub.useOutput(holdSub.getMeasurement(), 0); // Run the autobalance PID Command
+    System.out.println("Running Command AutoHold PID");
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
