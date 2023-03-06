@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.PivoterConstants;
+// import frc.robot.Constants.PivoterConstants;
 import frc.robot.subsystems.PivoterSubsystem;
 
 public class PivotToHighPosition extends CommandBase {
@@ -26,7 +26,7 @@ public class PivotToHighPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivot(1); // set to max speed. 
+    pivoterSub.pivot(0.3); // set to max speed. 
   }
 
   // Called once the command ends or is interrupted.

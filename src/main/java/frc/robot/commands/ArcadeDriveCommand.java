@@ -8,6 +8,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
+import frc.robot.subsystems.DrivetrainRamp;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
@@ -15,10 +16,13 @@ public class ArcadeDriveCommand extends CommandBase {
   
   private final XboxController controller = OI.xBoxController;
   private final DrivetrainSubsystem arcadeDriveSub;
+  private final DrivetrainRamp driveRamp;
   
-  
-  public ArcadeDriveCommand(DrivetrainSubsystem driveTrainSub) {
+  public ArcadeDriveCommand(DrivetrainSubsystem driveTrainSub, DrivetrainRamp drivetrainRamp ) {
     arcadeDriveSub = driveTrainSub;
+    driveRamp = drivetrainRamp;
+
+    addRequirements(drivetrainRamp); // Require the ramp function. 
     addRequirements(driveTrainSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -33,7 +37,9 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
     // Uses the left joystick X and Y values, and uses 80% of the value
-    arcadeDriveSub.arcadeDrive(controller.getLeftY() * 0.8, controller.getRightX() * 0.8);
+    // Ramp the drivetrain. 
+    arcadeDriveSub.arcadeDrive(driveRamp.applyAsDouble(controller.getLeftY() * 0.4) , controller.getRightX() * 0.4); // Halve the speed - we don't need to go so fast now. 
+
   }
 
   // Called once the command ends or is interrupted.

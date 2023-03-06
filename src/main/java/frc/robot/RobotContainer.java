@@ -20,8 +20,9 @@ import frc.robot.subsystems.*;
 // import edu.wpi.first.wpilibj.counter.ExternalDirectionCounter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+// import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -46,15 +47,15 @@ public class RobotContainer {
   private final GyroSubsystem gyroSub = new GyroSubsystem();
   private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
-  // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
+  private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
+  // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
   
   /*
    * Drivetrain Commands
    */
 
-  private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
+  private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
   private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
-
 
   /* 
    * Extender Commands
@@ -104,6 +105,21 @@ public class RobotContainer {
   private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, 107);
   private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, 29);
   private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, 60);
+
+  // // Feedforward testing. 
+  
+  // private final AddFeedFoward extendHighFeed = new AddFeedFoward(pivoterSub);
+  // private final AddFeedFoward extendMidFeed = new AddFeedFoward(pivoterSub);
+  // private final AddFeedFoward extendLowFeed = new AddFeedFoward(pivoterSub);
+
+  // private final ParallelRaceGroup ExtenderSetPositionHighCommandWithFeedFoward = new ParallelRaceGroup(extendToHigh, extendHighFeed);
+  // private final ParallelRaceGroup ExtenderSetPositionMidCommandWithFeedFoward = new ParallelRaceGroup(extendToMid, extendMidFeed);
+  // private final ParallelRaceGroup ExtenderSetPositionLowCommandWithFeedFoward = new ParallelRaceGroup(extendToLow, extendLowFeed);
+
+
+  // public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, ExtenderSetPositionHighCommandWithFeedFoward);
+  // public final Command goToMid = new SequentialCommandGroup(pivotToMid, ExtenderSetPositionMidCommandWithFeedFoward);
+  // public final Command goToLow = new SequentialCommandGroup(pivotToLow, ExtenderSetPositionLowCommandWithFeedFoward);  
 
   // Merge commands using sequential commands. 
   public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
@@ -218,8 +234,6 @@ public class RobotContainer {
   
   // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
   // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
-
-  // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
   
 
   // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
@@ -228,11 +242,7 @@ public class RobotContainer {
   // private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
   // private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
 
-  
-  // // Alternate forms - use in test
-  // private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
-  // private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
-  
+    
   // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
   // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
 
