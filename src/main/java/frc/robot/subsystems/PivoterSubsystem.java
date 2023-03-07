@@ -95,8 +95,8 @@ public class PivoterSubsystem extends SubsystemBase {
   public void addFeedFoward(){
     // Add some power to the pivoter to have it hold against gravity. 
     if(!getSwitch()){ // Make sure the trigger isn't activated. 
-      pivot(0.05);
-
+      System.out.println("FeedFoward");  
+       pivot(0.05);
       // secondPivoterMotor.fo
     }
   }
@@ -107,7 +107,9 @@ public class PivoterSubsystem extends SubsystemBase {
 
    public boolean getSwitch(){
     // Get the limit switch - either true or false. 
+    System.out.print(!minLimitSwitch.get());
     return !minLimitSwitch.get();
+    
    }
 
   @Override

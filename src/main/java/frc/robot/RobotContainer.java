@@ -102,10 +102,13 @@ public class RobotContainer {
   private final PivotToHighPosition pivotToHigh = new PivotToHighPosition(pivoterSub, PivoterConstants.kMaxPivoterValue);
   private final PivotToHighPosition pivotToMid = new PivotToHighPosition(pivoterSub, 15);
   private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, 6.5);
+  private final PivotToHighPosition pivotToGround = new PivotToHighPosition(pivoterSub, 1);
+  
 
   private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, 107);
   private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, 29);
   private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, 60);
+  private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, 10.5);
 
   // // Feedforward testing. 
   
@@ -122,10 +125,11 @@ public class RobotContainer {
   // public final Command goToMid = new SequentialCommandGroup(pivotToMid, ExtenderSetPositionMidCommandWithFeedFoward);
   // public final Command goToLow = new SequentialCommandGroup(pivotToLow, ExtenderSetPositionLowCommandWithFeedFoward);  
 
-  // Merge commands using sequential commands. 
+  // // Merge commands using sequential commands. 
   public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
   public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
   public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
+  public final Command goToGround = new SequentialCommandGroup(pivotToGround,extendToGround);
 
   // public final 
 
@@ -295,10 +299,11 @@ public class RobotContainer {
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
     
-    OI.button2Aux.onTrue(new SequentialCommandGroup(stowArm, stopGrabber));
+    OI.button2Aux.onTrue(stowArm);
 
     OI.button3Aux.whileTrue(openGrabber); // Open grabber 
     OI.button4Aux.toggleOnTrue(grabCube); // Grab at a weak grip. 
+    OI.button5Aux.onTrue(stopGrabber);
     OI.button6Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
 
     

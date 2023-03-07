@@ -32,7 +32,7 @@ public class PivotToHighPosition extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pivoterSub.stopMotor();
+    pivoterSub.addFeedFoward();
     // pivoterSub.re
   }
 
