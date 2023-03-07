@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import frc.robot.Constants.ExtenderConstants;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -100,15 +101,16 @@ public class RobotContainer {
    */
 
   private final PivotToHighPosition pivotToHigh = new PivotToHighPosition(pivoterSub, PivoterConstants.kMaxPivoterValue);
-  private final PivotToHighPosition pivotToMid = new PivotToHighPosition(pivoterSub, 15);
-  private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, 6.5);
-  private final PivotToHighPosition pivotToGround = new PivotToHighPosition(pivoterSub, 1);
+  private final PivotToHighPosition pivotToMid = new PivotToHighPosition(pivoterSub, PivoterConstants.kMidPivoterValue);
+  private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, PivoterConstants.kLowPivoterValue);
+  private final PivotToHighPosition pivotToGround = new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterValue);
+  private final PivotToHighPosition pivotToFeeder = new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue);
   
 
-  private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, 107);
-  private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, 29);
-  private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, 60);
-  private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, 10.5);
+  private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue);
+  private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kMidExtenderValue);
+  private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kLowExtenderValue);
+  private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue);
 
   // // Feedforward testing. 
   
@@ -129,9 +131,8 @@ public class RobotContainer {
   public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
   public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
   public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
-  public final Command goToGround = new SequentialCommandGroup(pivotToGround,extendToGround);
+  public final Command goToGround = new SequentialCommandGroup(pivotToGround, extendToGround);
 
-  // public final 
 
   /*
    * Auto Sequences
@@ -310,9 +311,11 @@ public class RobotContainer {
     OI.button7Aux.onTrue(goToHigh);
     OI.button8Aux.onTrue(goToMid);
     OI.button9Aux.onTrue(goToLow);
+    OI.button10Aux.onTrue(goToGround); // Pivot to the ground position. 
+    OI.button11Aux.onTrue(pivotToFeeder);
     
     OI.button12Aux.onTrue(drivetrainEncoderReset);
-    
+  
     /*
      * Command junk
      */
