@@ -23,21 +23,21 @@ public class TargetCenterPIDCommand extends CommandBase {
 //   PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
 
 // Get our angular P and D values. 
-  final double turnP = 0.02666666666; // Max yaw error is 30, which Yifan sets to 80% so 0.8/30 = 0.0266..
+  final double turnP = 0.02; // Max yaw error is 30, which Yifan sets to 80% so 0.8/30 = 0.0266..
   final double turnD = 0.0;
   PIDController turnController = new PIDController(turnP, 0, turnD);
 
   private final XboxController controller = OI.xBoxController;
-  private final PhotonCamera camera;
+  // private final PhotonCamera camera;
   private double forwardSpeed;
   private double rotationSpeed;
 
-  public TargetCenterPIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive, PhotonCamera inputCamera) {
+  public TargetCenterPIDCommand(PhotonVisionSubsystem photon, DrivetrainSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     photonSub = photon;
     driveSub = drive;
 
-    camera = inputCamera;  
+    // camera = inputCamera;  
     addRequirements(driveSub);
     addRequirements(photonSub);
   }
@@ -55,11 +55,11 @@ public class TargetCenterPIDCommand extends CommandBase {
   public void execute() {
     forwardSpeed = controller.getLeftY(); // Move the forward speed by the left value of the controller. 
     // Vision-alignment mode
-    var result = camera.getLatestResult(); // Get the most recent result from the camera. 
+    var result = photonSub.getLimelightCamera().getLatestResult(); // Get the most recent result from the camera. 
 
     if (result.hasTargets()) {
         // Calculate angular turn power
-        rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0); // Calculate it from current position to 0. 
+        rotationSpeed = -turnController.calculate(result.getTargets().get(0).getYaw(), 0); // Calculate it from current position to 0. 
       } 
     else{
       rotationSpeed = 0; // Don't do anything if there's no targets. 

@@ -50,7 +50,7 @@ public class RobotContainer {
   // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
-  // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
+  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
   
   /*
    * Drivetrain Commands
@@ -81,6 +81,11 @@ public class RobotContainer {
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
   private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
+
+  /*
+   * Photonvision Commands
+   */
+  private final TargetCenterPIDCommand photonCenter = new TargetCenterPIDCommand(photonSub, driveSub);
 
   /*
    * Store Commands: We need to create the commands again to follow the syntax of creating sequential commands. 
@@ -154,122 +159,6 @@ public class RobotContainer {
 
   // public final Autos Autos = new Autos(); 
   // public final Command driveandBalance = frc.robot.commands.Autos.BalanceOnly(driveFoward, balance, balanceHold); // IDK if this will work. 
-  /*
-   * ---- Trash bin -----
-   */
-  // Switch based translations
-  // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
- 
-  // Extend till we hit the maximum. 
-  // private final FunctionalCommand extendToMax = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   extenderSub::stopMotor, 
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> extenderSub.translateManual(0.3),
-  //   // On finished command
-  //   (interrupted) -> {extenderSub.stopMotor();
-  //                     System.out.println("Command Ended");},
-  //   // isFinished() - get switch value.  
-  //   extenderSub::getMaxSwitch,
-  //   // Give us the requirements. 
-  //   extenderSub
-  // );
-
-  // private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   grabberSub::stopMotor, 
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> grabberSub.runMotor(-0.125), // Counterclockwise closes. 
-  //   // On finished command
-  //   (interrupted) -> grabberSub.stopMotor(),
-  //   // isFinished() - get switch value.  
-  //   () -> (grabberSub.getGrabberDegrees() <= 0),
-  //   // Give us the requirements. 
-  //   grabberSub
-  // );
-
-   
-  // private final FunctionalCommand grabberSetClosed = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   grabberSub::stopMotor, 
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> grabberSub.runMotor(0.125), // CLockwise closes
-  //   // On finished command
-  //   (interrupted) -> grabberSub.stopMotor(),
-  //   // isFinished() - get switch value.  
-  //   () -> (grabberSub.getGrabberDegrees() >= 120),
-  //   // Give us the requirements. 
-  //   grabberSub
-  // );
-
-
-  // Pivoter Manual Speed Commands
-  // private final Command pivotSpeedDown = pivoterSub.pivotManual(-0.125);
-  // private final Command pivotSpeedUp = pivoterSub.pivotManual(0.25); // WHY is it inversed
-
-  // Pivot till we hit the minimum limit switch. 
-  // private final FunctionalCommand pivotToMin = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   pivoterSub::stopMotor, // Fix
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> pivoterSub.pivot(0.125), // Why is the motor inversed? It should be negative
-  //   // When we finish the command. 
-  //   (interrupted) -> pivoterSub.stopMotor(),
-  //   // isFinished() - get switch value; when we hit the switch  
-  //   pivoterSub::getSwitch,
-  //   // Give us the requirements. 
-  //   pivoterSub
-  // );
-
-  // retract till we hit the miminimum. 
-  // private final FunctionalCommand retractToMin = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   extenderSub::stopMotor, // Stop the motor first
-  //   // What to do during the command - run the motor unrestrained and retract the extender. . 
-  //   () -> extenderSub.translateExtender(-0.3),
-  //   // On finished command
-  //   (interrupted) -> {extenderSub.stopMotor();
-  //     System.out.println("Command Ended");},
-  //   // isFinished() - get switch value.  
-  //   extenderSub::getMinSwitch, // The minimum switch determines when we've ended. 
-  //   // Give us the requirements. 
-  //   extenderSub
-  // );
-
-
-  // Extender Manual Speed Commands
-  // private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
-  // private final Command extenderSpeedIn = extenderSub.translateManual(-0.3);
-
-
-  // Retract extender to min, then pivot -> represents going to the stored position. 
-  // private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
-
-  
-  // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
-  // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
-  
-
-  // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
-  // private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
- 
-  // private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
-  // private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
-
-    
-  // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
-  // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
-
-  // // PID Aim Commands
-  // // Auto center and get in range with the limelight or the apriltag camera. 
-  // private final TargetCenterAndRangePIDCommand limeCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  // private final TargetCenterAndRangePIDCommand aprilCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
-
-  // private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  // private final TargetCenterPIDCommand aprilCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getColorCamera());
-
-  // private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  // private final TargetRangePIDCommand aprilRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -303,6 +192,8 @@ public class RobotContainer {
     CommandScheduler.getInstance().setDefaultCommand(pivoterSub, addFeedFoward); // Continously add feedforward to the pivoter other than running it's commands with the pivoter or when it reaches the limit switches. 
     CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
   
+    OI.buttonRB.whileTrue(photonCenter);
+
     OI.povButtonUp.whileTrue(PivoterRotateUp);
     OI.povButtonDown.whileTrue(pivotMin);  
     OI.povButtonLeft.whileTrue(retractExtender);
