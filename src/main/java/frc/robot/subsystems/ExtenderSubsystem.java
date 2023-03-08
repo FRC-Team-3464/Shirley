@@ -128,6 +128,6 @@ public class ExtenderSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Extender Encoder (in)", getExtenderInchPosition());
     SmartDashboard.putBoolean("Extender MIN Limit", getMinSwitch());
     SmartDashboard.putBoolean("Extender Max Limit", getMaxSwitch());
-    
+    SmartDashboard.putNumber("Extender Current", extenderMotor.getOutputCurrent());
   }
 }

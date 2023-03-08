@@ -62,6 +62,6 @@ public class GrabberSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Grabber Rotation", getGrabberRotation()); 
     SmartDashboard.putNumber("Grabber Degrees", getGrabberDegrees());
     SmartDashboard.putNumber("Grabber Speed", grabberMotor.get()); // Give us the speed. 
-
+    SmartDashboard.putNumber("Grabber Power", grabberMotor.getOutputCurrent());
   }
 }

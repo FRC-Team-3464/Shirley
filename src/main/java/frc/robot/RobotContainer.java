@@ -100,19 +100,27 @@ public class RobotContainer {
    * Set the pivoter/extender to certain setpoints. 
    */
 
-  private final PivotToHighPosition pivotToHigh = new PivotToHighPosition(pivoterSub, PivoterConstants.kMaxPivoterValue);
+  private final PivotToHighPosition pivotToHigh = new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue);
   private final PivotToHighPosition pivotToMid = new PivotToHighPosition(pivoterSub, PivoterConstants.kMidPivoterValue);
   private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, PivoterConstants.kLowPivoterValue);
-  private final PivotToHighPosition pivotToGround = new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterValue);
+  private final PivotToHighPosition pivotUpToGround = new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue);
   private final PivotToHighPosition pivotToFeeder = new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue);
+  private final PivotToLowPosition pivotDownToGround = new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue);
+  //private final SequentialCommandGroup pivotDown = new SequentialCommandGroup(pivotUpToGround, pivotDownToGround);
   
 
   private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue);
   private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kMidExtenderValue);
   private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kLowExtenderValue);
-  private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue);
+  private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue); 
 
-  // // Feedforward testing. 
+  private final SequentialCommandGroup dropAtHigh = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); //
+  private final SequentialCommandGroup drop = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
+
+
+
+
+
   
   // private final AddFeedFoward extendHighFeed = new AddFeedFoward(pivoterSub);
   // private final AddFeedFoward extendMidFeed = new AddFeedFoward(pivoterSub);
@@ -131,7 +139,7 @@ public class RobotContainer {
   public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
   public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
   public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
-  public final Command goToGround = new SequentialCommandGroup(pivotToGround, extendToGround);
+  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, extendToGround, /*openGrabber,*/ pivotDownToGround);
 
 
   /*
@@ -302,12 +310,13 @@ public class RobotContainer {
     
     OI.button2Aux.onTrue(stowArm);
 
-    OI.button3Aux.whileTrue(openGrabber); // Open grabber 
-    OI.button4Aux.toggleOnTrue(grabCube); // Grab at a weak grip. 
-    OI.button5Aux.onTrue(stopGrabber);
-    OI.button6Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
-
+    OI.button3Aux.toggleOnTrue(openGrabber); // Open grabber 
+    // OI.button3Aux.onFalse(stopGrabber); // Open grabber 
     
+    // OI.button4Aux.toggleOnTrue(grabCube); // Grab at a weak grip. 
+    OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
+    OI.button5Aux.onTrue(stopGrabber);
+     
     OI.button7Aux.onTrue(goToHigh);
     OI.button8Aux.onTrue(goToMid);
     OI.button9Aux.onTrue(goToLow);

@@ -5,13 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+// import frc.robot.Constants.PivoterConstants;
 import frc.robot.subsystems.PivoterSubsystem;
 
-public class PivoterPivotMin extends CommandBase {
-  /** Creates a new PivoterPivotMin. */
+public class PivotToLowPosition extends CommandBase {
+  /** Creates a new PivotToHighPosition. */
   private final PivoterSubsystem pivoterSub;
-  public PivoterPivotMin(PivoterSubsystem pivoterSub) {
+  private final double setpoint;
+  public PivotToLowPosition(PivoterSubsystem pivoterSub, double target) {
     this.pivoterSub = pivoterSub;
+    setpoint = target;
     addRequirements(pivoterSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,20 +26,23 @@ public class PivoterPivotMin extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivot(-0.125);
-    System.out.println("Pivoter " + pivoterSub.getPivoterRotation());
+    pivoterSub.pivot(-0.1); // set to max speed. 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //System.out.println("End");
+    //pivoterSub.addFeedFoward();
+    // pivoterSub.re
     pivoterSub.stopMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pivoterSub.getSwitch();
+    if(pivoterSub.getSwitch()){
+      return true;
+    }
+    return (pivoterSub.getPivoterRotation() <= setpoint);
   }
 }

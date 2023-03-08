@@ -49,9 +49,9 @@ public final class Constants {
     public static final double tolerance = 0.75;
 
     // Setpoint
-    public static final double kGroundExtenderValue = 2.7; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kGroundExtenderValue = 9.3; // The setpoint to rotate the pivoter to the highest position.
     public static final double kLowExtenderValue = 0.875; // The setpoint to rotate the pivoter to the highest position.
-    public static final double kMidExtenderValue = 2.085; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidExtenderValue = 5; // The setpoint to rotate the pivoter to the highest position.
     public static final double kHighExtenderValue = 20.12; // The setpoint to rotate the pivoter to the highest position. FIX
 
   }
@@ -75,10 +75,14 @@ public final class Constants {
     public static final int kPivotMinSwitchPort = 2;
 
     public static final double kFeedPivoterValue = 12.26;
-    public static final double kMaxPivoterValue = 16.64; // The setpoint to rotate the pivoter to the highest position.
-    public static final double kMidPivoterValue = 13.476; // The setpoint to rotate the pivoter to the highest position.
-    public static final double kLowPivoterValue = 4.999; // The setpoint to rotate the pivoter to the highest position.
-    public static final double kGroundPivoterValue = 2.3809; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kHighPivoterValue = 17.1; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidPivoterValue = 15; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kLowPivoterValue = 7; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kGroundPivoterValue = 0.9; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kGroundPivoterUpValue = 3;
+
+    public static final double kPivoterMaxValue = 20;
+    
 
 
     // Encoder Conversion Factor
