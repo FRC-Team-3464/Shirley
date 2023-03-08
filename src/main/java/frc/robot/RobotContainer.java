@@ -55,7 +55,6 @@ public class RobotContainer {
   /*
    * Drivetrain Commands
    */
-
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
   private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
 
@@ -91,13 +90,15 @@ public class RobotContainer {
    * Store Commands: We need to create the commands again to follow the syntax of creating sequential commands. 
    */ 
 
-  private final ExtenderRetractLimit retractStore = new ExtenderRetractLimit(extenderSub);
-  private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
-
+  
   private final InstantCommand pivotEncoderReset = new InstantCommand(pivoterSub::resetEncoder, pivoterSub);
   private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
 
+  private final ExtenderRetractLimit retractStore = new ExtenderRetractLimit(extenderSub);
+  private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
+
   public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore, pivotEncoderReset, extenderEncoderReset);
+  public final Command stowGroundArm =  new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub));
   // public final Command stowArm = new SequentialCommandGroup(new ExtenderRetractLimit, pivotStore, pivotEncoderReset, extenderEncoderReset);
 
   /*
@@ -112,20 +113,17 @@ public class RobotContainer {
   private final PivotToHighPosition pivotToFeeder = new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue);
   private final PivotToLowPosition pivotDownToGround = new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue);
   //private final SequentialCommandGroup pivotDown = new SequentialCommandGroup(pivotUpToGround, pivotDownToGround);
-  
 
   private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue);
   private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kMidExtenderValue);
   private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kLowExtenderValue);
   private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue); 
 
-  private final SequentialCommandGroup dropAtHigh = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); //
-  private final SequentialCommandGroup drop = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
-
-
-
-
-
+  /*
+   * Auto Commands
+   */
+  private final SequentialCommandGroup auto1ExtendAndDrop = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); //
+  private final SequentialCommandGroup auto2ExtendDropTurnAndDrive = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
   
   // private final AddFeedFoward extendHighFeed = new AddFeedFoward(pivoterSub);
   // private final AddFeedFoward extendMidFeed = new AddFeedFoward(pivoterSub);
@@ -152,14 +150,8 @@ public class RobotContainer {
    */
   public final AutoDriveFoward driveFoward = new AutoDriveFoward(driveSub, 50);  // Drive forward` 160 inches. change later
   // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
-
   // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
-  
-
-
-  // public final Autos Autos = new Autos(); 
-  // public final Command driveandBalance = frc.robot.commands.Autos.BalanceOnly(driveFoward, balance, balanceHold); // IDK if this will work. 
- 
+   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -167,16 +159,6 @@ public class RobotContainer {
     configureBindings();
   }
 
-
-  /*
-   * --------- GET our drive balance autonomous commands.  -----------
-   */
-
-  // public Command getDriveBalanceAuto(){
-  //   return driveandBalance;
-  // }
-
-  // public Command getDr
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -191,81 +173,41 @@ public class RobotContainer {
     // Run default command as the arcade drive command.
     CommandScheduler.getInstance().setDefaultCommand(pivoterSub, addFeedFoward); // Continously add feedforward to the pivoter other than running it's commands with the pivoter or when it reaches the limit switches. 
     CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
-  
+
+    /*
+     * Controller 
+     */
+
     OI.buttonRB.whileTrue(photonCenter);
+    
+    /*
+     * Aux Stick
+     */
 
     OI.povButtonUp.whileTrue(PivoterRotateUp);
     OI.povButtonDown.whileTrue(pivotMin);  
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
     
-    OI.button2Aux.onTrue(stowArm);
+    OI.triggerAux.toggleOnTrue(grabCone);
 
-    OI.button3Aux.toggleOnTrue(openGrabber); // Open grabber 
-    // OI.button3Aux.onFalse(stopGrabber); // Open grabber 
-    
-    // OI.button4Aux.toggleOnTrue(grabCube); // Grab at a weak grip. 
-    OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
-    OI.button5Aux.onTrue(stopGrabber);
-     
+
+    OI.button2Aux.toggleOnTrue(openGrabber); // Open grabber 
+    // OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
+    // OI.button5Aux.onTrue(stopGrabber);
+    OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
+    OI.button4Aux.onTrue(pivotToFeeder);
+    OI.button5Aux.onTrue(stowArm);
+    OI.button6Aux.onTrue(stowGroundArm);
+
     OI.button7Aux.onTrue(goToHigh);
     OI.button8Aux.onTrue(goToMid);
     OI.button9Aux.onTrue(goToLow);
-    OI.button10Aux.onTrue(goToGround); // Pivot to the ground position. 
-    OI.button11Aux.onTrue(pivotToFeeder);
-    
-    OI.button12Aux.onTrue(drivetrainEncoderReset);
-  
-    /*
-     * Command junk
-     */
 
+    OI.button12Aux.onTrue(new AutoDriveFoward(driveSub, 30));
 
-    // Grabber Commands
+    // OI.button12Aux.onTrue(drivetrainEncoderReset);
 
-    // OI.povButtonRight.onFalse(extenderSub.commandStop());
-    // OI.povButtonLeft.onFalse(extenderSub.commandStop());
-    // OI.povButtonLeft.whileFalse(extenderSub::stopMotor);
-    
-    // CommandScheduler.getInstance().setDefaultCommand(extenderSub, new InstantCommand(extenderSub, ));
-    // Extender Executables
-    // OI.button10Aux.onTrue(new InstantCommand(grabberSub::resetGrabberDistance));
-  
-    // // Switich based commands
-    // OI.button3Aux.onTrue(retractToMin);
-    // OI.button4Aux.onTrue(extendToMax);
-
-    // OI.button5Aux.onTrue(pivotToMin);
-    
-    // // Open Grabber Set command. 
-    // // OI.button6Aux.onTrue(extendToMax);
-    // OI.button6Aux.whileTrue(grabberSpeedClose);
-    // OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
-
-    // Retract pivoter to min, rotate extender to min. 
-    //OI.button8Aux.onTrue(testGo); //THIS IS A VERY DANGEROUS LINE
-
-    // Trigger command execution.
-    // OI.triggerAux.toggleOnTrue(openGrabber);
-    // OI.triggerAux.toggleOnFalse(closeGrabber);
-
-    // // OI.button5Aux.toggleOnTrue(PIDPivotForward);
-    // // OI.button5Aux.toggleOnFalse(PIDPivotBack);
-
-    // OI.button5Aux.toggleOnTrue(PivoterHighPoint);
-    // OI.button5Aux.toggleOnFalse(PivoterLowPoint);
-
-    // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
-    // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
-
-    // OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
-    // OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
-    
-
-    // OI.buttonX.whileTrue(limeCenterAndRange);
-    // OI.buttonA.whileTrue(aprilCenterAndRange);
-    // runs StowArm command once when robot is initialized
-    // CommandScheduler.getInstance().schedule(stowArm);
     }
 
   /**
