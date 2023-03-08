@@ -38,8 +38,7 @@ public class ArcadeDriveCommand extends CommandBase {
   public void execute() {
     // Uses the left joystick X and Y values, and uses 80% of the value
     // Ramp the drivetrain. 
-    arcadeDriveSub.arcadeDrive(driveRamp.applyAsDouble(controller.getLeftY() * 0.8) , controller.getRightX() * 0.5); // Halve the speed - we don't need to go so fast now. 
-
+    arcadeDriveSub.arcadeDrive(driveRamp.applyAsDouble((controller.getLeftY() * 0.5)) , controller.getRightX() * 0.6); // Halve the speed - we don't need to go so fast now. 
   }
 
   // Called once the command ends or is interrupted.

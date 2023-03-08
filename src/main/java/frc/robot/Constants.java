@@ -76,7 +76,7 @@ public final class Constants {
 
     public static final double kFeedPivoterValue = 12.26;
     public static final double kHighPivoterValue = 17.1; // The setpoint to rotate the pivoter to the highest position.
-    public static final double kMidPivoterValue = 15; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidPivoterValue = 14; // The setpoint to rotate the pivoter to the highest position.
     public static final double kLowPivoterValue = 7; // The setpoint to rotate the pivoter to the highest position.
     public static final double kGroundPivoterValue = 0.9; // The setpoint to rotate the pivoter to the highest position.
     public static final double kGroundPivoterUpValue = 3;
