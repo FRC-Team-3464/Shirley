@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
 import frc.robot.subsystems.DrivetrainRamp;
@@ -39,6 +40,8 @@ public class ArcadeDriveCommand extends CommandBase {
     // Uses the left joystick X and Y values, and uses 80% of the value
     // Ramp the drivetrain. 
     arcadeDriveSub.arcadeDrive(driveRamp.applyAsDouble((controller.getLeftY() * 0.5)) , controller.getRightX() * 0.6); // Halve the speed - we don't need to go so fast now. 
+    SmartDashboard.putNumber("Foward Value", controller.getLeftY() * 0.5);
+    // SmartDashboard.putNumber("Foward Value", );
   }
 
   // Called once the command ends or is interrupted.
