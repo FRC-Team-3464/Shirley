@@ -152,14 +152,22 @@ public class RobotContainer {
   public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
   public final AutoDriveFoward driveToObject = new AutoDriveFoward(driveSub, -180); // Cross the 3+ points mark. 
   public final SequentialCommandGroup dropAndDrive = new SequentialCommandGroup(
+    // Stow 
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    // Pivot up
     new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue),
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue),
     new WaitCommand(2),
+    // Stow again
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     new WaitCommand(2),
+    //Drive back
     new AutoDriveBackward(driveSub, 180));
   // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
   // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
@@ -235,6 +243,6 @@ public class RobotContainer {
     // return command; 
 
 
-    return driveToObject;
+    return dropAndDrive;
   }
 }
