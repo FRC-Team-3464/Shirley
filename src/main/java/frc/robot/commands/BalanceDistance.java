@@ -29,6 +29,7 @@ public class BalanceDistance extends CommandBase {
   public void initialize() {
         
   }
+  
   @Override
   public void execute() {
     balanceSub.useOutput(balanceSub.getMeasurement(), 0); // Run the autobalance PID Command

@@ -30,8 +30,7 @@ public class BalancePIDSubsystem extends PIDSubsystem {
     public BalancePIDSubsystem(){ // What runs when we first create this command. 
         super(new PIDController(-0.03, 0.00, .001));  // This should be negative; negative means forwards, i think 
         getController().setSetpoint(0);
-        getController().setTolerance(1);
-        timer.start();
+        getController().setTolerance(1); // Have tolerance be += one degree. 
         distance = 0;
         // encoderDistance = 0;
     }
@@ -56,14 +55,13 @@ public class BalancePIDSubsystem extends PIDSubsystem {
         else if(speed < -.35){
             speed = -.35;
         }
-        
         driveSub.arcadeDrive(speed, 0);
         //System.out.println(speed);
     }
 
     @Override  
     public double getMeasurement(){
-        return gyroSub.getDegrees();
+        return gyroSub.getPitch();
     }
     
     public boolean returnAtSetpoint(){
@@ -73,20 +71,8 @@ public class BalancePIDSubsystem extends PIDSubsystem {
 
     @Override
     public void periodic(){
-        // Distance slipped we gotta find "4". 
-        double currentTime = timer.getFPGATimestamp(); // Get the current time. 
-        // double accelerationX = gyroSub.returnXAccelNum(); // Get our x acceleartion multiply by s^2 gives me meters. 
-        // try factoring in initial velocity -- x = v(init)*t + 1/2 a(t^2)
-
-        // double distanceTraveled = accelerationX * Math.pow(accelerationX, 2);
-        // distance += distanceTraveled;
-        SmartDashboard.putNumber("Distance in Meters", distance);
-        //   Now what I'm going to do is find the distance traveled to be the accleration times time squared. 
-        timer.reset(); 
-        //if(isEnabled())
-
+        SmartDashboard.putBoolean("Balance Complete", returnAtSetpoint());
         
-            //driveSub.arcadeDrive(0, getController().calculate(getMeasurement()));
     }
     
 }

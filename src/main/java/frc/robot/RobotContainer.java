@@ -46,9 +46,9 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
-  // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
+  private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
-  // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
@@ -57,7 +57,8 @@ public class RobotContainer {
    * Drivetrain Commands
    */
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
-  private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
+  private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub);
+  private final BalanceDistance balanceRobot = new BalanceDistance(driveSub, balanceSub); 
 
   /* 
    * Extender Commands
@@ -203,7 +204,8 @@ public class RobotContainer {
      */
 
     OI.buttonRB.whileTrue(photonCenter);
-    
+    OI.buttonX.onTrue(balanceRobot);
+
     /*
      * Aux Stick
      */

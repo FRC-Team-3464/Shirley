@@ -58,5 +58,8 @@ public class GyroSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
     SmartDashboard.putNumber("Gyro Angle", getDegrees());
+    SmartDashboard.putNumber("Gyro Pitch", getPitch());
+    SmartDashboard.putNumber("Gyro Yaw", getYaw());
+    
   }
 }

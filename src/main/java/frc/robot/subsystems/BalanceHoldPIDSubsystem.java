@@ -44,7 +44,7 @@ public class BalanceHoldPIDSubsystem extends PIDSubsystem {
     
     @Override  
     public double getMeasurement(){
-        return driveSub.getLeftPosition();
+        return driveSub.getLeftPosition(); // We use how much the encoder has moved as reference. 
     }
     
     @Override
