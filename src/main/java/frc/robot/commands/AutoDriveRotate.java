@@ -27,14 +27,17 @@ public class AutoDriveRotate extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    target += gyroSub.getDegrees();
+    gyroSub.resetGyro();
+    // target += gyroSub.getDegrees();
     directionSet = Math.signum(target); // Sign of 1 or -1
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveSub.arcadeDrive(0, 0.25 * directionSet); // Make this a constant. 
+    System.out.println(directionSet); 
+    // Positive is clockwise. 
+    driveSub.arcadeDrive(0, 0.25); // Make this a constant. 
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +49,6 @@ public class AutoDriveRotate extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return(Math.abs(target - gyroSub.getDegrees()) < 0.5); // Stop when we're close. 
+    return(gyroSub.getDegrees() > target); // Stop when we're close. 
   }
 }

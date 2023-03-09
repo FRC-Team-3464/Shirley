@@ -17,13 +17,16 @@ import frc.robot.Constants.GrabberConstants;
 public class GrabberSubsystem extends SubsystemBase {
   // Creates a CANSparkMax for the grabber motor - Need to verify direction. 
   private final CANSparkMax grabberMotor = new CANSparkMax(GrabberConstants.kGrabberMotorPort, MotorType.kBrushless);
+  // private final CANSparkMax grabberSecondMotor = new CANSparkMax(10, MotorType.kBrushless);
 
   // Gets encoder of the motor
   private final RelativeEncoder grabberEncoder = grabberMotor.getEncoder();
+  
 
   public GrabberSubsystem() {
     // Invert the grabber. 
     grabberMotor.setInverted(true);
+    // grabberSecondMotor.follow(grabberMotor, true);
   }
 
   /*

@@ -40,7 +40,9 @@ public class ArcadeDriveCommand extends CommandBase {
     // Uses the left joystick X and Y values, and uses 80% of the value
     // Ramp the drivetrain. 
     arcadeDriveSub.arcadeDrive(driveRamp.applyAsDouble((controller.getLeftY() * 0.5)) , controller.getRightX() * 0.6); // Halve the speed - we don't need to go so fast now. 
-    SmartDashboard.putNumber("Foward Value", controller.getLeftY() * 0.5);
+    SmartDashboard.putNumber("Forward Value", controller.getLeftY() * 0.5);
+    SmartDashboard.putNumber("Turn Value", controller.getRightX() * 0.6);
+    
     // SmartDashboard.putNumber("Foward Value", );
   }
 

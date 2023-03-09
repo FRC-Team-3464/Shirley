@@ -9,7 +9,7 @@ import frc.robot.Constants.ExtenderConstants;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj.SerialPort.StopBits;
+// import edu.wpi.first.wpilibj.SerialPort.StopBits;
 // import java.util.Arrays;
 // import edu.wpi.first.math.controller.RamseteController;
 // import edu.wpi.first.math.geometry.Pose2d;
@@ -23,10 +23,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+// import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+// import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -148,7 +149,18 @@ public class RobotContainer {
   /*
    * Auto Sequences
    */
-  public final AutoDriveFoward driveFoward = new AutoDriveFoward(driveSub, 50);  // Drive forward` 160 inches. change later
+  public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
+  public final AutoDriveFoward driveToObject = new AutoDriveFoward(driveSub, -180); // Cross the 3+ points mark. 
+  public final SequentialCommandGroup dropAndDrive = new SequentialCommandGroup(
+    new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue),
+    new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue),
+    new WaitCommand(2),
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    new WaitCommand(2),
+    new AutoDriveBackward(driveSub, 180));
   // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
   // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
    
@@ -204,8 +216,8 @@ public class RobotContainer {
     OI.button8Aux.onTrue(goToMid);
     OI.button9Aux.onTrue(goToLow);
 
-    OI.button12Aux.onTrue(new AutoDriveFoward(driveSub, 30));
-
+    OI.button11Aux.onTrue(new AutoDriveBackward(driveSub, 12));
+    // OI.button12Aux.onTrue(); 
     // OI.button12Aux.onTrue(drivetrainEncoderReset);
 
     }
@@ -223,6 +235,6 @@ public class RobotContainer {
     // return command; 
 
 
-    return null;
+    return driveToObject;
   }
 }

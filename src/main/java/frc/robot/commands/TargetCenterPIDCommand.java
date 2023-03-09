@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import org.photonvision.PhotonCamera;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -23,7 +21,7 @@ public class TargetCenterPIDCommand extends CommandBase {
 //   PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
 
 // Get our angular P and D values. 
-  final double turnP = 0.023; // Max yaw error is 30, which Yifan sets to 80% so 0.8/30 = 0.0266..
+  final double turnP = 0.025; // Max yaw error is 30, which Yifan sets to 80% so 0.8/30 = 0.0266..
   final double turnD = 0.0;
   PIDController turnController = new PIDController(turnP, 0, turnD);
 
