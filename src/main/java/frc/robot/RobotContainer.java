@@ -52,6 +52,9 @@ public class RobotContainer {
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
+  private final LEDSubsystem ledSub = new LEDSubsystem();
+  private final InstantCommand ledYellow = new InstantCommand(ledSub::yellow,ledSub);
+  private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub);
   
   /*
    * Drivetrain Commands
@@ -98,6 +101,7 @@ public class RobotContainer {
   private final ExtenderRetractLimit retractStore = new ExtenderRetractLimit(extenderSub);
   private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
 
+  // Close the grabber first
   public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore, pivotEncoderReset, extenderEncoderReset);
   public final Command stowGroundArm =  new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub));
   // public final Command stowArm = new SequentialCommandGroup(new ExtenderRetractLimit, pivotStore, pivotEncoderReset, extenderEncoderReset);
@@ -123,35 +127,11 @@ public class RobotContainer {
   /*
    * Auto Commands
    */
-  private final SequentialCommandGroup auto1ExtendAndDrop = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); //
-  private final SequentialCommandGroup auto2ExtendDropTurnAndDrive = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
   
-  // private final AddFeedFoward extendHighFeed = new AddFeedFoward(pivoterSub);
-  // private final AddFeedFoward extendMidFeed = new AddFeedFoward(pivoterSub);
-  // private final AddFeedFoward extendLowFeed = new AddFeedFoward(pivoterSub);
-
-  // private final ParallelRaceGroup ExtenderSetPositionHighCommandWithFeedFoward = new ParallelRaceGroup(extendToHigh, extendHighFeed);
-  // private final ParallelRaceGroup ExtenderSetPositionMidCommandWithFeedFoward = new ParallelRaceGroup(extendToMid, extendMidFeed);
-  // private final ParallelRaceGroup ExtenderSetPositionLowCommandWithFeedFoward = new ParallelRaceGroup(extendToLow, extendLowFeed);
-
-
-  // public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, ExtenderSetPositionHighCommandWithFeedFoward);
-  // public final Command goToMid = new SequentialCommandGroup(pivotToMid, ExtenderSetPositionMidCommandWithFeedFoward);
-  // public final Command goToLow = new SequentialCommandGroup(pivotToLow, ExtenderSetPositionLowCommandWithFeedFoward);  
-
-  // // Merge commands using sequential commands. 
-  public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
-  public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
-  public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
-  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, extendToGround, /*openGrabber,*/ pivotDownToGround);
-
-
-  /*
-   * Auto Sequences
-   */
-  public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
   public final AutoDriveFoward driveToObject = new AutoDriveFoward(driveSub, -180); // Cross the 3+ points mark. 
   public final SequentialCommandGroup autoDropAndDrive = new SequentialCommandGroup(
+    // Close grabber 
+    new CloseGrabberCone(grabberSub),
     // Stow 
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
@@ -160,16 +140,36 @@ public class RobotContainer {
     // Pivot up
     new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue),
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue),
-    new WaitCommand(2),
+    new WaitCommand(1),
+    // Open Grabber
+    new OpenGrabber(grabberSub),
     // Stow again
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
-    new WaitCommand(2),
+    new WaitCommand(1),
     //Drive back
     new AutoDriveBackward(driveSub, 180)
     );
+
+    
+
+  private final SequentialCommandGroup auto1ExtendAndDrop = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); //
+  private final SequentialCommandGroup auto2ExtendDropTurnAndDrive = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
+  
+  // Merge commands using sequential commands. 
+  public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
+  public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
+  public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
+  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, extendToGround, /*openGrabber,*/ pivotDownToGround);
+
+  /*
+   * Auto Sequences
+   */
+  public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
+  
+
 
 
 
@@ -213,10 +213,10 @@ public class RobotContainer {
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
     
-    OI.triggerAux.toggleOnTrue(grabCone);
+    OI.triggerAux.onTrue(grabCone);
 
 
-    OI.button2Aux.toggleOnTrue(openGrabber); // Open grabber 
+    OI.button2Aux.onTrue(openGrabber); // Open grabber 
     // OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
     // OI.button5Aux.onTrue(stopGrabber);
     OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
@@ -231,6 +231,8 @@ public class RobotContainer {
     OI.button11Aux.onTrue(new AutoDriveBackward(driveSub, 12));
     // OI.button12Aux.onTrue(); 
     // OI.button12Aux.onTrue(drivetrainEncoderReset);
+    OI.buttonB.onTrue(ledYellow);
+    OI.buttonA.onTrue(ledPurple);
 
     }
 
@@ -246,6 +248,19 @@ public class RobotContainer {
     // RamseteCommand command = new RamseteCommand(trajectory, driveSub::getPose, new RamseteController(2.0, 0.7), driveSub.getFeedforward(), driveSub.getKinematics(), driveSub::getSpeeds, driveSub.getLeftPIDController(), driveSub.getRightPIDController(), driveSub::setVolts, driveSub);
     // return command; 
 
-    return autoDropAndDrive;
+    Command selected_autoCommand;
+
+    switch(Robot.autoSelected){
+      case "autoDriveForward":
+        selected_autoCommand = driveToObject;
+        break; 
+      case "autoDropAndDrive":
+        selected_autoCommand = autoDropAndDrive;
+        break;
+      default:
+      selected_autoCommand = autoDropAndDrive;    
+    }
+
+    return selected_autoCommand;
   }
 }

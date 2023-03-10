@@ -37,6 +37,18 @@ public class PhotonVisionSubsystem extends SubsystemBase {
     }      
   }
 
+
+  // public void turnLEDOn(){
+  //   NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3.0D); 
+  // }      //RobotMap.shootingSolenoid1.set(true);
+  
+  // public void turnLEDOff(){
+
+  // }
+  // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1.0D); 
+  //     //RobotMap.shootingSolenoid1.set(false);
+  //   }
+
   // Return the color camera. 
   public PhotonCamera getColorCamera(){
     return aprilCamera;

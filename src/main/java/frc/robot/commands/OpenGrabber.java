@@ -30,15 +30,12 @@ public class OpenGrabber extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    grabberSub.runMotor(0.05); // Add the feedforward for the grabber to hold open. 
+    grabberSub.stopMotor(); // Add the feedforward for the grabber to hold open. 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(grabberSub.getGrabberDegrees() >= 1100){
-      return true;
-    }
-    return false;
+    return(grabberSub.getGrabberDegrees() >= 350);
   }
 }

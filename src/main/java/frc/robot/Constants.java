@@ -59,7 +59,7 @@ public final class Constants {
   public static class GrabberConstants {
     // Ports
     public static final int kGrabberMotorPort = 7;
-
+    public static final int kGrabberRightMotorPort = 10;
     // Encoder Conversion Factor
     public static final double kTickToDegrees = 360;
 
