@@ -37,7 +37,7 @@ public class BalanceDistance extends CommandBase {
 
  @Override
   public boolean isFinished() {
-      return balanceSub.returnAtSetpoint();// Add tolerance to PID controller 
-  }
-
+      // return balanceSub.returnAtSetpoint();// Add tolerance to PID controller 
+      return false;
+    }
 }

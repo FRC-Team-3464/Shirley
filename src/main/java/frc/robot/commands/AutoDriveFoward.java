@@ -30,13 +30,15 @@ public class AutoDriveFoward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveSub.arcadeDrive(-0.3, 0); // Drive forward. 
+    driveSub.arcadeDrive(-0.5, 0); // Drive forward. 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     driveSub.stopDrive();
+    driveSub.resetEncoders();
+  
     // driveSub.resetEncoders();
   }
 

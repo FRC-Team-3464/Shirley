@@ -56,19 +56,24 @@ public class Robot extends TimedRobot {
     // Create the choose with it's options. 
 
     OI oi = new OI();
-    m_robotContainer = new RobotContainer();
+
     
     // *** autoChooser.setDefaultOption("Drive Balance", m_robotContainer.getDriveBalanceAuto()); // This might work - 
     // *** autoChooser.addOption("Drive Balance Auto", m_robotContainer.getDriveBalanceAuto()); // Just get the actual command instead of the string of it. 
 
-    autoChooser.setDefaultOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
+    m_robotContainer = new RobotContainer();
+    // autoChooser.addOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
     autoChooser.addOption("Auto 1: Drive Only", "autoDriveForward");
     autoChooser.addOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
+    autoChooser.addOption("Auto 3: Place Cone and Balance", "autoDropAndBalance");
+    autoChooser.setDefaultOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
+    // autoChooser.addOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
+    // autoChooser.setDefaultOption("Auto 3: Place Cone and Balance", "autoDropAndBalance");
 
     // Put the auto choose 
     SmartDashboard.putData("Select Auto: ", autoChooser);
-
-    CameraServer.startAutomaticCapture(1); // Open the camera that's connected to the roborio. 
+    
+    CameraServer.startAutomaticCapture(0); // Open the camera that's connected to the roborio. 
 
   }
 

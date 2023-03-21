@@ -15,10 +15,10 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 public class BalancePIDSubsystem extends PIDSubsystem {
     //these should be using the subsystems declared in RobotContainer, not creating new ones
     //Works fine as is
-    private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
+    private final DrivetrainSubsystem driveSub;
     // private final EncoderSubsystem encoderSub = new EncoderSubsystem();
     //private final LimelightSubsystem limeSub = new LimelightSubsystem();
-    private final GyroSubsystem gyroSub = new GyroSubsystem();
+    private final GyroSubsystem gyroSub;
     // private final DrivetrainSubsystem driveSub;
     // private final GyroSubsystem gyroSub;
     private double speed;
@@ -27,12 +27,14 @@ public class BalancePIDSubsystem extends PIDSubsystem {
    
     private double encoderDistance;
     // create PID with predetermined constants
-    public BalancePIDSubsystem(){ // What runs when we first create this command. 
-        super(new PIDController(-0.03, 0.00, .001));  // This should be negative; negative means forwards, i think 
+    public BalancePIDSubsystem(DrivetrainSubsystem driveSub, GyroSubsystem gyroSub){ // What runs when we first create this command. 
+        super(new PIDController(0.0285, 0.00, -.002));  // This should be negative; negative means forwards, i think 
         getController().setSetpoint(0);
         getController().setTolerance(1);
         timer.start();
         distance = 0;
+        this.driveSub = driveSub;
+        this.gyroSub = gyroSub;
         // encoderDistance = 0;
     }
 
@@ -63,7 +65,7 @@ public class BalancePIDSubsystem extends PIDSubsystem {
 
     @Override  
     public double getMeasurement(){
-        return gyroSub.getDegrees();
+        return gyroSub.getPitch();
     }
     
     public boolean returnAtSetpoint(){

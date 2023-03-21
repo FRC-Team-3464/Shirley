@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,8 +18,17 @@ public class PhotonVisionSubsystem extends SubsystemBase {
   // Create the two photonvision cameras. 
   private final static PhotonCamera limelightCamera = new PhotonCamera("OV5647"); // Limelight
   private final static PhotonCamera aprilCamera = new PhotonCamera("Microsoft_LifeCam_HD-3000"); // Raspberry Pi on tip of grabbery. 
+  private static NetworkTable table;
+  private static NetworkTable limeTable;
+  private double limeLedStatus;
 
-  public PhotonVisionSubsystem() {}
+  public PhotonVisionSubsystem() {
+      table = NetworkTableInstance.getDefault().getTable("photonvision");
+      System.out.println("Can we see you" + table.containsSubTable("OV5647"));
+      limeTable = table.getSubTable("OV5647");
+      ArrayList<String> subtableList = new ArrayList<String>();
+      //subtableList.add((table.getSubTables().toArray());
+  }
   // Return the highest target - useful (not) when trying to target the high pole on the grid; this might be useful. 
   public PhotonTrackedTarget getLimelightHighestTarget(){ 
     var limelightOutput = limelightCamera.getLatestResult(); // Get the latest results from the limelight camera. 
