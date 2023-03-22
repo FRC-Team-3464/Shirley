@@ -39,7 +39,7 @@ public class ExtenderSubsystem extends SubsystemBase {
   }
 
   public void retract(){
-        extenderMotor.set(-0.5);
+        extenderMotor.set(-0.8);
   };
 
   // Run motor continuously without any interference from limitswitch
@@ -128,6 +128,6 @@ public class ExtenderSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Extender Encoder (in)", getExtenderInchPosition());
     SmartDashboard.putBoolean("Extender MIN Limit", getMinSwitch());
     SmartDashboard.putBoolean("Extender Max Limit", getMaxSwitch());
-    
+    SmartDashboard.putNumber("Extender Current", extenderMotor.getOutputCurrent());
   }
 }

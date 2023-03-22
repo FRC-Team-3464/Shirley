@@ -5,10 +5,11 @@
 package frc.robot;
 
 
+import frc.robot.Constants.ExtenderConstants;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-
+// import edu.wpi.first.wpilibj.SerialPort.StopBits;
 // import java.util.Arrays;
 // import edu.wpi.first.math.controller.RamseteController;
 // import edu.wpi.first.math.geometry.Pose2d;
@@ -20,10 +21,13 @@ import frc.robot.subsystems.*;
 // import edu.wpi.first.wpilibj.counter.ExternalDirectionCounter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+// import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+// import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -42,15 +46,21 @@ public class RobotContainer {
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
-  // private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem();
+  // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
+  private final GyroSubsystem gyroSub = new GyroSubsystem();
+  // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
+  private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
+  private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
+  private final LEDSubsystem ledSub = new LEDSubsystem();
+  private final InstantCommand ledYellow = new InstantCommand(ledSub::yellow,ledSub);
+  private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub);
   
   /*
    * Drivetrain Commands
    */
-
-  private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub);
+  private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
   private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
-
 
   /* 
    * Extender Commands
@@ -70,171 +80,159 @@ public class RobotContainer {
   /*
    * Grabber Commands
    */ 
-
+  private final InstantCommand stopGrabber = new InstantCommand(grabberSub::stopMotor, grabberSub); // Stops the grabber. 
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
   private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
 
   /*
+   * Photonvision Commands
+   */
+  private final TargetCenterPIDCommand photonCenter = new TargetCenterPIDCommand(photonSub, driveSub);
+
+  /*
    * Store Commands: We need to create the commands again to follow the syntax of creating sequential commands. 
    */ 
+
+  
+  private final InstantCommand pivotEncoderReset = new InstantCommand(pivoterSub::resetEncoder, pivoterSub);
+  private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
 
   private final ExtenderRetractLimit retractStore = new ExtenderRetractLimit(extenderSub);
   private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
 
-  private final InstantCommand pivotEncoderReset = new InstantCommand(pivoterSub::resetEncoder, pivoterSub);
-  private final InstantCommand extenderEncoderReset = new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub);
+  // Close the grabber first
+  public final Command stowArm = new SequentialCommandGroup(new CloseGrabberCone(grabberSub),retractStore, pivotStore, /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/ pivotEncoderReset, extenderEncoderReset);
+  public final Command stowGroundArm =  new SequentialCommandGroup(new CloseGrabberCone(grabberSub), new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub));
 
-  public final Command stowArm = new SequentialCommandGroup(retractStore, pivotStore, pivotEncoderReset, extenderEncoderReset);
+  // public final Command stowArm = new SequentialCommandGroup(new ExtenderRetractLimit, pivotStore, pivotEncoderReset, extenderEncoderReset);
 
   /*
    * Position based commands:
    * Set the pivoter/extender to certain setpoints. 
    */
 
-  private final PivotToHighPosition pivotToHigh = new PivotToHighPosition(pivoterSub, PivoterConstants.kMaxPivoterValue);
-  private final PivotToHighPosition pivotToMid = new PivotToHighPosition(pivoterSub, 15);
-  private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, 6.5);
+  private final PivotToHighPosition pivotToHighCone = new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue);
+  private final PivotToHighPosition pivotToHighCube = new PivotToHighPosition(pivoterSub, PivoterConstants.kHighCubePivoterValue);
+  private final PivotToHighPosition pivotToMidCone = new PivotToHighPosition(pivoterSub, PivoterConstants.kMidConePivoterValue);
+  private final PivotToHighPosition pivotToMidCube = new PivotToHighPosition(pivoterSub, PivoterConstants.kMidCubePivoterValue);
+  private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, PivoterConstants.kLowPivoterValue);
+  private final PivotToHighPosition pivotUpToGround = new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue);
+  private final PivotToHighPosition pivotToFeeder = new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue);
+  private final PivotToLowPosition pivotDownToGround = new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue);
+  //private final SequentialCommandGroup pivotDown = new SequentialCommandGroup(pivotUpToGround, pivotDownToGround);
 
-  private final ExtenderSetPositionCommand extendToHigh = new ExtenderSetPositionCommand(extenderSub, 107);
-  private final ExtenderSetPositionCommand extendToMid = new ExtenderSetPositionCommand(extenderSub, 29);
-  private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, 60);
-
-  // Merge commands using sequential commands. 
-  public final Command goToHigh = new SequentialCommandGroup(pivotToHigh, extendToHigh);
-  public final Command goToMid = new SequentialCommandGroup(pivotToMid, extendToMid);
-  public final Command goToLow = new SequentialCommandGroup(pivotToLow, extendToLow);
-
+  private final ExtenderSetPositionCommand extendToHighCone = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue);
+  private final ExtenderSetPositionCommand extendToHighCube = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderCubeValue);
+  private final ExtenderSetPositionCommand extendToMidCone = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kMidExtenderConeValue);
+  private final ExtenderSetPositionCommand extendToMidCube = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kMidExtenderCubeValue);
+  private final ExtenderSetPositionCommand extendToLow = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kLowExtenderValue);
+  private final ExtenderSetPositionCommand extendToGround = new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue); 
 
   /*
-   * ---- Trash bin -----
+   * Auto Commands
    */
-  // Switch based translations
-  // private final Command extendToMin = extenderSpeedIn.until(extenderSub::getMinSwitch); // Keep retracting till we hit the switch, then command ends. 
- 
-  // Extend till we hit the maximum. 
-  // private final FunctionalCommand extendToMax = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   extenderSub::stopMotor, 
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> extenderSub.translateManual(0.3),
-  //   // On finished command
-  //   (interrupted) -> {extenderSub.stopMotor();
-  //                     System.out.println("Command Ended");},
-  //   // isFinished() - get switch value.  
-  //   extenderSub::getMaxSwitch,
-  //   // Give us the requirements. 
-  //   extenderSub
-  // );
+  
+  public final AutoDriveFoward driveToObject = new AutoDriveFoward(driveSub, -180); // Cross the 3+ points mark. 
+  public final SequentialCommandGroup autoDropAndDrive = new SequentialCommandGroup(
+    // Stow 
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    // Close grabber 
 
-  // private final FunctionalCommand grabberSetOpen = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   grabberSub::stopMotor, 
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> grabberSub.runMotor(-0.125), // Counterclockwise closes. 
-  //   // On finished command
-  //   (interrupted) -> grabberSub.stopMotor(),
-  //   // isFinished() - get switch value.  
-  //   () -> (grabberSub.getGrabberDegrees() <= 0),
-  //   // Give us the requirements. 
-  //   grabberSub
-  // );
+    new CloseGrabberCone(grabberSub),
+    // new WaitCommand(0.2),
+    // new InstantCommand(grabberSub::stopMotor, grabberSub),
+    new WaitCommand(0.5),
+    // Pivot up
+    //new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue), TBD
+    //new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), TBD whether it's a cone or cube
+    new WaitCommand(0.15),
+    // Open Grabber
+    new OpenGrabber(grabberSub),
+    // Stow again
+    new WaitCommand(0.5),
+    new CloseGrabberCone(grabberSub),
+    new WaitCommand(0.2),
+    new InstantCommand(grabberSub::stopMotor, grabberSub),
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    new WaitCommand(0.5),
+    //Drive back
+    new AutoDriveBackward(driveSub, 180)
+    );
 
+  public final SequentialCommandGroup autoDropAndBalance = new SequentialCommandGroup(
+    // Stow 
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    // Close grabber 
+
+    new CloseGrabberCone(grabberSub),
+    // new WaitCommand(0.2),
+    // new InstantCommand(grabberSub::stopMotor, grabberSub),
+    new WaitCommand(0.25),
+    // Pivot up
+    // new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue), TBD
+    // new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), TBD
+    new WaitCommand(0.15),
+    // Open Grabber
+    new OpenGrabber(grabberSub),
+    // Stow again
+    new WaitCommand(0.4),
+    new CloseGrabberCone(grabberSub),
+    new WaitCommand(0.2),
+    new InstantCommand(grabberSub::stopMotor, grabberSub),
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    // Driveback and autobalance.
+    new AutoDriveBackward(driveSub, 68),
+    // new WaitCommand(0.5),
+    // new AutoDriveFoward(driveSub, 30),
+    new BalanceDistance(driveSub, balanceSub)
+    // new WaitCommand(0.5),
+    //Drive back
+  );
+    
+
+  //private final SequentialCommandGroup auto1ExtendAndDrop = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); // This line and the one below is TBD
+  // private final SequentialCommandGroup auto2ExtendDropTurnAndDrive = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
+  
+  // Merge commands using sequential commands. 
+  public final Command goToHighCone = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToHighCone, extendToHighCone);
+  public final Command goToHighCube = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToHighCube, extendToHighCube);
+  public final Command goToMidCone = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToMidCone, extendToMidCone);
+  public final Command goToMidCube = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToMidCube, extendToMidCube);
+  public final Command goToLow = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToLow, extendToLow);
+  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, new OpenGrabber(grabberSub), extendToGround, /*openGrabber,*/ pivotDownToGround);
+
+  /*
+   * Auto Sequences
+   */
+  public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
+  
+
+
+
+
+  // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
+  // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
    
-  // private final FunctionalCommand grabberSetClosed = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   grabberSub::stopMotor, 
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> grabberSub.runMotor(0.125), // CLockwise closes
-  //   // On finished command
-  //   (interrupted) -> grabberSub.stopMotor(),
-  //   // isFinished() - get switch value.  
-  //   () -> (grabberSub.getGrabberDegrees() >= 120),
-  //   // Give us the requirements. 
-  //   grabberSub
-  // );
-
-
-  // Pivoter Manual Speed Commands
-  // private final Command pivotSpeedDown = pivoterSub.pivotManual(-0.125);
-  // private final Command pivotSpeedUp = pivoterSub.pivotManual(0.25); // WHY is it inversed
-
-  // Pivot till we hit the minimum limit switch. 
-  // private final FunctionalCommand pivotToMin = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   pivoterSub::stopMotor, // Fix
-  //   // What to do during the command - run the motor unrestrained. 
-  //   () -> pivoterSub.pivot(0.125), // Why is the motor inversed? It should be negative
-  //   // When we finish the command. 
-  //   (interrupted) -> pivoterSub.stopMotor(),
-  //   // isFinished() - get switch value; when we hit the switch  
-  //   pivoterSub::getSwitch,
-  //   // Give us the requirements. 
-  //   pivoterSub
-  // );
-
-  // retract till we hit the miminimum. 
-  // private final FunctionalCommand retractToMin = new FunctionalCommand(
-  //   // what to do in initialize - basically nothing for us
-  //   extenderSub::stopMotor, // Stop the motor first
-  //   // What to do during the command - run the motor unrestrained and retract the extender. . 
-  //   () -> extenderSub.translateExtender(-0.3),
-  //   // On finished command
-  //   (interrupted) -> {extenderSub.stopMotor();
-  //     System.out.println("Command Ended");},
-  //   // isFinished() - get switch value.  
-  //   extenderSub::getMinSwitch, // The minimum switch determines when we've ended. 
-  //   // Give us the requirements. 
-  //   extenderSub
-  // );
-
-
-  // Extender Manual Speed Commands
-  // private final Command extenderSpeedOut = extenderSub.translateManual(0.3);
-  // private final Command extenderSpeedIn = extenderSub.translateManual(-0.3);
-
-
-  // Retract extender to min, then pivot -> represents going to the stored position. 
-  // private final SequentialCommandGroup goToStorePosition = new SequentialCommandGroup(retractToMin, pivotToMin);
-
-  
-  // private final PivoterPIDCommand PIDPivotForward = new PivoterPIDCommand(pivoterSub, 45); //It's about that - please test
-  // private final PivoterPIDCommand PIDPivotBack = new PivoterPIDCommand(pivoterSub, 0); // Dimension is wrong!!! 
-
-  // private final PivoterSetCommand PivoterRotateForward = new PivoterSetCommand(pivoterSub, 45);
-  
-
-  // private final ExtenderPIDCommand PIDExtenderExtend = new ExtenderPIDCommand(extenderSub, 22); // We want to get it to 22 inches. 
-  // private final ExtenderPIDCommand PIDExtenderRetract = new ExtenderPIDCommand(extenderSub, 0); // We want to get it to 22 inches. 
- 
-  // private final GrabberSetCommand openGrabber = new GrabberSetCommand(grabberSub, true);
-  // private final GrabberSetCommand closeGrabber = new GrabberSetCommand(grabberSub, false);
-
-  
-  // // Alternate forms - use in test
-  // private final PivoterSetCommand PivoterHighPoint = new PivoterSetCommand(pivoterSub, 45);
-  // private final PivoterSetCommand PivoterLowPoint = new PivoterSetCommand(pivoterSub, 0);
-  
-  // private final ExtenderSetPositionCommand noPIDCmdExtenderExtend = new ExtenderSetPositionCommand(extenderSub, 22);
-  // private final ExtenderSetPositionCommand noPIDCmdExtenderRetract = new ExtenderSetPositionCommand(extenderSub, 0);
-
-  // // PID Aim Commands
-  // // Auto center and get in range with the limelight or the apriltag camera. 
-  // private final TargetCenterAndRangePIDCommand limeCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  // private final TargetCenterAndRangePIDCommand aprilCenterAndRange = new TargetCenterAndRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
-
-  // private final TargetCenterPIDCommand limeCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  // private final TargetCenterPIDCommand aprilCenter = new TargetCenterPIDCommand(photonSub, driveSub, photonSub.getColorCamera());
-
-  // private final TargetRangePIDCommand limeRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getLimelightCamera());
-  // private final TargetRangePIDCommand aprilRange = new TargetRangePIDCommand(photonSub, driveSub, photonSub.getColorCamera());
- 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
   }
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -249,74 +247,51 @@ public class RobotContainer {
     // Run default command as the arcade drive command.
     CommandScheduler.getInstance().setDefaultCommand(pivoterSub, addFeedFoward); // Continously add feedforward to the pivoter other than running it's commands with the pivoter or when it reaches the limit switches. 
     CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
-  
+
+    /*
+     * Controller 
+     */
+
+    OI.buttonRB.whileTrue(photonCenter);
+    
+    /*
+     * Aux Stick
+     */
+
     OI.povButtonUp.whileTrue(PivoterRotateUp);
     OI.povButtonDown.whileTrue(pivotMin);  
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
     
-    OI.button2Aux.onTrue(stowArm);
-
-    OI.button3Aux.whileTrue(openGrabber);
-    OI.button4Aux.whileTrue(grabCube);
-    OI.button6Aux.toggleOnTrue(grabCone);
-
-    OI.button7Aux.onTrue(goToHigh);
-    OI.button8Aux.onTrue(goToMid);
-    OI.button9Aux.onTrue(goToLow);
-    
-    OI.button12Aux.onTrue(drivetrainEncoderReset);
-    
-    /*
-     * Command junk
-     */
-
-
-    // Grabber Commands
-
-    // OI.povButtonRight.onFalse(extenderSub.commandStop());
-    // OI.povButtonLeft.onFalse(extenderSub.commandStop());
-    // OI.povButtonLeft.whileFalse(extenderSub::stopMotor);
-    
-    // CommandScheduler.getInstance().setDefaultCommand(extenderSub, new InstantCommand(extenderSub, ));
-    // Extender Executables
-    // OI.button10Aux.onTrue(new InstantCommand(grabberSub::resetGrabberDistance));
-  
-    // // Switich based commands
-    // OI.button3Aux.onTrue(retractToMin);
-    // OI.button4Aux.onTrue(extendToMax);
-
-    // OI.button5Aux.onTrue(pivotToMin);
-    
-    // // Open Grabber Set command. 
-    // // OI.button6Aux.onTrue(extendToMax);
-    // OI.button6Aux.whileTrue(grabberSpeedClose);
-    // OI.button7Aux.whileTrue(grabberSpeedOpen); // That will be the default. 
-
-    // Retract pivoter to min, rotate extender to min. 
-    //OI.button8Aux.onTrue(testGo); //THIS IS A VERY DANGEROUS LINE
-
-    // Trigger command execution.
-    // OI.triggerAux.toggleOnTrue(openGrabber);
-    // OI.triggerAux.toggleOnFalse(closeGrabber);
-
-    // // OI.button5Aux.toggleOnTrue(PIDPivotForward);
-    // // OI.button5Aux.toggleOnFalse(PIDPivotBack);
-
-    // OI.button5Aux.toggleOnTrue(PivoterHighPoint);
-    // OI.button5Aux.toggleOnFalse(PivoterLowPoint);
-
-    // OI.button9Aux.toggleOnTrue(noPIDCmdExtenderExtend); // Don't think we need this
-    // OI.button9Aux.toggleOnFalse(noPIDCmdExtenderRetract); // Don't think we need this
-
-    // OI.button7Aux.toggleOnTrue(PIDExtenderExtend);
-    // OI.button7Aux.toggleOnFalse(PIDExtenderRetract);
+    OI.triggerAux.toggleOnTrue(grabCone);
+    // OI.triggerAux.onFalse();
     
 
-    // OI.buttonX.whileTrue(limeCenterAndRange);
-    // OI.buttonA.whileTrue(aprilCenterAndRange);
-    // runs StowArm command once when robot is initialized
-    // CommandScheduler.getInstance().schedule(stowArm);
+
+    OI.button2Aux.onTrue(openGrabber); // Open grabber 
+    // OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
+    // OI.button5Aux.onTrue(stopGrabber);
+    OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
+    OI.button4Aux.onTrue(pivotToFeeder);
+    OI.button5Aux.onTrue(stowArm);
+    OI.button6Aux.onTrue(stowGroundArm);
+
+    OI.button7Aux.onTrue(goToHighCone);
+    OI.button8Aux.onTrue(goToMidCone);
+    OI.button9Aux.onTrue(goToHighCube);
+    OI.button10Aux.onTrue(goToMidCube);
+    OI.button11Aux.onTrue(goToLow);
+    
+    OI.button12Aux.onTrue(new InstantCommand(grabberSub::stopMotor, grabberSub));
+
+
+    // OI.button11Aux.onTrue(new AutoDriveBackward(driveSub, 12));
+    // OI.button12Aux.onTrue(); 
+    // OI.button12Aux.onTrue(drivetrainEncoderReset);
+    OI.buttonB.onTrue(ledYellow);
+    OI.buttonA.onTrue(ledPurple);
+    OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
+
     }
 
   /**
@@ -330,6 +305,22 @@ public class RobotContainer {
     // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(Arrays.asList(new Pose2d(), new Pose2d(1.0, 0, new Rotation2d())), config); // Move forward to 1.0, which is one meter forward. 
     // RamseteCommand command = new RamseteCommand(trajectory, driveSub::getPose, new RamseteController(2.0, 0.7), driveSub.getFeedforward(), driveSub.getKinematics(), driveSub::getSpeeds, driveSub.getLeftPIDController(), driveSub.getRightPIDController(), driveSub::setVolts, driveSub);
     // return command; 
-    return null;
+
+    Command selected_autoCommand;
+
+    switch(Robot.autoSelected){
+      case "autoDriveForward":
+        selected_autoCommand = driveToObject;
+        break; 
+      case "autoDropAndDrive":
+        selected_autoCommand = autoDropAndDrive;
+        break;
+      case "autoDropAndBalance":
+        selected_autoCommand = autoDropAndBalance;
+      default:
+      selected_autoCommand = autoDropAndDrive;    
+    }
+
+    return selected_autoCommand;
   }
 }

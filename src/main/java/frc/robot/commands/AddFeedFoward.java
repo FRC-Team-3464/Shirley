@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PivoterSubsystem;
 
 public class AddFeedFoward extends CommandBase {
-  /** Creates a new AddFeedFoward. */
+  /* Creates a new AddFeedFoward. */
   private final PivoterSubsystem pivoterSub;
 
   public AddFeedFoward(PivoterSubsystem pivoterSub) {

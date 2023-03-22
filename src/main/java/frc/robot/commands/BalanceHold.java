@@ -5,20 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.BalanceHoldPIDSubsystem;
+// import frc.robot.subsystems.EncoderSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class AutoDriveFoward extends CommandBase {
-  /** Creates a new AutoDriveFoward. */
-
+public class BalanceHold extends CommandBase {
+ 
+  
+  private final BalanceHoldPIDSubsystem holdSub;
   private final DrivetrainSubsystem driveSub;
-  private double target;
-
-  public AutoDriveFoward(DrivetrainSubsystem driveSub, double target) { // This will most likely be in inches. 
+  /** Creates a new BalanceHold. */
+  public BalanceHold(BalanceHoldPIDSubsystem balance, DrivetrainSubsystem driveSub) {
+    holdSub = balance;
     this.driveSub = driveSub;
-    this.target = target; // Set the tarbet defined above to be what is passed into target. 
-
-    // Make sure that we require the subsystem for this command to work. 
-    addRequirements(driveSub);
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(holdSub, driveSub);
   }
 
   // Called when the command is initially scheduled.
@@ -30,22 +31,16 @@ public class AutoDriveFoward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveSub.arcadeDrive(-0.5, 0); // Drive forward. 
+    holdSub.useOutput(holdSub.getMeasurement(), 0); // Run the autobalance PID Command
+    System.out.println("Running Command AutoHold PID");
   }
-
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    driveSub.stopDrive();
-    driveSub.resetEncoders();
-  
-    // driveSub.resetEncoders();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //  Become smaller value until it's less than the target 
-    return (driveSub.getLeftPosition()) < target; //  until encoder value < -50
+    return false;
   }
 }

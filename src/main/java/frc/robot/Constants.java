@@ -47,22 +47,47 @@ public final class Constants {
 
     // PID stuff
     public static final double tolerance = 0.75;
+
+    // Setpoint
+    public static final double kGroundExtenderValue = 9.3; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kLowExtenderValue = 5.75; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidExtenderConeValue = 5; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidExtenderCubeValue = 2.56;
+    public static final double kHighExtenderCubeValue = 18.25;
+    public static final double kHighExtenderConeValue = 21.5; // The setpoint to rotate the pivoter to the highest position. FIX
+
   }
 
   public static class GrabberConstants {
     // Ports
     public static final int kGrabberMotorPort = 7;
-
+    public static final int kGrabberRightMotorPort = 10;
     // Encoder Conversion Factor
     public static final double kTickToDegrees = 360;
+
+    // Grabber Speeds
+    public static final double kStrongGrabSpeed = -0.3;
+    public static final double kWeakGrabSpeed = -0.125;
   }
 
   public static class PivoterConstants {
     // Ports
-    public static final int kPivoterMotorPort = 6;
+    public static final int kPivoterMotorPort = 9;
+    public static final int kPivoterSecondMotorPort = 6;
     public static final int kPivotMinSwitchPort = 2;
 
-    public static final double kMaxPivoterValue = 18.99; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kFeedPivoterValue = 12.26;
+    public static final double kHighConePivoterValue = 18.5;
+    public static final double kHighCubePivoterValue = 15.73; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidConePivoterValue = 13.9; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidCubePivoterValue = 11.15;
+    public static final double kLowPivoterValue = 3; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kGroundPivoterValue = 0.9; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kGroundPivoterUpValue = 3;
+
+    public static final double kPivoterMaxValue = 20;
+    
+
 
     // Encoder Conversion Factor
     // public static final double kPivoterRotationToDegree = ((1 / 64) * (24 / 36) * 360);

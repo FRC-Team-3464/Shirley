@@ -18,12 +18,15 @@ public class PivoterSubsystem extends SubsystemBase {
   // Create motor and limit switch. 
   private final CANSparkMax pivoterMotor = new CANSparkMax(PivoterConstants.kPivoterMotorPort, MotorType.kBrushless); //Right Motor for Arm Pivoter
   private final DigitalInput minLimitSwitch = new DigitalInput(PivoterConstants.kPivotMinSwitchPort);
+  private final CANSparkMax secondPivoterMotor = new CANSparkMax(PivoterConstants.kPivoterSecondMotorPort, MotorType.kBrushless);
 
   // Get the encoder from the motor. 
   private final RelativeEncoder pivoterEncoder = pivoterMotor.getEncoder(); //Encoder for Arm Pivoter Left Motor Position (used for both)
   
   public PivoterSubsystem() {
     pivoterMotor.setInverted(false);
+    // secondPivoterMotor.setInverted(false);
+    secondPivoterMotor.follow(pivoterMotor, true); // This inversts the motor and tells it to follow the other. 
   }
 
  /*
@@ -33,11 +36,14 @@ public class PivoterSubsystem extends SubsystemBase {
   //  Run the motor to our inputted speed. 
   public void pivot(double speed){
     pivoterMotor.set(speed);
+    // secondPivoterMotor.follow(pivoterMotor); // Does this work?
+
   }
 
   // Stop motor. 
   public void stopMotor(){
     pivoterMotor.stopMotor();
+    secondPivoterMotor.stopMotor();
   }
 
   // public void pivotForward(){
@@ -89,7 +95,9 @@ public class PivoterSubsystem extends SubsystemBase {
   public void addFeedFoward(){
     // Add some power to the pivoter to have it hold against gravity. 
     if(!getSwitch()){ // Make sure the trigger isn't activated. 
-      pivot(0.05);
+      //System.out.println("FeedFoward");  
+       pivot(0.05);
+      // secondPivoterMotor.fo
     }
   }
 
@@ -99,12 +107,15 @@ public class PivoterSubsystem extends SubsystemBase {
 
    public boolean getSwitch(){
     // Get the limit switch - either true or false. 
+    //System.out.print(!minLimitSwitch.get());
     return !minLimitSwitch.get();
+    
    }
 
   @Override
   public void periodic() {
     // Print out pivoter degrees and speed
+    // SmartDashboard.putBoolean("Motor Connected", pivoterMotor.con)
     SmartDashboard.putNumber("Pivoter Degrees:", getPivoterDegrees()); // get the pivoter value in degrees. 
     SmartDashboard.putNumber("Pivoter Rotations:", getPivoterRotation()); // Get the pivoter encoder rotation.
     SmartDashboard.putNumber("Pivoter Speed:", getPivoterSpeed()); // Get the speed of the pivoter. 

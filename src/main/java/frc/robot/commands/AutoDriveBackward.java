@@ -7,13 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class AutoDriveFoward extends CommandBase {
+public class AutoDriveBackward extends CommandBase {
   /** Creates a new AutoDriveFoward. */
 
   private final DrivetrainSubsystem driveSub;
   private double target;
 
-  public AutoDriveFoward(DrivetrainSubsystem driveSub, double target) { // This will most likely be in inches. 
+  public AutoDriveBackward(DrivetrainSubsystem driveSub, double target) { // This will most likely be in inches. 
     this.driveSub = driveSub;
     this.target = target; // Set the tarbet defined above to be what is passed into target. 
 
@@ -30,7 +30,8 @@ public class AutoDriveFoward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveSub.arcadeDrive(-0.5, 0); // Drive forward. 
+    System.out.println("Running ");
+    driveSub.arcadeDrive(0.5, 0); // Drive forward. 
   }
 
   // Called once the command ends or is interrupted.
@@ -38,14 +39,12 @@ public class AutoDriveFoward extends CommandBase {
   public void end(boolean interrupted) {
     driveSub.stopDrive();
     driveSub.resetEncoders();
-  
-    // driveSub.resetEncoders();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     //  Become smaller value until it's less than the target 
-    return (driveSub.getLeftPosition()) < target; //  until encoder value < -50
+    return (driveSub.getLeftPosition()) > target; //  until encoder value < -50
   }
 }

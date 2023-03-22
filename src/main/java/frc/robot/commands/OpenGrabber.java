@@ -23,22 +23,19 @@ public class OpenGrabber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabberSub.runMotor(0.125);
-    System.out.println(grabberSub.getGrabberDegrees());
+    grabberSub.runMotor(0.15);
+    //System.out.println(grabberSub.getGrabberDegrees());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    grabberSub.stopMotor();
+    grabberSub.stopMotor(); // Add the feedforward for the grabber to hold open. 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(grabberSub.getGrabberDegrees()>1100){
-      return true;
-    }
-    return false;
+    return(grabberSub.getGrabberDegrees() >= 350);
   }
 }
