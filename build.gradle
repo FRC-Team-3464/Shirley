@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2023.2.1"
+    id "edu.wpi.first.GradleRIO" version "2023.4.2" // On my laptop, it looks like 3.2 is the newest version??? Other is 2.1
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
