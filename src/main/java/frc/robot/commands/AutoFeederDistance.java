@@ -38,7 +38,7 @@ public class AutoFeederDistance extends CommandBase {
   @Override
   public void execute() {
     led.red();
-    drivetrain.arcadeDrive(-0.3, controller.getRightX());
+    drivetrain.arcadeDrive(-0.2, controller.getRightX());
 
     // SmartDashboard.
   }
@@ -46,14 +46,16 @@ public class AutoFeederDistance extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    led.green();
+    if(!interrupted){
+    led.green(); // If command ends without it being inturrupted, turn LED green. 
+    }
     drivetrain.stopDrive();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; // Going in decreases distance, so when sensor is smaller than actual 
+    return ultrasonic.getUltraDistance() < target; // Going in decreases distance, so when sensor is smaller than actual 
     // ultrasonic.getUltraDistance() <= target
   }
 }
