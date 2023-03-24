@@ -34,7 +34,7 @@ public class AutoFeederDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.arcadeDrive(-controller.getLeftTriggerAxis(), controller.getRightX());
+    drivetrain.arcadeDrive(-0.2, controller.getRightX());
     // SmartDashboard.
   }
 
@@ -47,6 +47,7 @@ public class AutoFeederDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ultrasonic.getUltraDistance() <= target; // Going in decreases distance, so when sensor is smaller than actual 
+    return false; // Going in decreases distance, so when sensor is smaller than actual 
+    // ultrasonic.getUltraDistance() <= target
   }
 }

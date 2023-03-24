@@ -23,12 +23,16 @@ public class UltrasonicSubsystem extends SubsystemBase {
     return vexUltrasonic.getRangeInches();
   }
 
+  public boolean getAtDistance(){
+    return  getUltraDistance() < DrivetrainConstants.kFeederDistance && getUltraDistance() > DrivetrainConstants.kFeederDistance - 1;
+  }
+
   @Override
   public void periodic() {
     // double distanceInches = vexUltrasonic.getRangeInches();
     // System.out.println(distanceInches);
     SmartDashboard.putNumber("Ultra Distance", getUltraDistance());
-    SmartDashboard.putBoolean("shouldGrab?", getUltraDistance() < DrivetrainConstants.kFeederDistance && getUltraDistance() > DrivetrainConstants.kFeederDistance - 1);
+    SmartDashboard.putBoolean("shouldGrab?", getAtDistance());
     
 
     // This method will be called once per scheduler run
