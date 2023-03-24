@@ -42,6 +42,7 @@ public class GrabberSubsystem extends SubsystemBase {
   public void stopMotor() {
     // Stop motor
     lGrabberMotor.stopMotor(); 
+    System.out.println("motor stopped");
   }
 
   public double getGrabberRotation() {
