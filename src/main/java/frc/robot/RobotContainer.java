@@ -259,7 +259,7 @@ public class RobotContainer {
      */
 
     OI.buttonRB.whileTrue(photonCenter);
-    OI.buttonLB.whileTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance).until(ultrasonicSubsystem::getAtDistance));
+    OI.buttonLB.whileTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance));
     OI.buttonB.onTrue(ledYellow);
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
