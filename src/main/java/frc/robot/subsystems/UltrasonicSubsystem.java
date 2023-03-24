@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -14,13 +15,15 @@ public class UltrasonicSubsystem extends SubsystemBase {
   DigitalInput echo = new DigitalInput(9);
   private final Ultrasonic vexUltrasonic = new Ultrasonic(ping, echo);
 
+  private final MedianFilter ultrasonicFilter = new MedianFilter(5);
+
   public UltrasonicSubsystem() {
     // Turn on Ultrasonic sensor
     Ultrasonic.setAutomaticMode(true);
-     }
+  }
 
   public double getUltraDistance(){
-    return vexUltrasonic.getRangeInches();
+    return ultrasonicFilter.calculate(vexUltrasonic.getRangeInches());
   }
 
   public boolean getAtDistance(){
