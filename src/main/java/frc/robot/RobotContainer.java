@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -56,7 +58,7 @@ public class RobotContainer {
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
   private final LEDSubsystem ledSub = new LEDSubsystem();
   private final InstantCommand ledYellow = new InstantCommand(ledSub::yellow,ledSub);
-  private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub);
+  private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub); 
   
   /*
    * Drivetrain Commands
@@ -257,7 +259,7 @@ public class RobotContainer {
      */
 
     OI.buttonRB.whileTrue(photonCenter);
-    OI.buttonLB.whileTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, DrivetrainConstants.kFeederDistance).until(ultrasonicSubsystem::getAtDistance));
+    OI.buttonLB.whileTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance).until(ultrasonicSubsystem::getAtDistance));
     OI.buttonB.onTrue(ledYellow);
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
