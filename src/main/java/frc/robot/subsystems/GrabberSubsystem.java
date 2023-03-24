@@ -16,17 +16,18 @@ import frc.robot.Constants.GrabberConstants;
 
 public class GrabberSubsystem extends SubsystemBase {
   // Creates a CANSparkMax for the grabber motor - Need to verify direction. 
-  private final CANSparkMax grabberMotor = new CANSparkMax(GrabberConstants.kGrabberMotorPort, MotorType.kBrushless);
-  private final CANSparkMax grabberSecondMotor = new CANSparkMax(GrabberConstants.kGrabberRightMotorPort, MotorType.kBrushless);
+  private final CANSparkMax lGrabberMotor = new CANSparkMax(GrabberConstants.kGrabberMotorPort, MotorType.kBrushless);
+  private final CANSparkMax rGrabberMotor = new CANSparkMax(GrabberConstants.kGrabberRightMotorPort, MotorType.kBrushless);
 
   // Gets encoder of the motor
-  private final RelativeEncoder grabberEncoder = grabberMotor.getEncoder();
+  private final RelativeEncoder lGrabberEncoder = lGrabberMotor.getEncoder();
+  private final RelativeEncoder rGrabberEncoder = rGrabberMotor.getEncoder();
   
 
   public GrabberSubsystem() {
     // Invert the grabber. 
-    grabberMotor.setInverted(true);
-    grabberSecondMotor.follow(grabberMotor, true);
+    lGrabberMotor.setInverted(true);
+    rGrabberMotor.follow(lGrabberMotor, true);
   }
 
   /*
@@ -35,36 +36,41 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public void runMotor(double speed) {
     // Set motor to the passed-in speed. 
-    grabberMotor.set(speed);
+    lGrabberMotor.set(speed);
   }
 
   public void stopMotor() {
     // Stop motor
-    grabberMotor.stopMotor(); 
+    lGrabberMotor.stopMotor(); 
+    System.out.println("motor stopped");
   }
 
   public double getGrabberRotation() {
     // Returns the encoder value of the grabber motor in rotations
-    return grabberEncoder.getPosition();
+    return lGrabberEncoder.getPosition();
   }
 
 
   public double getGrabberDegrees() {
     // Gets the encoder value of the grabbery motor in degrees
-    return (grabberEncoder.getPosition() * GrabberConstants.kTickToDegrees);
+    return (lGrabberEncoder.getPosition() * GrabberConstants.kTickToDegrees);
   }
 
   public void resetGrabberDistance() {
     // Set the position that the encoders are at to 0
-    grabberEncoder.setPosition(0);
+    lGrabberEncoder.setPosition(0);
+    rGrabberEncoder.setPosition(0);
   }
   
   @Override
   public void periodic() {
     // Puts encoder values on the SmartDashboard - in degree and rotation. 
-    SmartDashboard.putNumber("Grabber Rotation", getGrabberRotation()); 
-    SmartDashboard.putNumber("Grabber Degrees", getGrabberDegrees());
-    SmartDashboard.putNumber("Grabber Speed", grabberMotor.get()); // Give us the speed. 
-    SmartDashboard.putNumber("Grabber Power", grabberMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Left Grabber Rotation", getGrabberRotation()); 
+    SmartDashboard.putNumber("Left Grabber Degrees", getGrabberDegrees());
+    SmartDashboard.putNumber("Right Grabber Rotation", rGrabberEncoder.getPosition());
+    SmartDashboard.putNumber("Right Grabber Degree", rGrabberEncoder.getPosition() * GrabberConstants.kTickToDegrees);
+    
+    SmartDashboard.putNumber("Grabber Speed", lGrabberMotor.get()); // Give us the speed. 
+    SmartDashboard.putNumber("Grabber Power", lGrabberMotor.getOutputCurrent());
   }
 }

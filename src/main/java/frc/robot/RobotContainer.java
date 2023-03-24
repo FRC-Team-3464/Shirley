@@ -48,6 +48,7 @@ public class RobotContainer {
   private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
+  private final UltrasonicSubsystem ultrasonicSubsystem = new UltrasonicSubsystem();
   // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
   private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
@@ -61,6 +62,7 @@ public class RobotContainer {
    */
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
   private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
+  private final AutoFeederDistance goToFeederCmd = new AutoFeederDistance(driveSub, ultrasonicSubsystem, 27);
 
   /* 
    * Extender Commands
@@ -147,8 +149,8 @@ public class RobotContainer {
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
     new WaitCommand(0.5),
     // Pivot up
-    //new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue), TBD
-    //new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), TBD whether it's a cone or cube
+    new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), //TBD
+    new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
     new OpenGrabber(grabberSub),
@@ -213,6 +215,7 @@ public class RobotContainer {
   public final Command goToMidCube = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToMidCube, extendToMidCube);
   public final Command goToLow = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToLow, extendToLow);
   public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, new OpenGrabber(grabberSub), extendToGround, /*openGrabber,*/ pivotDownToGround);
+  public final Command goToFeeder = new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue), new OpenGrabber(grabberSub));
 
   /*
    * Auto Sequences
@@ -253,6 +256,10 @@ public class RobotContainer {
      */
 
     OI.buttonRB.whileTrue(photonCenter);
+    OI.buttonLB.whileTrue(goToFeeder);
+    OI.buttonB.onTrue(ledYellow);
+    OI.buttonA.onTrue(ledPurple);
+    OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
     
     /*
      * Aux Stick
@@ -272,7 +279,7 @@ public class RobotContainer {
     // OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
     // OI.button5Aux.onTrue(stopGrabber);
     OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
-    OI.button4Aux.onTrue(pivotToFeeder);
+    OI.button4Aux.onTrue(goToFeeder);
     OI.button5Aux.onTrue(stowArm);
     OI.button6Aux.onTrue(stowGroundArm);
 
@@ -281,16 +288,15 @@ public class RobotContainer {
     OI.button9Aux.onTrue(goToHighCube);
     OI.button10Aux.onTrue(goToMidCube);
     OI.button11Aux.onTrue(goToLow);
-    
-    OI.button12Aux.onTrue(new InstantCommand(grabberSub::stopMotor, grabberSub));
+    OI.button12Aux.onTrue(new SequentialCommandGroup(new InstantCommand(grabberSub::stopMotor, grabberSub), new InstantCommand(grabberSub::resetGrabberDistance, grabberSub)));
+
+    // OI.button12Aux.onTrue(new InstantCommand(grabberSub::stopMotor, grabberSub));
 
 
     // OI.button11Aux.onTrue(new AutoDriveBackward(driveSub, 12));
     // OI.button12Aux.onTrue(); 
     // OI.button12Aux.onTrue(drivetrainEncoderReset);
-    OI.buttonB.onTrue(ledYellow);
-    OI.buttonA.onTrue(ledPurple);
-    OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
+ 
 
     }
 
