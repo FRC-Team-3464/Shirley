@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.ExtenderConstants;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
@@ -23,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -55,14 +58,14 @@ public class RobotContainer {
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
   private final LEDSubsystem ledSub = new LEDSubsystem();
   private final InstantCommand ledYellow = new InstantCommand(ledSub::yellow,ledSub);
-  private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub);
+  private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub); 
   
   /*
    * Drivetrain Commands
    */
   private final ArcadeDriveCommand arcadeDriveCmd = new ArcadeDriveCommand(driveSub, driveRamp); // Add the drive ramp
   private final InstantCommand drivetrainEncoderReset = new InstantCommand(driveSub::resetEncoders, driveSub); 
-  private final AutoFeederDistance goToFeederCmd = new AutoFeederDistance(driveSub, ultrasonicSubsystem, 27);
+  // private final AutoFeederDistance goToFeederCmd = new AutoFeederDistance(driveSub, ultrasonicSubsystem, 27);
 
   /* 
    * Extender Commands
@@ -256,7 +259,7 @@ public class RobotContainer {
      */
 
     OI.buttonRB.whileTrue(photonCenter);
-    OI.buttonLB.whileTrue(goToFeeder);
+    OI.buttonLB.whileTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance).until(ultrasonicSubsystem::getAtDistance));
     OI.buttonB.onTrue(ledYellow);
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
@@ -269,7 +272,6 @@ public class RobotContainer {
     OI.povButtonDown.whileTrue(pivotMin);  
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
-    
     OI.triggerAux.toggleOnTrue(grabCone);
     // OI.triggerAux.onFalse();
     
