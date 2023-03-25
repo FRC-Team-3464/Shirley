@@ -10,6 +10,10 @@ import frc.robot.Constants.ExtenderConstants;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.SerialPort.StopBits;
 // import java.util.Arrays;
 // import edu.wpi.first.math.controller.RamseteController;
@@ -232,6 +236,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    // SmartDashboard.putData("Drive Forward (12)", new AutoPIDFoward(driveSub, 12));
     configureBindings();
   }
 
@@ -257,6 +262,7 @@ public class RobotContainer {
     OI.buttonRB.whileTrue(photonCenter);
     OI.buttonLB.toggleOnTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance));
     OI.buttonB.onTrue(ledYellow);
+    // OI.buttonA.onTrue(new AutoPIDFoward(driveSub, 12));
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
     OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
