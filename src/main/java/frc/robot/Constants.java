@@ -28,7 +28,7 @@ public final class Constants {
         ktrackWidthInches = 27; // We convert to meters in drivetrain sub; This might be 28 idk
   
     public static final double kRotationToInch = ((1 / 7.31) * (2 * Math.PI * 3)),
-        kFeederDistance = 29; // Conversion factor from rotation
+        kFeederDistance = 30; // Conversion factor from rotation
                   //Actual is 27, but 29  to compensate.                                                                 //  to meters
 
   }

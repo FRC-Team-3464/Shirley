@@ -10,14 +10,16 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
 public class BalanceHoldPIDSubsystem extends PIDSubsystem {
     // Command to hold the robot on the charge station. 
-    private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
+    private final DrivetrainSubsystem driveSub;
     private double speed;
    
     //create PID with predetermined constants
-    public BalanceHoldPIDSubsystem(){ // What runs when we first create this command. 
+    public BalanceHoldPIDSubsystem(DrivetrainSubsystem driveSub){ // What runs when we first create this command. 
         super(new PIDController(0.18, 0.000, .001));
         getController().setSetpoint(0);
         getController().setTolerance(3);
+
+        this.driveSub = driveSub;
     }
 
     @Override

@@ -52,7 +52,7 @@ public class RobotContainer {
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
   private final UltrasonicSubsystem ultrasonicSubsystem = new UltrasonicSubsystem();
-  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem(driveSub);
   private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
@@ -255,7 +255,7 @@ public class RobotContainer {
      */
 
     OI.buttonRB.whileTrue(photonCenter);
-    OI.buttonLB.whileTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance));
+    OI.buttonLB.toggleOnTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance));
     OI.buttonB.onTrue(ledYellow);
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));

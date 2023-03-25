@@ -10,12 +10,12 @@ import frc.robot.Constants.DrivetrainConstants;
 
 public class UltrasonicSubsystem extends SubsystemBase {
   /** Creates a new UltrasonicSubsystem. */
-
- DigitalOutput ping = new DigitalOutput(8);
+  
+  DigitalOutput ping = new DigitalOutput(8);
   DigitalInput echo = new DigitalInput(9);
   private final Ultrasonic vexUltrasonic = new Ultrasonic(ping, echo);
 
-  private final MedianFilter ultrasonicFilter = new MedianFilter(5);
+  private final MedianFilter ultrasonicFilter = new MedianFilter(10);
 
   public UltrasonicSubsystem() {
     // Turn on Ultrasonic sensor
