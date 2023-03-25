@@ -52,7 +52,7 @@ public class RobotContainer {
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
   private final UltrasonicSubsystem ultrasonicSubsystem = new UltrasonicSubsystem();
-  // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
   private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
@@ -225,10 +225,6 @@ public class RobotContainer {
    */
   public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
   
-
-
-
-
   // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
   // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
    
@@ -263,6 +259,8 @@ public class RobotContainer {
     OI.buttonB.onTrue(ledYellow);
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
+    OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
+    
     
     /*
      * Aux Stick
