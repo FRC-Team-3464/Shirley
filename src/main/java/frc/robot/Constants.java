@@ -28,8 +28,8 @@ public final class Constants {
         ktrackWidthInches = 27; // We convert to meters in drivetrain sub; This might be 28 idk
   
     public static final double kRotationToInch = ((1 / 7.31) * (2 * Math.PI * 3)),
-        kFeederDistance = 28; // Conversion factor from rotation
-                                                                                     // to meters
+        kFeederDistance = 29; // Conversion factor from rotation
+                  //Actual is 27, but 29  to compensate.                                                                 //  to meters
 
   }
 
@@ -77,7 +77,7 @@ public final class Constants {
     public static final int kPivoterSecondMotorPort = 6;
     public static final int kPivotMinSwitchPort = 2;
 
-    public static final double kFeedPivoterValue = 13.2;
+    public static final double kFeedPivoterValue = 13;
     public static final double kHighConePivoterValue = 18.5;
     public static final double kHighCubePivoterValue = 15.73; // The setpoint to rotate the pivoter to the highest position.
     public static final double kMidConePivoterValue = 13.9; // The setpoint to rotate the pivoter to the highest position.
