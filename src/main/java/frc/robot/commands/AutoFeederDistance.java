@@ -66,7 +66,7 @@ public class AutoFeederDistance extends CommandBase {
   @Override
   public boolean isFinished() {
     // return autoFeederPID.atSetpoint();
-    return ultrasonic.getUltraDistance() < target; // Going in decreases distance, so when sensor is smaller than actual 
+    return ultrasonic.getUltraDistance() <= target; // Going in decreases distance, so when sensor is smaller than actual 
     // ultrasonic.getUltraDistance() <= target
   }
 }
