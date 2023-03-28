@@ -10,6 +10,10 @@ import frc.robot.Constants.ExtenderConstants;
 import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.SerialPort.StopBits;
 // import java.util.Arrays;
 // import edu.wpi.first.math.controller.RamseteController;
@@ -52,7 +56,7 @@ public class RobotContainer {
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
   private final UltrasonicSubsystem ultrasonicSubsystem = new UltrasonicSubsystem();
-  // private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem();
+  private final BalanceHoldPIDSubsystem balanceHoldSub = new BalanceHoldPIDSubsystem(driveSub);
   private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem(driveSub, gyroSub);
   private final DrivetrainRamp driveRamp = new DrivetrainRamp(1.33, 2.5); // These values may be wrong. 
   private final PhotonVisionSubsystem photonSub = new PhotonVisionSubsystem(); // I just want to read the values in periodic().
@@ -139,6 +143,7 @@ public class RobotContainer {
    */
   
   public final AutoDriveFoward driveToObject = new AutoDriveFoward(driveSub, -180); // Cross the 3+ points mark. 
+  
   public final SequentialCommandGroup autoDropAndDrive = new SequentialCommandGroup(
     // Stow 
     new ExtenderRetractLimit(extenderSub),
@@ -166,12 +171,12 @@ public class RobotContainer {
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
-    new WaitCommand(0.5),
+    new WaitCommand(0.25),
     //Drive back
     new AutoDriveBackward(driveSub, 180)
     );
 
-  public final SequentialCommandGroup autoDropAndBalance = new SequentialCommandGroup(
+  public final SequentialCommandGroup leftAuto2Object = new SequentialCommandGroup(
     // Stow 
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
@@ -182,15 +187,15 @@ public class RobotContainer {
     new CloseGrabberCone(grabberSub),
     // new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
-    new WaitCommand(0.25),
+    new WaitCommand(0.5),
     // Pivot up
-    // new PivotToHighPosition(pivoterSub, PivoterConstants.kHighPivoterValue), TBD
-    // new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), TBD
+    new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), //TBD
+    new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
     new OpenGrabber(grabberSub),
     // Stow again
-    new WaitCommand(0.4),
+    new WaitCommand(0.5),
     new CloseGrabberCone(grabberSub),
     new WaitCommand(0.2),
     new InstantCommand(grabberSub::stopMotor, grabberSub),
@@ -198,13 +203,55 @@ public class RobotContainer {
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
-    // Driveback and autobalance.
-    new AutoDriveBackward(driveSub, 68),
-    // new WaitCommand(0.5),
-    // new AutoDriveFoward(driveSub, 30),
-    new BalanceDistance(driveSub, balanceSub)
-    // new WaitCommand(0.5),
+    new WaitCommand(0.25),
     //Drive back
+    new AutoDriveBackward(driveSub, 180),
+    new WaitCommand(0.25),
+    new AutoDriveRotate(driveSub, gyroSub, 100),
+    new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue), new OpenGrabber(grabberSub), new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
+    new AutoDriveFoward(driveSub, 12),
+    new WaitCommand(0.125),
+    // Pivot up from ground
+    new SequentialCommandGroup(new CloseGrabberCone(grabberSub), new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub))
+    );
+
+  public final SequentialCommandGroup rightAuto2Object = new SequentialCommandGroup(
+       // Stow 
+       new ExtenderRetractLimit(extenderSub),
+       new PivoterPivotMin(pivoterSub),
+       new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+       new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+       // Close grabber 
+   
+       new CloseGrabberCone(grabberSub),
+       // new WaitCommand(0.2),
+       // new InstantCommand(grabberSub::stopMotor, grabberSub),
+       new WaitCommand(0.5),
+       // Pivot up
+       new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), //TBD
+       new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
+       new WaitCommand(0.15),
+       // Open Grabber
+       new OpenGrabber(grabberSub),
+       // Stow again
+       new WaitCommand(0.5),
+       new CloseGrabberCone(grabberSub),
+       new WaitCommand(0.2),
+       new InstantCommand(grabberSub::stopMotor, grabberSub),
+       new ExtenderRetractLimit(extenderSub),
+       new PivoterPivotMin(pivoterSub),
+       new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+       new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+       new WaitCommand(0.25),
+       //Drive back
+       new AutoDriveBackward(driveSub, 180),
+       new WaitCommand(0.25),
+       new AutoDriveRotateCounter(driveSub, gyroSub, 100),
+       new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue), new OpenGrabber(grabberSub), new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
+       new AutoDriveFoward(driveSub, 12),
+       new WaitCommand(0.125),
+       // Pivot up from ground
+       new SequentialCommandGroup(new CloseGrabberCone(grabberSub), new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub))
   );
     
 
@@ -225,10 +272,6 @@ public class RobotContainer {
    */
   public final AutoDriveFoward driveOut = new AutoDriveFoward(driveSub, -100); // Cross the 3+ points mark. 
   
-
-
-
-
   // public final BalanceDistance balance = new BalanceDistance(driveSub, balanceSub);
   // public final BalanceHold balanceHold = new BalanceHold(balanceHoldSub, driveSub);
    
@@ -236,6 +279,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    // SmartDashboard.putData("Drive Forward (12)", new AutoPIDFoward(driveSub, 12));
     configureBindings();
   }
 
@@ -261,8 +305,14 @@ public class RobotContainer {
     OI.buttonRB.whileTrue(photonCenter);
     OI.buttonLB.toggleOnTrue(new AutoFeederDistance(driveSub, ultrasonicSubsystem, ledSub, DrivetrainConstants.kFeederDistance));
     OI.buttonB.onTrue(ledYellow);
+    // OI.buttonB.onTrue(new AutoDriveRotateCounter(driveSub, gyroSub, 100));
+    // OI.buttonA.onTrue(new AutoDriveRotate(driveSub, gyroSub, 100));
+    
+    // OI.buttonA.onTrue(new AutoPIDFoward(driveSub, 12));
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
+    OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
+    
     
     /*
      * Aux Stick
@@ -323,10 +373,14 @@ public class RobotContainer {
       case "autoDropAndDrive":
         selected_autoCommand = autoDropAndDrive;
         break;
-      case "autoDropAndBalance":
-        selected_autoCommand = autoDropAndBalance;
+      case "leftAuto2Object":
+        selected_autoCommand = leftAuto2Object;
+        break; 
+      case "rightAuto2Object":
+        selected_autoCommand = rightAuto2Object;
+        break;
       default:
-      selected_autoCommand = autoDropAndDrive;    
+      selected_autoCommand = leftAuto2Object;    
     }
 
     return selected_autoCommand;

@@ -35,7 +35,7 @@ public class ExtenderSubsystem extends SubsystemBase {
    */
   
   public void extend(){
-        extenderMotor.set(0.5);
+        extenderMotor.set(0.6);
   }
 
   public void retract(){

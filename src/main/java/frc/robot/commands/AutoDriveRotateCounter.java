@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
-public class AutoDriveRotate extends CommandBase {
+public class AutoDriveRotateCounter extends CommandBase {
   /** Creates a new AutoDriveRotate. */
   private final DrivetrainSubsystem driveSub; // Leave this undefined. 
   private final GyroSubsystem gyroSub; // Leave this undefined. 
   private double directionSet; // This will be either negative or positive 1.0 based on the sign of it's argument. 
   private double target; 
   
-  public AutoDriveRotate(DrivetrainSubsystem drive, GyroSubsystem gyro, double target) {
+  public AutoDriveRotateCounter(DrivetrainSubsystem drive, GyroSubsystem gyro, double target) {
     driveSub = drive;
     gyroSub = gyro;
     this.target = target; // this refers to the target we created with private double target. 
@@ -38,8 +38,8 @@ public class AutoDriveRotate extends CommandBase {
   public void execute() {
     System.out.println(directionSet); 
     // Positive is clockwise. 
-    SmartDashboard.putNumber("CLOSE?", Math.abs(gyroSub.getDegrees()));
-    driveSub.arcadeDrive(0, 0.3125 * directionSet); // Make this a constant. 
+    // SmartDashboard.putNumber("CLOSE?", Math.abs(gyroSub.getDegrees()));
+    driveSub.arcadeDrive(0, -0.3125); // Make this a constant. 
   }
 
   // Called once the command ends or is interrupted.
