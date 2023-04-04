@@ -50,7 +50,7 @@ public final class Constants {
     public static final double tolerance = 0.75;
 
     // Setpoint
-    public static final double kGroundExtenderValue = 9.3; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kGroundExtenderValue = 7.75; // The setpoint to rotate the pivoter to the highest position.
     public static final double kLowExtenderValue = 5.75; // The setpoint to rotate the pivoter to the highest position.
     public static final double kMidExtenderConeValue = 5; // The setpoint to rotate the pivoter to the highest position.
     public static final double kMidExtenderCubeValue = 2.56;
