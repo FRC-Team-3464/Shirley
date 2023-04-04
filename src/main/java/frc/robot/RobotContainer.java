@@ -255,6 +255,43 @@ public class RobotContainer {
   );
     
 
+  public final SequentialCommandGroup autoDropAndBalance = new SequentialCommandGroup(
+    // Stow 
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    // Close grabber 
+
+    new CloseGrabberCone(grabberSub),
+    // new WaitCommand(0.2),
+    // new InstantCommand(grabberSub::stopMotor, grabberSub),
+    new WaitCommand(0.45),
+    // Pivot up
+    new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), 
+    new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue), 
+    new WaitCommand(0.15),
+    // Open Grabber
+    new OpenGrabber(grabberSub),
+    // Stow again
+    new WaitCommand(0.4),
+    new CloseGrabberCone(grabberSub),
+    new WaitCommand(0.2),
+    new InstantCommand(grabberSub::stopMotor, grabberSub),
+    new ExtenderRetractLimit(extenderSub),
+    new PivoterPivotMin(pivoterSub),
+    new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
+    new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
+    // Driveback and autobalance.
+    new AutoDriveBackward(driveSub, 68),
+    // new WaitCommand(0.5),
+    // new AutoDriveFoward(driveSub, 30),
+    new BalanceDistance(driveSub, balanceSub)
+    // new WaitCommand(0.5),
+    //Drive back
+  );
+
+
   //private final SequentialCommandGroup auto1ExtendAndDrop = new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)); // This line and the one below is TBD
   // private final SequentialCommandGroup auto2ExtendDropTurnAndDrive = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
   
@@ -308,7 +345,7 @@ public class RobotContainer {
     // OI.buttonB.onTrue(new AutoDriveRotateCounter(driveSub, gyroSub, 100));
     // OI.buttonA.onTrue(new AutoDriveRotate(driveSub, gyroSub, 100));
     
-    // OI.buttonA.onTrue(new AutoPIDFoward(driveSub, 12));
+    // OI.buttonA.onTrue(new AutoDriveFoward(driveSub, 12));
     OI.buttonA.onTrue(ledPurple);
     OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
     OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
@@ -379,10 +416,12 @@ public class RobotContainer {
       case "rightAuto2Object":
         selected_autoCommand = rightAuto2Object;
         break;
+      case "autoDropAndBalance":
+        selected_autoCommand = autoDropAndBalance;
+        break;
       default:
       selected_autoCommand = leftAuto2Object;    
     }
-
     return selected_autoCommand;
   }
 }

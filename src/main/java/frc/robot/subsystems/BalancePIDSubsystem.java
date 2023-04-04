@@ -28,7 +28,7 @@ public class BalancePIDSubsystem extends PIDSubsystem {
     private double encoderDistance;
     // create PID with predetermined constants
     public BalancePIDSubsystem(DrivetrainSubsystem driveSub, GyroSubsystem gyroSub){ // What runs when we first create this command. 
-        super(new PIDController(0.0285, 0.00, -.002));  // This should be negative; negative means forwards, i think 
+        super(new PIDController(0.0275, 0.00, .002));  // This should be negative; negative means forwards, i think 
         getController().setSetpoint(0);
         getController().setTolerance(1);
         timer.start();

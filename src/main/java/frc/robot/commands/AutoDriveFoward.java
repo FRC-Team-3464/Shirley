@@ -46,6 +46,6 @@ public class AutoDriveFoward extends CommandBase {
   @Override
   public boolean isFinished() {
     //  Become smaller value until it's less than the target 
-    return (driveSub.getLeftPosition()) < target; //  until encoder value < -50
+    return (Math.abs(driveSub.getLeftPosition()) > target); //  until encoder value < -50
   }
 }
