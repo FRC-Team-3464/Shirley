@@ -24,6 +24,7 @@ public class GrabberSubsystem extends SubsystemBase {
   private final RelativeEncoder rGrabberEncoder = rGrabberMotor.getEncoder();
   
 
+
   public GrabberSubsystem() {
     // Invert the grabber. 
     lGrabberMotor.setInverted(true);
@@ -42,6 +43,7 @@ public class GrabberSubsystem extends SubsystemBase {
   public void stopMotor() {
     // Stop motor
     lGrabberMotor.stopMotor(); 
+    System.out.println("motor stopped");
   }
 
   public double getGrabberRotation() {
@@ -71,5 +73,8 @@ public class GrabberSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("Grabber Speed", lGrabberMotor.get()); // Give us the speed. 
     SmartDashboard.putNumber("Grabber Power", lGrabberMotor.getOutputCurrent());
+
+    SmartDashboard.putNumber("Left Motor Temperature", lGrabberMotor.getMotorTemperature());
+    SmartDashboard.putNumber("Right Motor Temperature", rGrabberMotor.getMotorTemperature());
   }
 }

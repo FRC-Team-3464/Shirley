@@ -65,8 +65,10 @@ public class Robot extends TimedRobot {
     // autoChooser.addOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
     autoChooser.addOption("Auto 1: Drive Only", "autoDriveForward");
     autoChooser.addOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
-    autoChooser.addOption("Auto 3: Place Cone and Balance", "autoDropAndBalance");
-    autoChooser.setDefaultOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
+    autoChooser.addOption("Auto 3: Left Two Object", "leftAuto2Object");
+    autoChooser.addOption("Auto 4: Right Two Object", "rightAuto2Object");
+    autoChooser.addOption("Auto 5: Place Cone and Balance", "autoDropAndBalance");
+    autoChooser.setDefaultOption("Auto 3: Left Two Object", "leftAuto2Object");
     // autoChooser.addOption("Auto 2: Place Cone and Drive", "autoDropAndDrive");
     // autoChooser.setDefaultOption("Auto 3: Place Cone and Balance", "autoDropAndBalance");
 

@@ -23,8 +23,8 @@ public class PivoterPivotMin extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivot(-0.125);
-    System.out.println("Pivoter " + pivoterSub.getPivoterRotation());
+    pivoterSub.pivot(-0.2);
+    // System.out.println("Pivoter " + pivoterSub.getPivoterRotation());
   }
 
   // Called once the command ends or is interrupted.

@@ -9,23 +9,17 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 // import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BalanceHoldPIDSubsystem extends PIDSubsystem {
-  private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
-    // private final EncoderSubsystem encoderSub = new EncoderSubsystem();
-    // private final LimelightSubsystem limeSub = new LimelightSubsystem();
-    // private final GyroSubsystem gyroSub = new GyroSubsystem();
+    // Command to hold the robot on the charge station. 
+    private final DrivetrainSubsystem driveSub;
     private double speed;
-    // private double distance; // create distance
-    
    
-    // private double encoderDistance;
     //create PID with predetermined constants
-    public BalanceHoldPIDSubsystem(){ // What runs when we first create this command. 
+    public BalanceHoldPIDSubsystem(DrivetrainSubsystem driveSub){ // What runs when we first create this command. 
         super(new PIDController(0.18, 0.000, .001));
         getController().setSetpoint(0);
         getController().setTolerance(3);
-        
-        // distance = 0;
-        // encoderDistance = 0;
+
+        this.driveSub = driveSub;
     }
 
     @Override
@@ -36,10 +30,8 @@ public class BalanceHoldPIDSubsystem extends PIDSubsystem {
         }
         else if(speed < -.35){
             speed = -.35;
-        }
-        
+        }    
         driveSub.arcadeDrive(speed, 0);
-        //System.out.println(speed);
     }
     
     @Override  
@@ -48,10 +40,6 @@ public class BalanceHoldPIDSubsystem extends PIDSubsystem {
     }
     
     @Override
-    public void periodic(){
-        // Distance slipped we gotta find "4". 
-        
-            //driveSub.arcadeDrive(0, getController().calculate(getMeasurement()));
-    }
+    public void periodic(){}
  
 }

@@ -35,11 +35,11 @@ public class ExtenderSubsystem extends SubsystemBase {
    */
   
   public void extend(){
-        extenderMotor.set(0.5);
+        extenderMotor.set(1);
   }
 
   public void retract(){
-        extenderMotor.set(-0.8);
+        extenderMotor.set(-0.97);
   };
 
   // Run motor continuously without any interference from limitswitch
