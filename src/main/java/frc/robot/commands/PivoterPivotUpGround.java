@@ -10,11 +10,11 @@ import frc.robot.subsystems.PivoterSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.PivoterConstants;
 
-public class PivotToHighPosition extends CommandBase {
+public class PivoterPivotUpGround extends CommandBase {
   /** Creates a new PivotToHighPosition. */
   private final PivoterSubsystem pivoterSub;
   private final double setpoint;
-  public PivotToHighPosition(PivoterSubsystem pivoterSub, double target) {
+  public PivoterPivotUpGround(PivoterSubsystem pivoterSub, double target) {
     this.pivoterSub = pivoterSub;
     setpoint = target;
     addRequirements(pivoterSub);
@@ -28,7 +28,7 @@ public class PivotToHighPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivoterSub.pivot(0.5); // set to max speed. 
+    pivoterSub.pivot(0.2); // set to max speed. 
   }
 
   // Called once the command ends or is interrupted.

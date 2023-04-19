@@ -126,8 +126,8 @@ public class RobotContainer {
   private final PivotToHighPosition pivotToMidCone = new PivotToHighPosition(pivoterSub, PivoterConstants.kMidConePivoterValue);
   private final PivotToHighPosition pivotToMidCube = new PivotToHighPosition(pivoterSub, PivoterConstants.kMidCubePivoterValue);
   private final PivotToHighPosition pivotToLow = new PivotToHighPosition(pivoterSub, PivoterConstants.kLowPivoterValue);
-  private final PivotToHighPosition pivotUpToGround = new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue);
   private final PivotToHighPosition pivotToFeeder = new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue);
+  private final PivoterPivotUpGround pivotUpToGround = new PivoterPivotUpGround(pivoterSub, PivoterConstants.kGroundPivoterUpValue);
   private final PivotToLowPosition pivotDownToGround = new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue);
   //private final SequentialCommandGroup pivotDown = new SequentialCommandGroup(pivotUpToGround, pivotDownToGround);
 
@@ -187,7 +187,7 @@ public class RobotContainer {
     new CloseGrabberCone(grabberSub),
     // new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
-    new WaitCommand(0.5),
+    new WaitCommand(0.2),
     // Pivot up
     new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), //TBD
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
@@ -205,10 +205,11 @@ public class RobotContainer {
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     new WaitCommand(0.25),
     //Drive back
-    new AutoDriveBackward(driveSub, 180),
+    new AutoDriveBackward(driveSub, 175),
     new WaitCommand(0.25),
-    new AutoDriveRotate(driveSub, gyroSub, 100),
+    new AutoDriveRotate(driveSub, gyroSub, 115),
     new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue), new OpenGrabber(grabberSub), new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
+    new WaitCommand(0.5),
     new AutoDriveFoward(driveSub, 12),
     new WaitCommand(0.125),
     // Pivot up from ground
