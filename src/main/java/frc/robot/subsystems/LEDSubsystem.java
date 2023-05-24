@@ -43,6 +43,26 @@ public class LEDSubsystem extends SubsystemBase {
      System.out.println("Yellowing");
   }
 
+  public void brown() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        ledBuffer.setRGB(i, 74, 65, 42);
+     }
+     
+     ledStrip.setData(ledBuffer);
+     System.out.println("Browinign");
+  }
+
+  public void blue() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        ledBuffer.setRGB(i, 5, 20, 250);
+     }
+     
+     ledStrip.setData(ledBuffer);
+     System.out.println("Blueing");
+  }
+
   public void red() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
