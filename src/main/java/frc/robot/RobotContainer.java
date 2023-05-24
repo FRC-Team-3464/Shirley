@@ -93,6 +93,7 @@ public class RobotContainer {
   private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
   private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
   private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
+  private final AutoGrab autoGrab = new AutoGrab(grabberSub, ledSub, driveSub, driveRamp);
 
   /*
    * Photonvision Commands
@@ -371,7 +372,9 @@ public class RobotContainer {
     OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
     OI.button4Aux.onTrue(goToFeeder);
     OI.button5Aux.onTrue(stowArm);
-    OI.button6Aux.onTrue(stowGroundArm);
+    OI.button6Aux.whileTrue(autoGrab);
+    // OI.button6Aux.onTrue(stowGroundArm);
+
 
     OI.button7Aux.onTrue(goToHighCone);
     OI.button8Aux.onTrue(goToMidCone);
