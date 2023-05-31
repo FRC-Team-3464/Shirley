@@ -33,6 +33,9 @@ public class LEDSubsystem extends SubsystemBase {
 
   }
 
+  // public void blink() {
+
+  // }
   public void yellow() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
@@ -95,20 +98,46 @@ public class LEDSubsystem extends SubsystemBase {
 
   
 
-  /*public void rainbow() {
-    // For every pixel
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      final var hue = (rainbowFirstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
-      // Set the value
-      ledBuffer.setHSV(i, hue, 255, 128);
+
+
+  public void rainbow() {
+    // // For every pixel
+    // double rainbowFirstPixelHue = 0;
+    // for (var i = 0; i < ledBuffer.getLength(); i++) {
+    //   // Calculate the hue - hue is easier for rainbows because the color
+    //   // shape is a circle so only one value needs to precess
+
+    //   final var hue = (0 + (i * 180 / ledBuffer.getLength())) % 180;
+    //   // Set the value
+    //   ledBuffer.setHSV(i, hue, 255, 128);
+    // }
+    // // Increase by to make the rainbow "move"
+    // rainbowFirstPixelHue += 3;
+    // // Check bounds
+    // rainbowFirstPixelHue %= 180;
+    for (var i = 0; i < 8; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 100, 1, 0);
     }
-    // Increase by to make the rainbow "move"
-    rainbowFirstPixelHue += 3;
-    // Check bounds
-    rainbowFirstPixelHue %= 180;
-  }*/
+    for (var i = 8; i < 16; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 130, 50, 0);
+    } 
+    for (var i = 16; i < 24; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 100,100, 0);
+    }
+    for (var i = 24; i < 32; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 0,100, 0);
+    }
+    for (var i = 32; i < 40; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 0,0, 100);
+    }
+    for (var i = 40; i < ledBuffer.getLength(); i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 100, 1, 186);
+    }
+
+    ledStrip.setData(ledBuffer);
+}
+
+
 
 
 
