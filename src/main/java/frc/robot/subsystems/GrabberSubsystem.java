@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +24,7 @@ public class GrabberSubsystem extends SubsystemBase {
   private final RelativeEncoder lGrabberEncoder = lGrabberMotor.getEncoder();
   private final RelativeEncoder rGrabberEncoder = rGrabberMotor.getEncoder();
   
+  private final DigitalInput grabbingLimit = new DigitalInput(7);
 
 
   public GrabberSubsystem() {
@@ -46,10 +48,14 @@ public class GrabberSubsystem extends SubsystemBase {
     System.out.println("motor stopped");
   }
 
+  public boolean getGrabberLimit() {
+    return !grabbingLimit.get();
+  }
   public double getGrabberRotation() {
     // Returns the encoder value of the grabber motor in rotations
     return lGrabberEncoder.getPosition();
   }
+
 
 
   public double getGrabberDegrees() {
@@ -73,6 +79,8 @@ public class GrabberSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("Grabber Speed", lGrabberMotor.get()); // Give us the speed. 
     SmartDashboard.putNumber("Grabber Power", lGrabberMotor.getOutputCurrent());
+
+    SmartDashboard.putBoolean("GrabberLimit", getGrabberLimit());
 
     SmartDashboard.putNumber("Left Motor Temperature", lGrabberMotor.getMotorTemperature());
     SmartDashboard.putNumber("Right Motor Temperature", rGrabberMotor.getMotorTemperature());
