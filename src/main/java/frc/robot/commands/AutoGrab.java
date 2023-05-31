@@ -44,9 +44,18 @@ public class AutoGrab extends CommandBase {
   public void execute() {
     // if(grabberSub.getGrabberLimit()) {
     //     // }
-    driveSub.arcadeDrive(driveRampSub.applyAsDouble((controller.getLeftY() * 0.8) - (0.2 * controller.getRightTriggerAxis())) , controller.getRightX() * 0.6); // Halve the speed - we don't need to go so fast now. 
-  
-    ledSub.brown();
+ 
+
+
+    if( grabberSub.getGrabberLimit()){
+      grabberSub.runMotor(GrabberConstants.kStrongGrabSpeed);
+      ledSub.rainbow();
+      driveSub.stopDrive();
+    }else{
+      ledSub.brown();
+      driveSub.arcadeDrive(driveRampSub.applyAsDouble((controller.getLeftY() * 0.8) - (0.2 * controller.getRightTriggerAxis())) , controller.getRightX() * 0.6); // Halve the speed - we don't need to go so fast now. 
+
+    }
     // LED 
   }
 
@@ -54,11 +63,11 @@ public class AutoGrab extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     // grabberSub.stopMotor();
-    grabberSub.runMotor(GrabberConstants.kStrongGrabSpeed);
-    ledSub.blue();
-    driveSub.stopDrive();
-    driveSub.arcadeDrive(0.2,0);
-    new WaitCommand(0.5);
+    // grabberSub.runMotor(GrabberConstants.kStrongGrabSpeed);
+    // ledSub.red();
+    // driveSub.stopDrive();
+    // driveSub.arcadeDrive(0.2,0);
+    // new WaitCommand(0.5);
     // LED Flash
 
   }
@@ -66,6 +75,6 @@ public class AutoGrab extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return grabberSub.getGrabberLimit();
+    return false;
   }
 }
