@@ -52,9 +52,8 @@ public class AutoGrab extends CommandBase {
       ledSub.rainbow();
       driveSub.stopDrive();
     }else{
-      ledSub.brown();
+      ledSub.white();
       driveSub.arcadeDrive(driveRampSub.applyAsDouble((controller.getLeftY() * 0.8) - (0.2 * controller.getRightTriggerAxis())) , controller.getRightX() * 0.6); // Halve the speed - we don't need to go so fast now. 
-
     }
     // LED 
   }

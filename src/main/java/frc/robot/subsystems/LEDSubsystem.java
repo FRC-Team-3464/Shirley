@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,6 +15,7 @@ public class LEDSubsystem extends SubsystemBase {
   // Create a gyroscope.
   private final AddressableLED ledStrip;
   private final AddressableLEDBuffer ledBuffer;
+  Timer flashTimer = new Timer();
   
 
   public LEDSubsystem() {
@@ -46,7 +48,7 @@ public class LEDSubsystem extends SubsystemBase {
      System.out.println("Yellowing");
   }
 
-  public void brown() {
+  public void white() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
         ledBuffer.setRGB(i, 74, 65, 42);
@@ -96,11 +98,21 @@ public class LEDSubsystem extends SubsystemBase {
   }
   
 
-  
+  public void flash(){
+    flashTimer.start();
+    if(flashTimer.get() % 0.5 == 0){
+        ledStrip.start();
+        white();
+    }else{
+        ledStrip.stop();
+    }
+    }
+    
 
 
 
   public void rainbow() {
+    flashTimer.stop();
     // // For every pixel
     // double rainbowFirstPixelHue = 0;
     // for (var i = 0; i < ledBuffer.getLength(); i++) {
