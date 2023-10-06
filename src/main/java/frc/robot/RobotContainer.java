@@ -49,10 +49,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems are defined here
   // private final UltrasonicSubsystem ultrasonicSub = new UltrasonicSubsystem();
+  private final IntakeSubsystem intakeSub = new IntakeSubsystem();
   private final ExtenderSubsystem extenderSub = new ExtenderSubsystem();
   private final PivoterSubsystem pivoterSub = new PivoterSubsystem();
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
-  private final GrabberSubsystem grabberSub = new GrabberSubsystem();
+  //private final GrabberSubsystem grabberSub = new GrabberSubsystem();
   // private final BalancePIDSubsystem balanceSub = new BalancePIDSubsystem();
   private final GyroSubsystem gyroSub = new GyroSubsystem();
   private final UltrasonicSubsystem ultrasonicSubsystem = new UltrasonicSubsystem();
@@ -63,6 +64,12 @@ public class RobotContainer {
   private final LEDSubsystem ledSub = new LEDSubsystem();
   private final InstantCommand ledYellow = new InstantCommand(ledSub::yellow,ledSub);
   private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub); 
+
+  /*
+   * Rolly Intake Commands
+   */
+  private final RunRollyGrabber suck = new RunRollyGrabber(intakeSub, ledSub);
+  private final ReverseRollyGrabber spit = new ReverseRollyGrabber(intakeSub, ledSub);
   
   /*
    * Drivetrain Commands
@@ -89,11 +96,11 @@ public class RobotContainer {
   /*
    * Grabber Commands
    */ 
-  private final InstantCommand stopGrabber = new InstantCommand(grabberSub::stopMotor, grabberSub); // Stops the grabber. 
-  private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
-  private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
-  private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
-  private final AutoGrab autoGrab = new AutoGrab(grabberSub, ledSub, driveSub, driveRamp);
+  // private final InstantCommand stopGrabber = new InstantCommand(grabberSub::stopMotor, grabberSub); // Stops the grabber. 
+  // private final OpenGrabber openGrabber = new OpenGrabber(grabberSub);
+  // private final CloseGrabberCone grabCone = new CloseGrabberCone(grabberSub);
+  // private final CloseGrabberCube grabCube = new CloseGrabberCube(grabberSub);
+  // private final AutoGrab autoGrab = new AutoGrab(grabberSub, ledSub, driveSub, driveRamp);
 
   /*
    * Photonvision Commands
@@ -112,8 +119,8 @@ public class RobotContainer {
   private final PivoterPivotMin pivotStore = new PivoterPivotMin(pivoterSub);
 
   // Close the grabber first
-  public final Command stowArm = new SequentialCommandGroup(new CloseGrabberCone(grabberSub),retractStore, pivotStore, /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/ pivotEncoderReset, extenderEncoderReset);
-  public final Command stowGroundArm =  new SequentialCommandGroup(new CloseGrabberCone(grabberSub), new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub));
+  public final Command stowArm = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/retractStore, pivotStore, /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/ pivotEncoderReset, extenderEncoderReset);
+  public final Command stowGroundArm =  new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub));
 
   // public final Command stowArm = new SequentialCommandGroup(new ExtenderRetractLimit, pivotStore, pivotEncoderReset, extenderEncoderReset);
 
@@ -153,7 +160,7 @@ public class RobotContainer {
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     // Close grabber 
 
-    new CloseGrabberCone(grabberSub),
+    //new CloseGrabberCone(grabberSub),
     // new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
     new WaitCommand(0.5),
@@ -162,12 +169,12 @@ public class RobotContainer {
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
-    new OpenGrabber(grabberSub),
+    //new OpenGrabber(grabberSub),
     // Stow again
     new WaitCommand(0.5),
-    new CloseGrabberCone(grabberSub),
+    //new CloseGrabberCone(grabberSub),
     new WaitCommand(0.2),
-    new InstantCommand(grabberSub::stopMotor, grabberSub),
+    //new InstantCommand(grabberSub::stopMotor, grabberSub),
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
@@ -185,7 +192,7 @@ public class RobotContainer {
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     // Close grabber 
 
-    new CloseGrabberCone(grabberSub),
+    //new CloseGrabberCone(grabberSub),
     // new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
     new WaitCommand(0.2),
@@ -194,12 +201,12 @@ public class RobotContainer {
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
-    new OpenGrabber(grabberSub),
+    //new OpenGrabber(grabberSub),
     // Stow again
     new WaitCommand(0.5),
-    new CloseGrabberCone(grabberSub),
+    //new CloseGrabberCone(grabberSub),
     new WaitCommand(0.2),
-    new InstantCommand(grabberSub::stopMotor, grabberSub),
+    //new InstantCommand(grabberSub::stopMotor, grabberSub),
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
@@ -209,12 +216,12 @@ public class RobotContainer {
     new AutoDriveBackward(driveSub, 175),
     new WaitCommand(0.25),
     new AutoDriveRotate(driveSub, gyroSub, 115),
-    new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue), new OpenGrabber(grabberSub), new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
+    new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue), /*new OpenGrabber(grabberSub), */new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
     new WaitCommand(0.5),
     new AutoDriveFoward(driveSub, 12),
     new WaitCommand(0.125),
     // Pivot up from ground
-    new SequentialCommandGroup(new CloseGrabberCone(grabberSub), new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub))
+    new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub))
     );
 
   public final SequentialCommandGroup rightAuto2Object = new SequentialCommandGroup(
@@ -225,7 +232,7 @@ public class RobotContainer {
        new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
        // Close grabber 
    
-       new CloseGrabberCone(grabberSub),
+       // new CloseGrabberCone(grabberSub),
        // new WaitCommand(0.2),
        // new InstantCommand(grabberSub::stopMotor, grabberSub),
        new WaitCommand(0.5),
@@ -234,12 +241,12 @@ public class RobotContainer {
        new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
        new WaitCommand(0.15),
        // Open Grabber
-       new OpenGrabber(grabberSub),
+       // new OpenGrabber(grabberSub),
        // Stow again
        new WaitCommand(0.5),
-       new CloseGrabberCone(grabberSub),
+       //new CloseGrabberCone(grabberSub),
        new WaitCommand(0.2),
-       new InstantCommand(grabberSub::stopMotor, grabberSub),
+       //new InstantCommand(grabberSub::stopMotor, grabberSub),
        new ExtenderRetractLimit(extenderSub),
        new PivoterPivotMin(pivoterSub),
        new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
@@ -249,11 +256,11 @@ public class RobotContainer {
        new AutoDriveBackward(driveSub, 180),
        new WaitCommand(0.25),
        new AutoDriveRotateCounter(driveSub, gyroSub, 100),
-       new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue), new OpenGrabber(grabberSub), new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
+       new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kGroundPivoterUpValue),/* new OpenGrabber(grabberSub),*/ new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kGroundExtenderValue), /*openGrabber,*/ new PivotToLowPosition(pivoterSub, PivoterConstants.kGroundPivoterValue)),
        new AutoDriveFoward(driveSub, 12),
        new WaitCommand(0.125),
        // Pivot up from ground
-       new SequentialCommandGroup(new CloseGrabberCone(grabberSub), new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub))
+       new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub), */new PivotToHighPosition(pivoterSub, 3), new ExtenderRetractLimit(extenderSub), new PivoterPivotMin(pivoterSub), new WaitCommand(0.2), /*new InstantCommand(grabberSub::stopMotor,  grabberSub),*/  new InstantCommand(pivoterSub::resetEncoder, pivoterSub), new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub))
   );
     
 
@@ -265,7 +272,7 @@ public class RobotContainer {
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     // Close grabber 
 
-    new CloseGrabberCone(grabberSub),
+    //new CloseGrabberCone(grabberSub),
     // new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
     new WaitCommand(0.45),
@@ -274,12 +281,12 @@ public class RobotContainer {
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue), 
     new WaitCommand(0.15),
     // Open Grabber
-    new OpenGrabber(grabberSub),
+    //new OpenGrabber(grabberSub),
     // Stow again
     new WaitCommand(0.4),
-    new CloseGrabberCone(grabberSub),
+    //new CloseGrabberCone(grabberSub),
     new WaitCommand(0.2),
-    new InstantCommand(grabberSub::stopMotor, grabberSub),
+    //new InstantCommand(grabberSub::stopMotor, grabberSub),
     new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
@@ -298,13 +305,13 @@ public class RobotContainer {
   // private final SequentialCommandGroup auto2ExtendDropTurnAndDrive = new SequentialCommandGroup(new SequentialCommandGroup(new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderValue), new OpenGrabber(grabberSub), new InstantCommand(grabberSub::stopMotor, grabberSub)), new AutoDriveRotate(driveSub, gyroSub, 180), new AutoDriveFoward(driveSub, 10));
   
   // Merge commands using sequential commands. 
-  public final Command goToHighCone = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToHighCone, extendToHighCone);
-  public final Command goToHighCube = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToHighCube, extendToHighCube);
-  public final Command goToMidCone = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToMidCone, extendToMidCone);
-  public final Command goToMidCube = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToMidCube, extendToMidCube);
-  public final Command goToLow = new SequentialCommandGroup(new CloseGrabberCone(grabberSub), pivotToLow, extendToLow);
-  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, new OpenGrabber(grabberSub), extendToGround, /*openGrabber,*/ pivotDownToGround);
-  public final Command goToFeeder = new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue), new OpenGrabber(grabberSub));
+  public final Command goToHighCone = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ pivotToHighCone, extendToHighCone);
+  public final Command goToHighCube = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ pivotToHighCube, extendToHighCube);
+  public final Command goToMidCone = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ pivotToMidCone, extendToMidCone);
+  public final Command goToMidCube = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ pivotToMidCube, extendToMidCube);
+  public final Command goToLow = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub), */pivotToLow, extendToLow);
+  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, /*new OpenGrabber(grabberSub), */extendToGround, /*openGrabber,*/ pivotDownToGround);
+  public final Command goToFeeder = new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue)/*,new OpenGrabber(grabberSub)*/);
 
   /*
    * Auto Sequences
@@ -361,18 +368,18 @@ public class RobotContainer {
     OI.povButtonDown.whileTrue(pivotMin);  
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
-    OI.triggerAux.toggleOnTrue(grabCone);
+    OI.triggerAux.toggleOnTrue(suck);
     // OI.triggerAux.onFalse();
     
 
 
-    OI.button2Aux.onTrue(openGrabber); // Open grabber 
+    OI.button2Aux.onTrue(spit); // Open grabber 
     // OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
     // OI.button5Aux.onTrue(stopGrabber);
     OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
     OI.button4Aux.onTrue(goToFeeder);
     OI.button5Aux.onTrue(stowArm);
-    OI.button6Aux.whileTrue(autoGrab);
+    //OI.button6Aux.whileTrue(autoGrab);
     // OI.button6Aux.onTrue(stowGroundArm);
 
 
@@ -381,7 +388,7 @@ public class RobotContainer {
     OI.button9Aux.onTrue(goToHighCube);
     OI.button10Aux.onTrue(goToMidCube);
     OI.button11Aux.onTrue(goToLow);
-    OI.button12Aux.onTrue(new SequentialCommandGroup(new InstantCommand(grabberSub::stopMotor, grabberSub), new InstantCommand(grabberSub::resetGrabberDistance, grabberSub)));
+    // OI.button12Aux.onTrue(new SequentialCommandGroup(new InstantCommand(grabberSub::stopMotor, grabberSub), new InstantCommand(grabberSub::resetGrabberDistance, grabberSub)));
 
     // OI.button12Aux.onTrue(new InstantCommand(grabberSub::stopMotor, grabberSub));
 

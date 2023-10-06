@@ -33,8 +33,8 @@ public class GrabberSubsystem extends SubsystemBase {
     rGrabberMotor.follow(lGrabberMotor, true);
   }
 
-  /*
-  * Grabber methods
+  
+  // Grabber methods
   
 
   public void runMotor(double speed) {
