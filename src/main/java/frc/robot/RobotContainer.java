@@ -64,6 +64,9 @@ public class RobotContainer {
   private final InstantCommand ledYellow = new InstantCommand(ledSub::yellow,ledSub);
   private final InstantCommand ledPurple = new InstantCommand(ledSub::purple,ledSub); 
   
+  // Test command, don't bother
+  private final TestLedCMD ledDecision = new TestLedCMD(ledSub);
+
   /*
    * Drivetrain Commands
    */
@@ -349,8 +352,9 @@ public class RobotContainer {
     
     // OI.buttonA.onTrue(new AutoDriveFoward(driveSub, 12));
     OI.buttonA.onTrue(ledPurple);
-    OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
-    OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
+    // OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
+    OI.buttonX.onTrue(ledDecision);
+    // OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
     
     
     /*
