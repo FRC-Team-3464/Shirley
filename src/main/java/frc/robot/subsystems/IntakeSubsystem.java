@@ -15,7 +15,7 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   
-  private final CANSparkMax intakeMotor = new CANSparkMax(Constants.OperatorConstants.intakeMotorPort, MotorType.kBrushless);
+  private final CANSparkMax intakeMotor = new CANSparkMax(15, MotorType.kBrushless);
   
 
 
@@ -24,7 +24,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public void runIntake(double speed) {
     intakeMotor.set(speed);
   }
-
 
   @Override
   public void periodic() {
