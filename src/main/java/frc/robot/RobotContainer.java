@@ -70,6 +70,7 @@ public class RobotContainer {
    */
   private final RunRollyGrabber suck = new RunRollyGrabber(intakeSub, ledSub);
   private final ReverseRollyGrabber spit = new ReverseRollyGrabber(intakeSub, ledSub);
+  private final RolleyGrabberConstantRun constantGrab = new RolleyGrabberConstantRun(intakeSub);
   
   /*
    * Drivetrain Commands
@@ -343,6 +344,7 @@ public class RobotContainer {
     // Run default command as the arcade drive command.
     CommandScheduler.getInstance().setDefaultCommand(pivoterSub, addFeedFoward); // Continously add feedforward to the pivoter other than running it's commands with the pivoter or when it reaches the limit switches. 
     CommandScheduler.getInstance().setDefaultCommand(driveSub, arcadeDriveCmd); // Set the default command to have the robot always drive
+    CommandScheduler.getInstance().setDefaultCommand(intakeSub, constantGrab);
 
     /*
      * Controller 
