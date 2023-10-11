@@ -11,6 +11,8 @@ import frc.robot.Constants.PivoterConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
+import java.nio.file.StandardOpenOption;
+
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -93,6 +95,7 @@ public class RobotContainer {
   private final PivoterPivotUp PivoterRotateUp = new PivoterPivotUp(pivoterSub); // Rotate the pivoter up...indefinitly. 
   private final PivoterPivotMin pivotMin = new PivoterPivotMin(pivoterSub); // Rotate down till we rech the pivoter min switch. 
   private final AddFeedFoward addFeedFoward = new AddFeedFoward(pivoterSub); // Hold the pivoter up. 
+  private final StopFeedForward stopFeedForward = new StopFeedForward(pivoterSub);
 
   /*
    * Grabber Commands
@@ -370,12 +373,12 @@ public class RobotContainer {
     OI.povButtonDown.whileTrue(pivotMin);  
     OI.povButtonLeft.whileTrue(retractExtender);
     OI.povButtonRight.whileTrue(extendExtender);
-    OI.triggerAux.toggleOnTrue(suck);
+    OI.triggerAux.whileTrue(suck);
     // OI.triggerAux.onFalse();
     
 
 
-    OI.button2Aux.onTrue(spit); // Open grabber 
+    OI.button2Aux.whileTrue(spit); // Open grabber 
     // OI.button4Aux.toggleOnTrue(grabCone); // Grab at a strong grip. 
     // OI.button5Aux.onTrue(stopGrabber);
     OI.button3Aux.onTrue(goToGround); // Pivot to the ground position. 
@@ -390,6 +393,7 @@ public class RobotContainer {
     OI.button9Aux.onTrue(goToHighCube);
     OI.button10Aux.onTrue(goToMidCube);
     OI.button11Aux.onTrue(goToLow);
+    OI.button12Aux.whileTrue(stopFeedForward);
     // OI.button12Aux.onTrue(new SequentialCommandGroup(new InstantCommand(grabberSub::stopMotor, grabberSub), new InstantCommand(grabberSub::resetGrabberDistance, grabberSub)));
 
     // OI.button12Aux.onTrue(new InstantCommand(grabberSub::stopMotor, grabberSub));

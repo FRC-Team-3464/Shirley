@@ -28,20 +28,22 @@ public class ReverseRollyGrabber extends CommandBase {
   @Override
   public void execute() {
     if(ledSub.getLEDState() == "cube") {
-      intakeSub.runIntake(0.25);
+      intakeSub.runIntake(-0.25);
     }
     else if(ledSub.getLEDState() == "cone") {
-      intakeSub.runIntake(0.15);
+      intakeSub.runIntake(-0.15);
     }
     // in case he forgets to press, hopefully won't use this tho
     else {
-      intakeSub.runIntake(0.20);
+      intakeSub.runIntake(-0.20);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intakeSub.runIntake(0);
+  }
 
   // Returns true when the command should end.
   @Override
