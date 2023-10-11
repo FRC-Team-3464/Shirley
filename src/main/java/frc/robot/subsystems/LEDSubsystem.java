@@ -14,7 +14,7 @@ public class LEDSubsystem extends SubsystemBase {
   // Create a gyroscope.
   private final AddressableLED ledStrip;
   private final AddressableLEDBuffer ledBuffer;
-  private final String ledState;
+  String ledState;
   
 
   public LEDSubsystem() {
@@ -47,7 +47,7 @@ public class LEDSubsystem extends SubsystemBase {
      
      ledStrip.setData(ledBuffer);
      System.out.println("Yellowing");
-     String ledState = "cone";
+     ledState = "cone";
   }
 
   public void purple() {
@@ -57,7 +57,7 @@ public class LEDSubsystem extends SubsystemBase {
      }
      
      ledStrip.setData(ledBuffer);
-     String ledState = "cube";
+     ledState = "cube";
      System.out.println("Purpling");
   }
 

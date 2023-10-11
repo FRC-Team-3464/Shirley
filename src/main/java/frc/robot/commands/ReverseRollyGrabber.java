@@ -27,11 +27,15 @@ public class ReverseRollyGrabber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(ledSub.getLEDState());
     if(ledSub.getLEDState() == "cube") {
-      intakeSub.runIntake(-0.25);
+      intakeSub.runIntake(-0.50);
     }
     else if(ledSub.getLEDState() == "cone") {
       intakeSub.runIntake(-0.15);
+    }
+    else if(ledSub.getLEDState() == "starting") {
+      intakeSub.runIntake(-0.20);
     }
     // in case he forgets to press, hopefully won't use this tho
     else {

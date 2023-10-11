@@ -52,10 +52,10 @@ public final class Constants {
     // Setpoint
     public static final double kGroundExtenderValue = 7.75; // The setpoint to rotate the pivoter to the highest position.
     public static final double kLowExtenderValue = 5.75; // The setpoint to rotate the pivoter to the highest position.
-    public static final double kMidExtenderConeValue = 5; // The setpoint to rotate the pivoter to the highest position.
+    public static final double kMidExtenderConeValue = 5.5; // The setpoint to rotate the pivoter to the highest position.
     public static final double kMidExtenderCubeValue = 2.56;
     public static final double kHighExtenderCubeValue = 18.25;
-    public static final double kHighExtenderConeValue = 20.5; // The setpoint to rotate the pivoter to the highest position. FIX
+    public static final double kHighExtenderConeValue = 22; // The setpoint to rotate the pivoter to the highest position. FIX
 
   }
 
