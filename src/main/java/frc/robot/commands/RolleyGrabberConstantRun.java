@@ -23,7 +23,9 @@ public class RolleyGrabberConstantRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSub.runIntake(0.04);
+    if(intakeSub.yesObject()) {
+      intakeSub.runIntake(0.04);
+    }
   }
 
   // Called once the command ends or is interrupted.

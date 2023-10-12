@@ -6,17 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 
-public class ReverseRollyGrabber extends CommandBase {
-  /** Creates a new ReverseRollyGrabber. */
-  public final IntakeSubsystem intakeSub;
-  public final LEDSubsystem ledSub;
-  public ReverseRollyGrabber(IntakeSubsystem intakeSub, LEDSubsystem ledSub) {
+public class AutoReverseIntake extends CommandBase {
+  /** Creates a new AutoRunIntake. */
+  private final IntakeSubsystem intakeSub;
+  public AutoReverseIntake(IntakeSubsystem intakeSub) {
     this.intakeSub = intakeSub;
-    this.ledSub = ledSub;
-    addRequirements(intakeSub);
-    addRequirements(ledSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -27,28 +22,18 @@ public class ReverseRollyGrabber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(ledSub.getLEDState());
-    if(ledSub.getLEDState() == "cube") {
-      intakeSub.runIntake(-0.50);
-    }
-    else if(ledSub.getLEDState() == "cone") {
-      intakeSub.runIntake(-0.15);
-    }
-    // in case he forgets to press, hopefully won't use this tho
-    else {
-      intakeSub.runIntake(-0.20);
-    }
+    intakeSub.runIntake(-0.50);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSub.runIntake(0);
+    intakeSub.stopMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return(intakeSub.getEncoder() < -10);
   }
 }

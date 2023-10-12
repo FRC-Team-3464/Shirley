@@ -165,17 +165,16 @@ public class RobotContainer {
     // Close grabber 
 
     //new CloseGrabberCone(grabberSub),
-    new RunRollyGrabber(intakeSub, ledSub),
-    // new WaitCommand(0.2),
+    new AutoRunIntake(intakeSub),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
-    new WaitCommand(0.5),
+    new WaitCommand(0.2),
     // Pivot up
     new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), //TBD
     // new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
     //new OpenGrabber(grabberSub),
-    new ReverseRollyGrabber(intakeSub, ledSub),
+    new AutoReverseIntake(intakeSub),
     // Stow again
     new WaitCommand(0.5),
     //new CloseGrabberCone(grabberSub),
@@ -198,8 +197,8 @@ public class RobotContainer {
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     // Close grabber 
 
-    new RunRollyGrabber(intakeSub, ledSub),
     //new CloseGrabberCone(grabberSub),
+    new AutoRunIntake(intakeSub),
     // new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
     new WaitCommand(0.2),
@@ -208,7 +207,7 @@ public class RobotContainer {
     //new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
-    new ReverseRollyGrabber(intakeSub, ledSub),
+    new AutoReverseIntake(intakeSub),
     //new OpenGrabber(grabberSub),
     // Stow again
     new WaitCommand(0.5),
@@ -318,7 +317,7 @@ public class RobotContainer {
   public final Command goToMidCone = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ pivotToMidCone, extendToMidCone);
   public final Command goToMidCube = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub),*/ pivotToMidCube /*extendToMidCube*/);
   public final Command goToLow = new SequentialCommandGroup(/*new CloseGrabberCone(grabberSub), */pivotToLow, extendToLow);
-  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, /*new OpenGrabber(grabberSub), extendToGround, openGrabber, */pivotDownToGround);
+  public final Command goToGround = new SequentialCommandGroup(pivotUpToGround, /*new OpenGrabber(grabberSub), */ extendToGround /*openGrabber, pivotDownToGround*/);
   public final Command goToFeeder = new SequentialCommandGroup(new PivotToHighPosition(pivoterSub, PivoterConstants.kFeedPivoterValue)/*,new OpenGrabber(grabberSub)*/);
 
   /*
@@ -389,7 +388,7 @@ public class RobotContainer {
     OI.button4Aux.onTrue(goToFeeder);
     OI.button5Aux.onTrue(stowArm);
     //OI.button6Aux.whileTrue(autoGrab);
-    // OI.button6Aux.onTrue(stowGroundArm);
+    OI.button6Aux.onTrue(stowGroundArm);
 
 
     OI.button7Aux.onTrue(goToHighCone);
