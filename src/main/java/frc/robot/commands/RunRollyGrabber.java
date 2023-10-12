@@ -28,6 +28,9 @@ public class RunRollyGrabber extends CommandBase {
   @Override
   public void execute() {
     intakeSub.runIntake(0.25);
+    if(intakeSub.yesObject()) {
+      ledSub.green();
+    }
   }
 
   // Called once the command ends or is interrupted.

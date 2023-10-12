@@ -38,6 +38,9 @@ public class ReverseRollyGrabber extends CommandBase {
     else {
       intakeSub.runIntake(-0.20);
     }
+    if(intakeSub.yesObject() == false) {
+      ledSub.red();
+    }
   }
 
   // Called once the command ends or is interrupted.

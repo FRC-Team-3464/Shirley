@@ -84,7 +84,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void red() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 200, 0, 0);
+        ledBuffer.setRGB(i, 200, 20, 15);
      }
      
      ledStrip.setData(ledBuffer);
@@ -94,7 +94,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void green() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 0, 154, 30);
+        ledBuffer.setRGB(i, 0, 194, 30);
      }
      ledStrip.setData(ledBuffer);
      System.out.println("Greening");
