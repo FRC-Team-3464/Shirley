@@ -169,8 +169,8 @@ public class RobotContainer {
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
     new WaitCommand(0.2),
     // Pivot up
-    new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), //TBD
-    // new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue),// TBD whether it's a cone or cube
+    new PivotToHighPosition(pivoterSub, 20), //TBD
+    new ExtenderSetPositionCommand(extenderSub, 17 ),// TBD whether it's a cone or cube
     new WaitCommand(0.15),
     // Open Grabber
     //new OpenGrabber(grabberSub),
@@ -180,13 +180,14 @@ public class RobotContainer {
     //new CloseGrabberCone(grabberSub),
     //new WaitCommand(0.2),
     //new InstantCommand(grabberSub::stopMotor, grabberSub),
-    //new ExtenderRetractLimit(extenderSub),
+    new ExtenderRetractLimit(extenderSub),
     new PivoterPivotMin(pivoterSub),
     new InstantCommand(pivoterSub::resetEncoder, pivoterSub),
     new InstantCommand(extenderSub::resetExtenderEncoder, extenderSub),
     new WaitCommand(0.25),
     //Drive back
-    new AutoDriveBackward(driveSub, 180)
+    new AutoDriveBackward(driveSub, 160)
+    //new AutoDriveRotate(driveSub, gyroSub, 115)
     );
 
   public final SequentialCommandGroup leftAuto2Object = new SequentialCommandGroup(
@@ -280,17 +281,19 @@ public class RobotContainer {
     // Close grabber 
 
     //new CloseGrabberCone(grabberSub),
-    // new WaitCommand(0.2),
+    new AutoRunIntake(intakeSub),
+    new WaitCommand(0.2),
     // new InstantCommand(grabberSub::stopMotor, grabberSub),
-    new WaitCommand(0.45),
+    //new WaitCommand(0.45),
     // Pivot up
     new PivotToHighPosition(pivoterSub, PivoterConstants.kHighConePivoterValue), 
     new ExtenderSetPositionCommand(extenderSub, ExtenderConstants.kHighExtenderConeValue), 
     new WaitCommand(0.15),
     // Open Grabber
+    new AutoReverseIntake(intakeSub),
     //new OpenGrabber(grabberSub),
     // Stow again
-    new WaitCommand(0.4),
+    //new WaitCommand(0.4),
     //new CloseGrabberCone(grabberSub),
     new WaitCommand(0.2),
     //new InstantCommand(grabberSub::stopMotor, grabberSub),
@@ -302,7 +305,7 @@ public class RobotContainer {
     new AutoDriveBackward(driveSub, 68),
     // new WaitCommand(0.5),
     // new AutoDriveFoward(driveSub, 30),
-    new BalanceDistance(driveSub, balanceSub)
+    new BalanceDistance(driveSub, balanceSub, ledSub)
     // new WaitCommand(0.5),
     //Drive back
   );
@@ -364,7 +367,7 @@ public class RobotContainer {
     
     // OI.buttonA.onTrue(new AutoDriveFoward(driveSub, 12));
     OI.buttonA.onTrue(ledPurple);
-    OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub));
+    OI.buttonX.whileTrue(new BalanceDistance(driveSub, balanceSub, ledSub));
     OI.buttonY.toggleOnTrue(new BalanceHold(balanceHoldSub, driveSub));
     
     

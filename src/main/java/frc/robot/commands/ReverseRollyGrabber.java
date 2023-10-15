@@ -36,7 +36,7 @@ public class ReverseRollyGrabber extends CommandBase {
     }
     // in case he forgets to press, hopefully won't use this tho
     else {
-      intakeSub.runIntake(-0.20);
+      intakeSub.runIntake(-0.60);
     }
     if(intakeSub.yesObject() == false) {
       ledSub.red();

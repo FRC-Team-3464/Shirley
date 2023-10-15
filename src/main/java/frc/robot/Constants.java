@@ -77,7 +77,7 @@ public final class Constants {
     public static final int kPivoterSecondMotorPort = 6;
     public static final int kPivotMinSwitchPort = 2;
 
-    public static final double kFeedPivoterValue = 12.5;
+    public static final double kFeedPivoterValue = 11.7;
     public static final double kHighConePivoterValue = 18.5;
     public static final double kHighCubePivoterValue = 15.73; // The setpoint to rotate the pivoter to the highest position.
     public static final double kMidConePivoterValue = 13.9; // The setpoint to rotate the pivoter to the highest position.
