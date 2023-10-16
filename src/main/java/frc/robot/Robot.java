@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   static double pipeIndex;
   NetworkTableEntry pipelineIndex;
+  public String ledState;
 
   /*
    * Setting the autonomous command
@@ -56,7 +57,6 @@ public class Robot extends TimedRobot {
     // Create the choose with it's options. 
 
     OI oi = new OI();
-
     
     // *** autoChooser.setDefaultOption("Drive Balance", m_robotContainer.getDriveBalanceAuto()); // This might work - 
     // *** autoChooser.addOption("Drive Balance Auto", m_robotContainer.getDriveBalanceAuto()); // Just get the actual command instead of the string of it. 
