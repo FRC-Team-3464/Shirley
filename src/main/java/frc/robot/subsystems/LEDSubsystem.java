@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,6 +16,7 @@ public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED ledStrip;
   private final AddressableLEDBuffer ledBuffer;
   String ledState;
+
   
 
   public LEDSubsystem() {
@@ -39,6 +41,7 @@ public class LEDSubsystem extends SubsystemBase {
     return ledState;
   }
 
+
   public void yellow() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
@@ -61,7 +64,7 @@ public class LEDSubsystem extends SubsystemBase {
      System.out.println("Purpling");
   }
 
-  public void brown() {
+  public void white() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
         ledBuffer.setRGB(i, 74, 65, 42);
@@ -102,22 +105,58 @@ public class LEDSubsystem extends SubsystemBase {
 
   
 
-  
-
-  /*public void rainbow() {
-    // For every pixel
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Calculate the hue - hue is easier for rainbows because the color
-      // shape is a circle so only one value needs to precess
-      final var hue = (rainbowFirstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
-      // Set the value
-      ledBuffer.setHSV(i, hue, 255, 128);
+  public void flash(){
+    flashTimer.start();
+    if(flashTimer.get() % 0.5 == 0){
+        ledStrip.start();
+        white();
+    }else{
+        ledStrip.stop();
     }
-    // Increase by to make the rainbow "move"
-    rainbowFirstPixelHue += 3;
-    // Check bounds
-    rainbowFirstPixelHue %= 180;
-  }*/
+    }
+    
+
+
+
+  public void rainbow() {
+    flashTimer.stop();
+    // // For every pixel
+    // double rainbowFirstPixelHue = 0;
+    // for (var i = 0; i < ledBuffer.getLength(); i++) {
+    //   // Calculate the hue - hue is easier for rainbows because the color
+    //   // shape is a circle so only one value needs to precess
+
+    //   final var hue = (0 + (i * 180 / ledBuffer.getLength())) % 180;
+    //   // Set the value
+    //   ledBuffer.setHSV(i, hue, 255, 128);
+    // }
+    // // Increase by to make the rainbow "move"
+    // rainbowFirstPixelHue += 3;
+    // // Check bounds
+    // rainbowFirstPixelHue %= 180;
+    for (var i = 0; i < 8; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 100, 1, 0);
+    }
+    for (var i = 8; i < 16; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 130, 50, 0);
+    } 
+    for (var i = 16; i < 24; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 100,100, 0);
+    }
+    for (var i = 24; i < 32; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 0,100, 0);
+    }
+    for (var i = 32; i < 40; i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 0,0, 100);
+    }
+    for (var i = 40; i < ledBuffer.getLength(); i++) { // fIRST 8 leds. 
+      ledBuffer.setRGB(i, 100, 1, 186);
+    }
+
+    ledStrip.setData(ledBuffer);
+}
+
+
 
 
 
