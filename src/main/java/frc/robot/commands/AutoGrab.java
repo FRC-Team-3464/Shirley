@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/*
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,7 +15,7 @@ import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 
 public class AutoGrab extends CommandBase {
-  /** Creates a new AutoGrab. */
+  /** Creates a new AutoGrab. 
   private final XboxController controller = OI.xBoxController;
   private final GrabberSubsystem grabberSub;
   private final LEDSubsystem ledSub;
@@ -77,3 +77,5 @@ public class AutoGrab extends CommandBase {
     return false;
   }
 }
+
+*/

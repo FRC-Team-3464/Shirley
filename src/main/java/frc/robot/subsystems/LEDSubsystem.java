@@ -15,13 +15,15 @@ public class LEDSubsystem extends SubsystemBase {
   // Create a gyroscope.
   private final AddressableLED ledStrip;
   private final AddressableLEDBuffer ledBuffer;
-  Timer flashTimer = new Timer();
+  String ledState;
+
   
 
   public LEDSubsystem() {
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
     ledStrip = new AddressableLED(9);
+    ledState = "starting";
 
     // Reuse buffer
     // Default to a length of 60, start empty output
@@ -35,9 +37,11 @@ public class LEDSubsystem extends SubsystemBase {
 
   }
 
-  // public void blink() {
+  public String getLEDState(){
+    return ledState;
+  }
 
-  // }
+
   public void yellow() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
@@ -46,6 +50,18 @@ public class LEDSubsystem extends SubsystemBase {
      
      ledStrip.setData(ledBuffer);
      System.out.println("Yellowing");
+     ledState = "cone";
+  }
+
+  public void purple() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        ledBuffer.setRGB(i, 100, 1, 186);
+     }
+     
+     ledStrip.setData(ledBuffer);
+     ledState = "cube";
+     System.out.println("Purpling");
   }
 
   public void white() {
@@ -71,7 +87,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void red() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 200, 0, 0);
+        ledBuffer.setRGB(i, 200, 20, 15);
      }
      
      ledStrip.setData(ledBuffer);
@@ -81,21 +97,12 @@ public class LEDSubsystem extends SubsystemBase {
   public void green() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 0, 154, 30);
+        ledBuffer.setRGB(i, 0, 194, 30);
      }
      ledStrip.setData(ledBuffer);
      System.out.println("Greening");
   }
 
-  public void purple() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 100, 1, 186);
-     }
-     
-     ledStrip.setData(ledBuffer);
-     System.out.println("Purpling");
-  }
   
 
   public void flash(){
@@ -157,5 +164,6 @@ public class LEDSubsystem extends SubsystemBase {
   public void periodic() {
     //SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
     //SmartDashboard.putNumber("Gyro Angle", getDegrees());
+    SmartDashboard.putString("LedState", ledState);
   }
 }

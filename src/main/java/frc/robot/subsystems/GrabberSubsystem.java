@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/*
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
@@ -33,9 +33,8 @@ public class GrabberSubsystem extends SubsystemBase {
     rGrabberMotor.follow(lGrabberMotor, true);
   }
 
-  
+  // Grabber methods
 
-  
 
   public void runMotor(double speed) {
     // Set motor to the passed-in speed. 
@@ -86,3 +85,4 @@ public class GrabberSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Motor Temperature", rGrabberMotor.getMotorTemperature());
   }
 }
+*/
